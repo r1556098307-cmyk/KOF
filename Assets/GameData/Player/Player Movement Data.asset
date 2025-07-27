@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082d86ec3678a2e46a71182e95eb8cb9, type: 3}
+  m_Name: Player Movement Data
+  m_EditorClassIdentifier: 
+  runMaxSpeed: 10
+  runAccelAmount: 9.5
+  runDeccelAmount: 9.5
+  accelInAir: 1
+  deccelInAir: 1
+  jumpHangTimeThreshold: 1
+  jumpHangAccelerationMult: 1.1
+  jumpHangMaxSpeedMult: 1.3
+  coyoteTime: 0.2
+  jumpHangGravityMult: 1
+  jumpForce: 15
+  fallGravityMult: 4
+  maxFallSpeed: 30
+  doConserveMomentum: 0

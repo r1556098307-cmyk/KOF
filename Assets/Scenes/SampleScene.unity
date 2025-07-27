@@ -2177,7 +2177,7 @@ Transform:
   m_GameObject: {fileID: 579076211}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.59, z: 0}
+  m_LocalPosition: {x: 0.036, y: -2.667, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2303,7 +2303,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2450,28 +2450,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6580042231efd44e852f6717d9c8328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementData: {fileID: 11400000, guid: 271aa5bc12f54354993970692c99034c, type: 2}
+  combatData: {fileID: 11400000, guid: fbbf8024ba6f09f4ab08a118c3233dbc, type: 2}
   animator: {fileID: 0}
   inputDirection: {x: 0, y: 0}
-  playerData:
-    runMaxSpeed: 10
-    runAccelAmount: 9.5
-    runDeccelAmount: 9.5
-    accelInAir: 1
-    deccelInAir: 1
-    jumpHangTimeThreshold: 1
-    jumpHangAccelerationMult: 1.1
-    jumpHangMaxSpeedMult: 1.3
-    coyoteTime: 0.1
-    doConserveMomentum: 0
-    attackForce: 8
-    attackMaxSpeed: 5
-    attackSpeedDecay: 0.95
-    attackSpeedDecayDuration: 0.5
-    dashAttackForce: 20
-    dashAttackMaxSpeed: 15
-    dashAttackDuration: 0.3
-    dashAttackDecay: 0.92
-    dashAttackIgnoreInput: 1
   isFacingRight: 0
   isDash: 0
   isWalk: 0
@@ -2479,8 +2461,7 @@ MonoBehaviour:
   isGround: 0
   isAttack: 0
   isJumpFall: 0
-  inputBufferTime: 0.15
-  comboWindowTime: 0.2
+  dashAttackTimer: 0
   lastOnGroundTime: 0
   groundCheckPoint: {fileID: 579076212}
   groundCheckSize: {x: 0.49, y: 0.03}
@@ -2499,6 +2480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 924c4286788929f4190811c1605a99ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  justLanded: 0
+  startedJumping: 0
 --- !u!1 &1559170552
 GameObject:
   m_ObjectHideFlags: 0
