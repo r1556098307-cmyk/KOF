@@ -1,547 +1,374 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
-public class MovementData
+public class PlayerData
 {
-    [Header("Run Settings")]
-    public float runMaxSpeed = 5f;
-    public float runAccelAmount = 10f;
-    public float runDeccelAmount = 10f;
-    [Range(0f, 1f)] public float accelInAir = 0.65f;
-    [Range(0f, 1f)] public float deccelInAir = 0.65f;
-    public bool doConserveMomentum = false;
+    public float runMaxSpeed = 10f;
+    public float runAccelAmount = 9.5f; // 地面加速度
+    public float runDeccelAmount = 9.5f; // 地面减速度
+    public float accelInAir = 1f; // 空中加速倍率
+    public float deccelInAir = 1f; // 空中减速倍率
+    public float jumpHangTimeThreshold = 1f; // 跳跃悬停判定阈值
+    public float jumpHangAccelerationMult = 1.1f; // 跳跃顶点加速倍率
+    public float jumpHangMaxSpeedMult = 1.3f; // 跳跃顶点最大速度倍率
+    public float coyoteTime = 0.1f; // 土狼时间
 
-    [Header("Jump Settings")]
-    public float jumpForce = 10f;
-    public float jumpCutGravityMult = 2f;
-    public float jumpHangGravityMult = 0.5f;
-    public float jumpHangTimeThreshold = 2f;
-    public float jumpHangAccelerationMult = 1.1f;
-    public float jumpHangMaxSpeedMult = 1.3f;
+    public bool doConserveMomentum = false; // 是否开启动量保持
 
-    [Header("Gravity & Falling")]
-    public float gravityScale = 1f;
-    public float fallGravityMult = 1.5f;
-    public float maxFallSpeed = 20f;
-    public float fastFallGravityMult = 2f;
-    public float maxFastFallSpeed = 25f;
+    [Header("攻击位移参数")]
+    public float attackForce = 15f; // 攻击时施加的瞬间力
+    public float attackMaxSpeed = 8f; // 攻击时的最大速度限制
+    public float attackSpeedDecay = 0.95f; // 攻击后速度衰减系数（每帧）
+    public float attackSpeedDecayDuration = 0.5f; // 速度衰减持续时间
 
-    [Header("Coyote Time & Jump Buffer")]
-    public float coyoteTime = 0.1f;
-    public float jumpInputBufferTime = 0.1f;
-
-    [Header("Dash Settings")]
-    public float dashSpeed = 15f;
-    public float dashDuration = 0.3f;
-    public float dashAttackTime = 0.15f;
-    public float dashEndTime = 0.2f;
-    public Vector2 dashEndSpeed = new Vector2(0.5f, 0.5f);
-    public float dashSleepTime = 0.02f;
+    [Header("冲刺攻击参数")]
+    public float dashAttackForce = 20f;        // 冲刺攻击力度
+    public float dashAttackMaxSpeed = 15f;     // 冲刺最大速度
+    public float dashAttackDuration = 0.3f;    // 冲刺持续时间
+    public float dashAttackDecay = 0.92f;      // 冲刺速度衰减
+    public bool dashAttackIgnoreInput = true;  // 冲刺时是否忽略移动输入
 }
 
 public class KiritoController : MonoBehaviour
 {
-    [Header("Movement Data")]
-    public MovementData Data;
-
-    // 如果Data为空，使用默认值
-    private MovementData GetData()
-    {
-        if (Data == null)
-        {
-            Data = new MovementData();
-        }
-        return Data;
-    }
-
-    [Header("Combat Settings")]
-    public int maxEnergy = 5;
-    public float energyRegenRate = 1f;
-    public float attackCooldown = 0.5f;
-
-    [Header("Ground Check")]
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayerMask;
-
-    // Components
-    private Animator animator;
+    public PlayerInputControl inputControl;
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
+    public KiritoAnimator animator;
 
-    // Input
-    private float horizontalInput;
-    private float verticalInput;
+    public Vector2 inputDirection;
+    public PlayerData playerData;
 
-    // State
-    public bool IsFacingRight { get; private set; }
-    public bool IsJumping { get; private set; }
-    public bool IsDashing { get; private set; }
+    public bool isFacingRight;
+    public bool isDash;
+    public bool isWalk;
+    public bool isJump;
+    public bool isGround;
+    public bool isAttack;
+    public bool isJumpFall;
 
-    private bool isGrounded;
-    private bool isAttacking;
-    private bool isBlocking;
-    private int currentEnergy;
-    private float lastAttackTime;
+    // 攻击速度控制
+    private bool isAttackSpeedActive = false;
+    private float attackSpeedTimer = 0f;
 
-    // Jump mechanics
-    public float LastOnGroundTime { get; private set; }
-    public float LastPressedJumpTime { get; private set; }
-    private bool isJumpCut;
-    private bool isJumpFalling;
+    // 冲刺攻击状态
+    private bool isDashAttacking = false;
+    private float dashAttackTimer = 0f;
+    private Vector2 dashDirection;
 
-    // Dash mechanics
-    private bool isDashAttacking;
-    private Vector2 lastDashDir;
+    // 输入缓冲和组合攻击控制
+    [Header("输入控制参数")]
+    public float inputBufferTime = 0.15f; // 输入缓冲时间
+    public float comboWindowTime = 0.2f;  // 组合技窗口时间
 
-    // Special move input buffer
-    private float[] inputBuffer = new float[4];
-    private int bufferIndex = 0;
-    private float lastInputTime;
-    private const float INPUT_BUFFER_TIME = 1f;
+    private float lastAttackInputTime = -1f;  // J键输入时间
+    private float lastCrouchInputTime = -1f;  // S键输入时间
+    private bool isProcessingCombo = false;
+    private bool isCrouching = false;
 
-    void Start()
+    public float lastOnGroundTime; // 实现土狼时间优化
+
+    [SerializeField]
+    private Transform groundCheckPoint;
+    [SerializeField]
+    private Vector2 groundCheckSize = new Vector2(0.49f, 0.03f);
+    [SerializeField]
+    private LayerMask groundLayer;
+
+    private void Awake()
     {
-        animator = GetComponent<Animator>();
+        inputControl = new PlayerInputControl();
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-        currentEnergy = maxEnergy;
-        IsFacingRight = true;
-
-        // 确保Data不为空
-        GetData();
-
-        SetGravityScale(GetData().gravityScale);
-        StartCoroutine(EnergyRegeneration());
-
-        // 初始化地面状态
-        CheckGrounded();
-        if (isGrounded)
-        {
-            LastOnGroundTime = GetData().coyoteTime;
-        }
-
-        Debug.Log("KiritoController initialized. Data: " + (Data != null ? "OK" : "NULL"));
+        animator = GetComponent<KiritoAnimator>();
+        inputControl.GamePlay.Attack.started += Attack;  // J键 - 普通攻击
+        inputControl.GamePlay.DownAttack.started += Crouch;  // S键 - 下蹲
     }
 
-    void Update()
+    private void Start()
     {
-        #region TIMERS
-        LastOnGroundTime -= Time.deltaTime;
-        LastPressedJumpTime -= Time.deltaTime;
-        #endregion
-
-        HandleInput();
-        CheckGrounded();
-        UpdateAnimatorParameters();
-        CheckSpecialMoves();
-        HandleJumpLogic();
-        HandleGravity();
+        isFacingRight = true;
     }
 
-    void FixedUpdate()
+    private void OnEnable()
     {
-        if (!isAttacking && !IsDashing)
-        {
-            HandleMovement();
-        }
-        else if (isDashAttacking)
-        {
-            HandleMovement(Data.dashEndSpeed.x);
-        }
+        inputControl.Enable();
     }
 
-    void HandleInput()
+    private void OnDisable()
     {
-        // Basic input
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        // Face direction
-        if (horizontalInput != 0)
-            CheckDirectionToFace(horizontalInput > 0);
-
-        // Movement inputs
-        bool jumpInput = Input.GetKeyDown(KeyCode.Space);
-        bool jumpUpInput = Input.GetKeyUp(KeyCode.Space);
-        bool crouchInput = Input.GetKey(KeyCode.S);
-        bool dashInput = Input.GetKeyDown(KeyCode.L);
-
-        // Combat inputs
-        bool lightAttackInput = Input.GetKeyDown(KeyCode.J);
-        bool heavyAttackInput = Input.GetKeyDown(KeyCode.K);
-        bool blockInput = Input.GetKey(KeyCode.LeftControl);
-
-        // Handle jump input
-        if (jumpInput)
-        {
-            Debug.Log("Jump input detected!");
-            OnJumpInput();
-        }
-
-        if (jumpUpInput)
-        {
-            OnJumpUpInput();
-        }
-
-        // Handle walking animation
-        bool walkInput = Mathf.Abs(horizontalInput) > 0.1f;
-        animator.SetBool("isWalking", walkInput && isGrounded && !isAttacking);
-
-        // Handle crouching
-        animator.SetBool("isCrouching", crouchInput && isGrounded);
-
-        // Handle dashing
-        if (dashInput && !IsDashing && !isAttacking)
-        {
-            StartCoroutine(StartDash());
-        }
-
-        // Handle blocking
-        isBlocking = blockInput && !isAttacking;
-        animator.SetBool("isBlocking", isBlocking);
-
-        // Handle attacks
-        if (Time.time - lastAttackTime > attackCooldown)
-        {
-            HandleAttacks(lightAttackInput, heavyAttackInput, crouchInput);
-        }
-
-        // Update input buffer for special moves
-        UpdateInputBuffer();
+        inputControl.Disable();
     }
 
-    void HandleMovement(float lerpAmount = 1f)
+    private void Update()
     {
-        // Calculate target speed
-        float targetSpeed = horizontalInput * Data.runMaxSpeed;
+        lastOnGroundTime -= Time.deltaTime;
+
+        inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
+
+        // 处理Sprite的翻转
+        if (inputDirection.x != 0)
+        {
+            isWalk = true;
+            CheckDirectionToFace(inputDirection.x > 0);
+        }
+        else
+        {
+            isWalk = false;
+        }
+
+        // 地面检测
+        if (!isDash && !isJump)
+        {
+            if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
+            {
+                if (lastOnGroundTime < -0.1f)
+                {
+                    // Animator的params设置在地面上
+                }
+                isGround = true;
+                lastOnGroundTime = playerData.coyoteTime;
+            }
+        }
+
+        // 更新攻击速度状态
+        UpdateAttackSpeed();
+
+        // 更新冲刺攻击状态
+        UpdateDashAttack();
+
+        // 处理输入缓冲和组合攻击
+        ProcessCombatInput();
+    }
+
+    private void FixedUpdate()
+    {
+        Move(1);
+    }
+
+    public void Move(float lerpAmount)
+    {
+        // 如果正在冲刺攻击且忽略输入，则不处理常规移动
+        if (isDashAttacking && playerData.dashAttackIgnoreInput)
+        {
+            ApplyDashMovement();
+            return;
+        }
+
+        // 使用平滑插值来加速
+        float targetSpeed = inputDirection.x * playerData.runMaxSpeed;
         targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
 
-        // Calculate acceleration rate
         float accelRate;
-        if (LastOnGroundTime > 0)
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount;
-        else
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount * Data.accelInAir : Data.runDeccelAmount * Data.deccelInAir;
 
-        // Jump apex bonus
-        if ((IsJumping || isJumpFalling) && Mathf.Abs(rb.velocity.y) < Data.jumpHangTimeThreshold)
+        // 动态加速度计算，在空中和地面使用不同的加速度
+        if (lastOnGroundTime > 0)
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccelAmount : playerData.runDeccelAmount;
+        else
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccelAmount * playerData.accelInAir : playerData.runDeccelAmount * playerData.deccelInAir;
+
+        // 跳跃顶点加速
+        if ((isJump || isJumpFall) && Mathf.Abs(rb.velocity.y) < playerData.jumpHangTimeThreshold)
         {
-            accelRate *= Data.jumpHangAccelerationMult;
-            targetSpeed *= Data.jumpHangMaxSpeedMult;
+            accelRate *= playerData.jumpHangAccelerationMult;
+            targetSpeed *= playerData.jumpHangMaxSpeedMult;
         }
 
-        // Conserve momentum
-        if (Data.doConserveMomentum && Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) &&
-            Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && LastOnGroundTime < 0)
+        // 动量保持
+        if (playerData.doConserveMomentum && Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) &&
+            Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && lastOnGroundTime < 0)
         {
             accelRate = 0;
         }
 
-        // Apply force
+        // 对rb提供力，速度离目标远则加速快，近则加速慢
         float speedDif = targetSpeed - rb.velocity.x;
         float movement = speedDif * accelRate;
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
+
+        // 应用攻击速度限制
+        ApplyAttackSpeedLimit();
     }
 
-    void HandleJumpLogic()
+    private void UpdateAttackSpeed()
     {
-        // Check if falling after jump
-        if (IsJumping && rb.velocity.y < 0)
+        if (isAttackSpeedActive)
         {
-            IsJumping = false;
-            isJumpFalling = true;
-        }
-
-        // Reset jump states when grounded
-        if (LastOnGroundTime > 0 && !IsJumping)
-        {
-            isJumpCut = false;
-            isJumpFalling = false;
-        }
-
-        // Perform jump - 添加调试信息
-        if (!IsDashing && CanJump() && LastPressedJumpTime > 0)
-        {
-            Debug.Log($"Jumping! CanJump: {CanJump()}, LastPressedJumpTime: {LastPressedJumpTime}, LastOnGroundTime: {LastOnGroundTime}");
-            IsJumping = true;
-            isJumpCut = false;
-            isJumpFalling = false;
-            Jump();
-        }
-    }
-
-    void HandleGravity()
-    {
-        if (!isDashAttacking)
-        {
-            if (isJumpCut)
+            attackSpeedTimer -= Time.deltaTime;
+            if (attackSpeedTimer <= 0f)
             {
-                // Higher gravity if jump button released
-                SetGravityScale(Data.gravityScale * Data.jumpCutGravityMult);
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -Data.maxFallSpeed));
-            }
-            else if ((IsJumping || isJumpFalling) && Mathf.Abs(rb.velocity.y) < Data.jumpHangTimeThreshold)
-            {
-                // Reduced gravity at jump apex
-                SetGravityScale(Data.gravityScale * Data.jumpHangGravityMult);
-            }
-            else if (rb.velocity.y < 0 && verticalInput < 0)
-            {
-                // Fast fall
-                SetGravityScale(Data.gravityScale * Data.fastFallGravityMult);
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -Data.maxFastFallSpeed));
-            }
-            else if (rb.velocity.y < 0)
-            {
-                // Normal falling
-                SetGravityScale(Data.gravityScale * Data.fallGravityMult);
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -Data.maxFallSpeed));
-            }
-            else
-            {
-                // Default gravity
-                SetGravityScale(Data.gravityScale);
+                isAttackSpeedActive = false;
             }
         }
-        else
+    }
+
+    private void UpdateDashAttack()
+    {
+        if (isDashAttacking)
         {
-            // No gravity during dash attack
-            SetGravityScale(0);
+            dashAttackTimer -= Time.deltaTime;
+            if (dashAttackTimer <= 0f)
+            {
+                isDashAttacking = false;
+                isProcessingCombo = false; // 冲刺结束后重置组合状态
+                // 冲刺结束后可以添加一些额外逻辑，比如恢复正常状态
+            }
         }
     }
 
-    #region INPUT CALLBACKS
-    public void OnJumpInput()
+    private void ProcessCombatInput()
     {
-        LastPressedJumpTime = GetData().jumpInputBufferTime;
-        Debug.Log($"OnJumpInput called. LastPressedJumpTime set to: {LastPressedJumpTime}");
-    }
+        // 如果正在处理组合攻击，不处理新输入
+        if (isProcessingCombo) return;
 
-    public void OnJumpUpInput()
-    {
-        if (CanJumpCut())
-            isJumpCut = true;
-    }
-    #endregion
+        float currentTime = Time.time;
 
-    void Jump()
-    {
-        Debug.Log("Jump executed!");
-        LastPressedJumpTime = 0;
-        LastOnGroundTime = 0;
+        // 检查是否有组合攻击输入 (S+J 在时间窗口内)
+        bool hasRecentAttack = (currentTime - lastAttackInputTime) <= comboWindowTime;
+        bool hasRecentCrouch = (currentTime - lastCrouchInputTime) <= comboWindowTime;
 
-        // Apply jump force with compensation for falling velocity
-        float force = GetData().jumpForce;
-        if (rb.velocity.y < 0)
-            force -= rb.velocity.y;
-
-        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        animator.SetBool("isJumping", true);
-
-        Debug.Log($"Jump force applied: {force}, Current velocity: {rb.velocity}");
-    }
-
-    IEnumerator StartDash()
-    {
-        LastOnGroundTime = 0;
-
-        // Determine dash direction
-        if (horizontalInput != 0)
-            lastDashDir = new Vector2(horizontalInput, 0).normalized;
-        else
-            lastDashDir = IsFacingRight ? Vector2.right : Vector2.left;
-
-        // Freeze time briefly for game feel
-        Sleep(Data.dashSleepTime);
-
-        IsDashing = true;
-        isDashAttacking = true;
-
-        SetGravityScale(0);
-        animator.SetBool("isDashing", true);
-
-        float startTime = Time.time;
-
-        // Dash attack phase
-        while (Time.time - startTime <= Data.dashAttackTime)
+        // 优先级1: S+J组合攻击 (冲刺攻击)
+        if (hasRecentAttack && hasRecentCrouch)
         {
-            rb.velocity = lastDashDir * Data.dashSpeed;
-            yield return null;
+            ExecuteComboAttack();
+            return;
         }
 
-        startTime = Time.time;
-        isDashAttacking = false;
-
-        // Dash end phase
-        SetGravityScale(Data.gravityScale);
-        rb.velocity = Data.dashEndSpeed * lastDashDir;
-
-        while (Time.time - startTime <= Data.dashEndTime)
+        // 优先级2: 单独的普通攻击 (J)
+        if (hasRecentAttack && !hasRecentCrouch)
         {
-            yield return null;
+            ExecuteNormalAttack();
+            return;
         }
 
-        // Dash complete
-        IsDashing = false;
-        animator.SetBool("isDashing", false);
-    }
-
-    void HandleAttacks(bool lightAttack, bool heavyAttack, bool crouching)
-    {
-        bool upInput = Input.GetKey(KeyCode.W);
-
-        if (lightAttack)
+        // 优先级3: 单独的下蹲 (S)
+        if (hasRecentCrouch && !hasRecentAttack)
         {
-            if (upInput && !crouching)
-                PerformAttack("UpAttack");
-            else if (crouching)
-                PerformAttack("CrouchLightAttack");
-            else
-                PerformAttack("LightAttack");
-        }
-        else if (heavyAttack)
-        {
-            if (upInput && !crouching)
-                PerformAttack("HeadButt");
-            else if (crouching)
-                PerformAttack("CrouchHeavyAttack");
-            else
-                PerformAttack("HeavyAttack");
-        }
-
-        if (lightAttack && heavyAttack && currentEnergy >= 3)
-        {
-            PerformSuperMove();
+            ExecuteCrouch();
+            return;
         }
     }
 
-    void PerformAttack(string attackTrigger)
+    private void ExecuteComboAttack()
     {
-        animator.SetTrigger(attackTrigger);
-        isAttacking = true;
-        lastAttackTime = Time.time;
-        StartCoroutine(ResetAttackState(0.5f));
+        // 如果已经在冲刺攻击中，则不能再次触发
+        if (isDashAttacking) return;
+
+        Debug.Log("执行冲刺攻击: S+J");
+
+        isProcessingCombo = true;
+        animator.DownAttack(); // 冲刺攻击动画
+        DashAttack();
+
+        // 清除输入记录
+        lastAttackInputTime = -1f;
+        lastCrouchInputTime = -1f;
     }
 
-    void PerformSuperMove()
+    private void ExecuteNormalAttack()
     {
-        if (currentEnergy >= 3)
+        // 如果正在冲刺攻击，则不能进行普通攻击
+        if (isDashAttacking) return;
+
+        Debug.Log("执行普通攻击: J");
+
+        isProcessingCombo = true;
+        animator.Attack();
+        isAttack = true;
+        ApplyAttackForce();
+
+        // 清除输入记录
+        lastAttackInputTime = -1f;
+
+        // 普通攻击结束得快一些
+        StartCoroutine(ResetComboStateAfterDelay(0.1f));
+    }
+
+    private void ExecuteCrouch()
+    {
+        // 如果正在攻击，则不能下蹲
+        if (isDashAttacking || isAttack) return;
+
+        Debug.Log("执行下蹲: S");
+
+        // 下蹲逻辑
+        isCrouching = true;
+        // 这里可以添加下蹲动画
+        // animator.Crouch();
+
+        // 清除输入记录
+        lastCrouchInputTime = -1f;
+
+        // 下蹲状态可以持续到松开按键或其他条件
+        StartCoroutine(HandleCrouchState());
+    }
+
+    private System.Collections.IEnumerator HandleCrouchState()
+    {
+        // 等待一小段时间后允许其他输入
+        yield return new WaitForSeconds(0.05f);
+
+        // 检查是否还在按住下蹲键
+        Vector2 currentInput = inputControl.GamePlay.Move.ReadValue<Vector2>();
+        if (currentInput.y >= -0.5f) // 如果没有向下输入
         {
-            animator.SetTrigger("SuperMove");
-            currentEnergy -= 3;
-            isAttacking = true;
-            lastAttackTime = Time.time;
-            StartCoroutine(ResetAttackState(1.0f));
+            isCrouching = false;
+            // animator.StopCrouch(); // 停止下蹲动画
         }
     }
 
-    IEnumerator ResetAttackState(float delay)
+    private System.Collections.IEnumerator ResetComboStateAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        isAttacking = false;
+        isProcessingCombo = false;
     }
 
-    void UpdateInputBuffer()
+    private void ApplyDashMovement()
     {
-        if (Time.time - lastInputTime > INPUT_BUFFER_TIME)
+        // 在冲刺期间维持冲刺速度并应用衰减
+        Vector2 currentVelocity = rb.velocity;
+
+        // 限制冲刺速度不超过最大值
+        float currentHorizontalSpeed = currentVelocity.x;
+        if (Mathf.Abs(currentHorizontalSpeed) > playerData.dashAttackMaxSpeed)
         {
-            bufferIndex = 0;
+            currentHorizontalSpeed = Mathf.Sign(currentHorizontalSpeed) * playerData.dashAttackMaxSpeed;
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
-            AddToInputBuffer(1);
-        else if (Input.GetKeyDown(KeyCode.D))
-            AddToInputBuffer(2);
-        else if (Input.GetKeyDown(KeyCode.K))
-            AddToInputBuffer(3);
+        // 应用冲刺速度衰减
+        currentHorizontalSpeed *= playerData.dashAttackDecay;
+
+        // 更新速度
+        rb.velocity = new Vector2(currentHorizontalSpeed, currentVelocity.y);
     }
 
-    void AddToInputBuffer(float input)
+    private void ApplyAttackSpeedLimit()
     {
-        if (bufferIndex < inputBuffer.Length)
+        if (isAttackSpeedActive && !isDashAttacking) // 冲刺时不应用普通攻击的速度限制
         {
-            inputBuffer[bufferIndex] = input;
-            bufferIndex++;
-            lastInputTime = Time.time;
-        }
-    }
+            // 限制水平速度不超过攻击最大速度
+            float currentSpeed = rb.velocity.x;
+            float maxSpeed = playerData.attackMaxSpeed;
 
-    void CheckSpecialMoves()
-    {
-        if (bufferIndex >= 4)
-        {
-            if (inputBuffer[0] == 1 && inputBuffer[1] == 2 &&
-                inputBuffer[2] == 2 && inputBuffer[3] == 3)
+            if (Mathf.Abs(currentSpeed) > maxSpeed)
             {
-                if (currentEnergy >= 1)
-                {
-                    PerformSpecialMove();
-                }
+                // 将速度限制在最大攻击速度内，但保持方向
+                float clampedSpeed = Mathf.Sign(currentSpeed) * maxSpeed;
+                rb.velocity = new Vector2(clampedSpeed, rb.velocity.y);
             }
-            bufferIndex = 0;
+
+            // 应用速度衰减
+            float decayFactor = Mathf.Lerp(1f, playerData.attackSpeedDecay, Time.fixedDeltaTime / 0.02f);
+            rb.velocity = new Vector2(rb.velocity.x * decayFactor, rb.velocity.y);
         }
     }
 
-    void PerformSpecialMove()
-    {
-        animator.SetTrigger("SpecialMove");
-        currentEnergy -= 1;
-        isAttacking = true;
-        lastAttackTime = Time.time;
-        StartCoroutine(ResetAttackState(0.8f));
-        bufferIndex = 0;
-    }
-
-    void CheckGrounded()
-    {
-        bool wasGrounded = isGrounded;
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayerMask);
-
-        if (isGrounded)
-        {
-            LastOnGroundTime = GetData().coyoteTime;
-        }
-
-        animator.SetBool("isGrounded", isGrounded);
-
-        // Handle falling animation
-        if (!isGrounded && rb.velocity.y < 0)
-        {
-            animator.SetBool("isFalling", true);
-            // Only reset jumping if we're actually falling (not just jumped)
-            if (!IsJumping || rb.velocity.y < -1f)
-            {
-                animator.SetBool("isJumping", false);
-            }
-        }
-        else if (isGrounded && rb.velocity.y <= 0.1f)
-        {
-            animator.SetBool("isFalling", false);
-            animator.SetBool("isJumping", false);
-        }
-
-        // Debug信息（可选）
-        if (wasGrounded != isGrounded)
-        {
-            Debug.Log($"Ground state changed: {isGrounded}, LastOnGroundTime: {LastOnGroundTime}");
-        }
-    }
-
-    void UpdateAnimatorParameters()
-    {
-        animator.SetFloat("HorizontalInput", horizontalInput);
-        animator.SetFloat("VerticalInput", verticalInput);
-        animator.SetInteger("Energy", currentEnergy);
-    }
-
-    #region CHECK METHODS
     public void CheckDirectionToFace(bool isMovingRight)
     {
-        if (isMovingRight != IsFacingRight)
+        if (isMovingRight != isFacingRight)
             Turn();
     }
 
@@ -550,99 +377,440 @@ public class KiritoController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
-        IsFacingRight = !IsFacingRight;
+        isFacingRight = !isFacingRight;
     }
 
-    private bool CanJump()
+    private void Attack(InputAction.CallbackContext obj)
     {
-        bool canJump = LastOnGroundTime > 0 && !IsJumping;
-        Debug.Log($"CanJump: {canJump}, LastOnGroundTime: {LastOnGroundTime}, IsJumping: {IsJumping}, isGrounded: {isGrounded}");
-        return canJump;
+        // 记录攻击输入时间 (J键)
+        lastAttackInputTime = Time.time;
     }
 
-    private bool CanJumpCut()
+    private void Crouch(InputAction.CallbackContext obj)
     {
-        return IsJumping && rb.velocity.y > 0;
+        // 记录下蹲输入时间 (S键)
+        lastCrouchInputTime = Time.time;
+    }
+
+    private void DashAttack()
+    {
+        // 确定冲刺方向
+        Vector2 targetDirection = GetDashDirection();
+
+        // 先停止当前水平速度（可选，让冲刺更有冲击感）
+        rb.velocity = new Vector2(0, rb.velocity.y);
+
+        // 施加冲刺力
+        Vector2 dashForce = targetDirection * playerData.dashAttackForce;
+        rb.AddForce(dashForce, ForceMode2D.Impulse);
+
+        // 启动冲刺状态
+        isDashAttacking = true;
+        dashAttackTimer = playerData.dashAttackDuration;
+        dashDirection = targetDirection;
+
+        // 停止普通攻击的速度效果，避免冲突
+        StopAttackSpeed();
+
+        //TODO: 视觉效果
+    }
+
+    private Vector2 GetDashDirection()
+    {
+        Vector2 forwardDirection = isFacingRight ? Vector2.right : Vector2.left;
+        return forwardDirection;
+    }
+
+    private void ApplyAttackForce()
+    {
+        // 计算攻击方向
+        Vector2 attackDirection = isFacingRight ? Vector2.right : Vector2.left;
+
+        // 施加瞬间攻击力
+        rb.AddForce(attackDirection * playerData.attackForce, ForceMode2D.Impulse);
+
+        // 启动攻击速度控制
+        isAttackSpeedActive = true;
+        attackSpeedTimer = playerData.attackSpeedDecayDuration;
+    }
+
+    // 可以通过动画事件调用，在攻击动画的特定帧触发
+    public void TriggerAttackForceFromAnimation()
+    {
+        ApplyAttackForce();
+    }
+
+    // 立即停止攻击速度效果
+    public void StopAttackSpeed()
+    {
+        isAttackSpeedActive = false;
+        attackSpeedTimer = 0f;
+    }
+
+    // 立即停止冲刺攻击
+    public void StopDashAttack()
+    {
+        isDashAttacking = false;
+        dashAttackTimer = 0f;
+    }
+
+    #region EDITOR METHODS
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
     }
     #endregion
-
-    #region UTILITY METHODS
-    public void SetGravityScale(float scale)
-    {
-        rb.gravityScale = scale;
-    }
-
-    private void Sleep(float duration)
-    {
-        StartCoroutine(nameof(PerformSleep), duration);
-    }
-
-    private IEnumerator PerformSleep(float duration)
-    {
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1;
-    }
-    #endregion
-
-    IEnumerator EnergyRegeneration()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f / energyRegenRate);
-            if (currentEnergy < maxEnergy)
-            {
-                currentEnergy++;
-            }
-        }
-    }
-
-    // Public methods for taking damage (called by other scripts)
-    public void TakeHit(int damage, bool isHeavyHit = false)
-    {
-        if (!isBlocking)
-        {
-            if (isHeavyHit)
-                animator.SetTrigger("HitHeavy");
-            else
-                animator.SetTrigger("HitLight");
-        }
-    }
-
-    public void GetKnockedDown()
-    {
-        animator.SetTrigger("Knockdown");
-        StartCoroutine(AutoGetUp());
-    }
-
-    IEnumerator AutoGetUp()
-    {
-        yield return new WaitForSeconds(2f);
-        animator.SetTrigger("GetUp");
-    }
-
-    public void TriggerVictory()
-    {
-        animator.SetTrigger("Victory");
-        enabled = false;
-    }
-
-    public void OnAttackHit()
-    {
-        Debug.Log("Attack Hit!");
-    }
-
-    public void OnAttackComplete()
-    {
-        isAttacking = false;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = isGrounded ? Color.green : Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
-    }
 }
+//using System;
+//using System.Collections;
+//using System.Collections.Generic;
+//using Unity.VisualScripting;
+//using UnityEngine;
+//using UnityEngine.InputSystem;
+
+//[System.Serializable]
+//public class PlayerData
+//{
+//    public float runMaxSpeed = 10f;
+//    public float runAccelAmount = 9.5f; // 地面加速度
+//    public float runDeccelAmount = 9.5f; // 地面减速度
+//    public float accelInAir = 1f; // 空中加速倍率
+//    public float deccelInAir = 1f; // 空中减速倍率
+//    public float jumpHangTimeThreshold = 1f; // 跳跃悬停判定阈值
+//    public float jumpHangAccelerationMult = 1.1f; // 跳跃顶点加速倍率
+//    public float jumpHangMaxSpeedMult = 1.3f; // 跳跃顶点最大速度倍率
+//    public float coyoteTime = 0.1f; // 土狼时间
+
+//    public bool doConserveMomentum = false; // 是否开启动量保持
+
+//    [Header("攻击位移参数")]
+//    public float attackForce = 15f; // 攻击时施加的瞬间力
+//    public float attackMaxSpeed = 8f; // 攻击时的最大速度限制
+//    public float attackSpeedDecay = 0.95f; // 攻击后速度衰减系数（每帧）
+//    public float attackSpeedDecayDuration = 0.5f; // 速度衰减持续时间
+
+//    [Header("冲刺攻击参数")]
+//    public float dashAttackForce = 20f;        // 冲刺攻击力度
+//    public float dashAttackMaxSpeed = 15f;     // 冲刺最大速度
+//    public float dashAttackDuration = 0.3f;    // 冲刺持续时间
+//    public float dashAttackDecay = 0.92f;      // 冲刺速度衰减
+//    public bool dashAttackIgnoreInput = true;  // 冲刺时是否忽略移动输入
+//}
+
+//public class KiritoController : MonoBehaviour
+//{
+//    public PlayerInputControl inputControl;
+//    private Rigidbody2D rb;
+//    public KiritoAnimator animator;
+
+//    public Vector2 inputDirection;
+//    public PlayerData playerData;
+
+//    public bool isFacingRight;
+//    public bool isDash;
+//    public bool isWalk;
+//    public bool isJump;
+//    public bool isGround;
+//    public bool isAttack;
+//    public bool isJumpFall;
+
+//    // 攻击速度控制
+//    private bool isAttackSpeedActive = false;
+//    private float attackSpeedTimer = 0f;
+
+//    // 冲刺攻击状态
+//    private bool isDashAttacking = false;
+//    private float dashAttackTimer = 0f;
+//    private Vector2 dashDirection;
+
+//    public float lastOnGroundTime; // 实现土狼时间优化
+
+//    [SerializeField]
+//    private Transform groundCheckPoint;
+//    [SerializeField]
+//    private Vector2 groundCheckSize = new Vector2(0.49f, 0.03f);
+//    [SerializeField]
+//    private LayerMask groundLayer;
+
+//    private void Awake()
+//    {
+//        inputControl = new PlayerInputControl();
+//        rb = GetComponent<Rigidbody2D>();
+//        animator = GetComponent<KiritoAnimator>();
+//        inputControl.GamePlay.Attack.started += Attack;
+//        inputControl.GamePlay.DownAttack.started += DownAttack;
+//    }
+
+//    private void Start()
+//    {
+//        isFacingRight = true;
+//    }
+
+//    private void OnEnable()
+//    {
+//        inputControl.Enable();
+//    }
+
+//    private void OnDisable()
+//    {
+//        inputControl.Disable();
+//    }
+
+//    private void Update()
+//    {
+//        lastOnGroundTime -= Time.deltaTime;
+
+//        inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
+
+//        // 处理Sprite的翻转
+//        if (inputDirection.x != 0)
+//        {
+//            isWalk = true;
+//            CheckDirectionToFace(inputDirection.x > 0);
+//        }
+//        else
+//        {
+//            isWalk = false;
+//        }
+
+//        // 地面检测
+//        if (!isDash && !isJump)
+//        {
+//            if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
+//            {
+//                if (lastOnGroundTime < -0.1f)
+//                {
+//                    // Animator的params设置在地面上
+//                }
+//                isGround = true;
+//                lastOnGroundTime = playerData.coyoteTime;
+//            }
+//        }
+
+//        // 更新攻击速度状态
+//        UpdateAttackSpeed();
+
+//        // 更新冲刺攻击状态
+//        UpdateDashAttack();
+//    }
+
+//    private void FixedUpdate()
+//    {
+//        Move(1);
+//    }
+
+//    public void Move(float lerpAmount)
+//    {
+//        // 如果正在冲刺攻击且忽略输入，则不处理常规移动
+//        if (isDashAttacking && playerData.dashAttackIgnoreInput)
+//        {
+//            ApplyDashMovement();
+//            return;
+//        }
+
+//        // 使用平滑插值来加速
+//        float targetSpeed = inputDirection.x * playerData.runMaxSpeed;
+//        targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
+
+//        float accelRate;
+
+//        // 动态加速度计算，在空中和地面使用不同的加速度
+//        if (lastOnGroundTime > 0)
+//            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccelAmount : playerData.runDeccelAmount;
+//        else
+//            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccelAmount * playerData.accelInAir : playerData.runDeccelAmount * playerData.deccelInAir;
+
+//        // 跳跃顶点加速
+//        if ((isJump || isJumpFall) && Mathf.Abs(rb.velocity.y) < playerData.jumpHangTimeThreshold)
+//        {
+//            accelRate *= playerData.jumpHangAccelerationMult;
+//            targetSpeed *= playerData.jumpHangMaxSpeedMult;
+//        }
+
+//        // 动量保持
+//        if (playerData.doConserveMomentum && Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) &&
+//            Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && lastOnGroundTime < 0)
+//        {
+//            accelRate = 0;
+//        }
+
+//        // 对rb提供力，速度离目标远则加速快，近则加速慢
+//        float speedDif = targetSpeed - rb.velocity.x;
+//        float movement = speedDif * accelRate;
+//        rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
+
+//        // 应用攻击速度限制
+//        ApplyAttackSpeedLimit();
+//    }
+
+//    private void UpdateAttackSpeed()
+//    {
+//        if (isAttackSpeedActive)
+//        {
+//            attackSpeedTimer -= Time.deltaTime;
+//            if (attackSpeedTimer <= 0f)
+//            {
+//                isAttackSpeedActive = false;
+//            }
+//        }
+//    }
+
+//    private void UpdateDashAttack()
+//    {
+//        if (isDashAttacking)
+//        {
+//            dashAttackTimer -= Time.deltaTime;
+//            if (dashAttackTimer <= 0f)
+//            {
+//                isDashAttacking = false;
+//                // 冲刺结束后可以添加一些额外逻辑，比如恢复正常状态
+//            }
+//        }
+//    }
+
+//    private void ApplyDashMovement()
+//    {
+//        // 在冲刺期间维持冲刺速度并应用衰减
+//        Vector2 currentVelocity = rb.velocity;
+
+//        // 限制冲刺速度不超过最大值
+//        float currentHorizontalSpeed = currentVelocity.x;
+//        if (Mathf.Abs(currentHorizontalSpeed) > playerData.dashAttackMaxSpeed)
+//        {
+//            currentHorizontalSpeed = Mathf.Sign(currentHorizontalSpeed) * playerData.dashAttackMaxSpeed;
+//        }
+
+//        // 应用冲刺速度衰减
+//        currentHorizontalSpeed *= playerData.dashAttackDecay;
+
+//        // 更新速度
+//        rb.velocity = new Vector2(currentHorizontalSpeed, currentVelocity.y);
+//    }
+
+//    private void ApplyAttackSpeedLimit()
+//    {
+//        if (isAttackSpeedActive && !isDashAttacking) // 冲刺时不应用普通攻击的速度限制
+//        {
+//            // 限制水平速度不超过攻击最大速度
+//            float currentSpeed = rb.velocity.x;
+//            float maxSpeed = playerData.attackMaxSpeed;
+
+//            if (Mathf.Abs(currentSpeed) > maxSpeed)
+//            {
+//                // 将速度限制在最大攻击速度内，但保持方向
+//                float clampedSpeed = Mathf.Sign(currentSpeed) * maxSpeed;
+//                rb.velocity = new Vector2(clampedSpeed, rb.velocity.y);
+//            }
+
+//            // 应用速度衰减
+//            float decayFactor = Mathf.Lerp(1f, playerData.attackSpeedDecay, Time.fixedDeltaTime / 0.02f);
+//            rb.velocity = new Vector2(rb.velocity.x * decayFactor, rb.velocity.y);
+//        }
+//    }
+
+//    public void CheckDirectionToFace(bool isMovingRight)
+//    {
+//        if (isMovingRight != isFacingRight)
+//            Turn();
+//    }
+
+//    private void Turn()
+//    {
+//        Vector3 scale = transform.localScale;
+//        scale.x *= -1;
+//        transform.localScale = scale;
+//        isFacingRight = !isFacingRight;
+//    }
+
+//    private void Attack(InputAction.CallbackContext obj)
+//    {
+//        // 如果正在冲刺攻击，则不能进行普通攻击
+//        if (isDashAttacking) return;
+
+//        animator.Attack();
+//        isAttack = true;
+
+//        // 施加攻击力和启动速度控制
+//        ApplyAttackForce();
+//    }
+
+//    private void DownAttack(InputAction.CallbackContext obj)
+//    {
+//        // 如果已经在冲刺攻击中，则不能再次触发
+//        if (isDashAttacking) return;
+
+//        animator.DownAttack();
+//        DashAttack();
+//    }
+
+//    private void DashAttack()
+//    {
+//        // 确定冲刺方向
+//        Vector2 targetDirection = GetDashDirection();
+
+//        // 先停止当前水平速度（可选，让冲刺更有冲击感）
+//        rb.velocity = new Vector2(0, rb.velocity.y);
+
+//        // 施加冲刺力
+//        Vector2 dashForce = targetDirection * playerData.dashAttackForce;
+//        rb.AddForce(dashForce, ForceMode2D.Impulse);
+
+//        // 启动冲刺状态
+//        isDashAttacking = true;
+//        dashAttackTimer = playerData.dashAttackDuration;
+//        dashDirection = targetDirection;
+
+//        // 停止普通攻击的速度效果，避免冲突
+//        StopAttackSpeed();
+
+//        //TODO: 视觉效果
+//    }
+
+//    private Vector2 GetDashDirection()
+//    {
+//        Vector2 forwardDirection = isFacingRight ? Vector2.right : Vector2.left;
+//        return forwardDirection;
+//    }
+
+//    private void ApplyAttackForce()
+//    {
+//        // 计算攻击方向
+//        Vector2 attackDirection = isFacingRight ? Vector2.right : Vector2.left;
+
+//        // 施加瞬间攻击力
+//        rb.AddForce(attackDirection * playerData.attackForce, ForceMode2D.Impulse);
+
+//        // 启动攻击速度控制
+//        isAttackSpeedActive = true;
+//        attackSpeedTimer = playerData.attackSpeedDecayDuration;
+//    }
+
+//    // 可以通过动画事件调用，在攻击动画的特定帧触发
+//    public void TriggerAttackForceFromAnimation()
+//    {
+//        ApplyAttackForce();
+//    }
+
+//    // 立即停止攻击速度效果
+//    public void StopAttackSpeed()
+//    {
+//        isAttackSpeedActive = false;
+//        attackSpeedTimer = 0f;
+//    }
+
+//    // 立即停止冲刺攻击
+//    public void StopDashAttack()
+//    {
+//        isDashAttacking = false;
+//        dashAttackTimer = 0f;
+//    }
+
+//    #region EDITOR METHODS
+//    private void OnDrawGizmosSelected()
+//    {
+//        Gizmos.color = Color.green;
+//        Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
+//    }
+//    #endregion
+//}
