@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,14 +26,10 @@ public class KiritoController : MonoBehaviour
     private bool isAttackSpeedActive = false;
     private float attackSpeedTimer = 0f;
 
-    // 冲刺攻击状态
-    //[SerializeField]
-    //private bool isDashAttacking = false;
-    [SerializeField]
-    private float dashAttackTimer = 0f;
 
     public float lastOnGroundTime; // 实现土狼时间优化
     //TODO:实现跳跃缓冲手感优化
+    public float LastPressedJumpTime;
 
     [SerializeField]
     private Transform groundCheckPoint;
@@ -67,8 +64,10 @@ public class KiritoController : MonoBehaviour
 
     private void Update()
     {
+        #region 计时器更新
         lastOnGroundTime -= Time.deltaTime;
-
+        LastPressedJumpTime -= Time.deltaTime;
+        #endregion
         inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
 
         // 处理Sprite的翻转
@@ -104,13 +103,39 @@ public class KiritoController : MonoBehaviour
             }
         }
 
-        // 跳跃状态检测
+
         if (isJump && rb.velocity.y < 0)
         {
-            // 当跳跃到顶点开始下降时，切换到下降状态
             isJump = false;
+
             isJumpFall = true;
         }
+
+        if (!isDash)
+        {
+            if(CanJump()&&LastPressedJumpTime>0)
+            {
+                // 重置跳跃相关计时器
+                lastOnGroundTime = 0;
+                LastPressedJumpTime = 0;
+
+                // 设置跳跃状态
+                isJump = true;
+                isGround = false;
+
+                // 计算跳跃力度，如果正在下降则补偿向下的速度
+                float jumpForce = movementData.jumpForce;
+                if (rb.velocity.y < 0)
+                    jumpForce -= rb.velocity.y;
+
+                // 施加向上的跳跃力
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+                // 通知动画系统开始跳跃
+                animator.StartJump();
+            }
+        }
+
 
         // 如果回到地面，重置跳跃状态
         if (lastOnGroundTime > 0 && !isJump)
@@ -122,6 +147,47 @@ public class KiritoController : MonoBehaviour
         UpdateAttackSpeed();
 
         //TODO:调整重力缩放
+        // 调整重力缩放
+        UpdateGravity();
+    }
+
+    private void UpdateGravity()
+    {
+        if (!isDash)  // 非冲刺状态
+        {
+            // 快速下落（按住下键）
+            if (rb.velocity.y < 0 && inputDirection.y < 0)
+            {
+                SetGravityScale(movementData.gravityScale * movementData.fastFallGravityMult);
+                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -movementData.maxFastFallSpeed));
+            }
+            // 跳跃顶点时的悬停感（可选）
+            else if ((isJump || isJumpFall) && Mathf.Abs(rb.velocity.y) < movementData.jumpHangTimeThreshold)
+            {
+                SetGravityScale(movementData.gravityScale * movementData.jumpHangGravityMult);
+            }
+            // 下落时增加重力
+            else if (rb.velocity.y < 0)
+            {
+                SetGravityScale(movementData.gravityScale * movementData.fallGravityMult);
+                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -movementData.maxFallSpeed));
+            }
+            // 默认重力（上升时）
+            else
+            {
+                SetGravityScale(movementData.gravityScale);
+            }
+        }
+        else
+        {
+            // 冲刺时无重力
+            SetGravityScale(0);
+        }
+    }
+
+    private void SetGravityScale(float scale)
+    {
+        rb.gravityScale = scale;
     }
 
     private void FixedUpdate()
@@ -247,28 +313,7 @@ public class KiritoController : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext obj)
     {
-        Debug.Log("Jump");
-        // 检查是否可以跳跃（在地面上或土狼时间内）
-        if (CanJump())
-        {
-            // 重置跳跃相关计时器
-            lastOnGroundTime = 0;
-
-            // 设置跳跃状态
-            isJump = true;
-            isGround = false;
-
-            // 计算跳跃力度，如果正在下降则补偿向下的速度
-            float jumpForce = movementData.jumpForce;
-            if (rb.velocity.y < 0)
-                jumpForce -= rb.velocity.y;
-
-            // 施加向上的跳跃力
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-            // 通知动画系统开始跳跃
-            animator.StartJump();
-        }
+        LastPressedJumpTime = movementData.jumpInputBufferTime;
     }
 
     private bool CanJump()

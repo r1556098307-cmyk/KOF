@@ -43,15 +43,15 @@ public class KiritoAnimator : MonoBehaviour
         anim.SetBool("isGround", controller.isGround);
 
         // 一次性触发的动画
-        if (startedJumping)
-        {
-            anim.SetTrigger("jumpStart");
-        }
+        //if (startedJumping)
+        //{
+        //    anim.SetTrigger("jumpStart");
+        //}
 
-        if (justLanded)
-        {
-            anim.SetTrigger("land");
-        }
+        //if (justLanded)
+        //{
+        //    anim.SetTrigger("land");
+        //}
     }
 
     public void Attack()
