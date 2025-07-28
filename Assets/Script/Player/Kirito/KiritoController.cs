@@ -1,7 +1,7 @@
 using System;
+using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 
 public class KiritoController : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class KiritoController : MonoBehaviour
     public bool isDash;
     public bool isWalk;
     public bool isJump;
+    public bool isCrouch;
     public bool isGround;
     public bool isAttack;
     public bool isJumpFall;
@@ -26,9 +27,12 @@ public class KiritoController : MonoBehaviour
     private bool isAttackSpeedActive = false;
     private float attackSpeedTimer = 0f;
 
+    //冲刺控制
+    private float dashTimer = 0f;
+    private bool canDash = true;
+    private float dashCooldownTimer = 0f;
 
     public float lastOnGroundTime; // 实现土狼时间优化
-    //TODO:实现跳跃缓冲手感优化
     public float LastPressedJumpTime;
 
     [SerializeField]
@@ -45,7 +49,15 @@ public class KiritoController : MonoBehaviour
         animator = GetComponent<KiritoAnimator>();
         inputControl.GamePlay.Attack.started += Attack;
         inputControl.GamePlay.Jump.started += Jump;
+        inputControl.GamePlay.Dash.started += Dash;
+
+        //TODO:添加下蹲
+        inputControl.GamePlay.Crouch.started += Crouch;
+        inputControl.GamePlay.Crouch.canceled += CrouchCancel;
+        //TODO:添加格挡
     }
+
+
 
     private void Start()
     {
@@ -67,11 +79,31 @@ public class KiritoController : MonoBehaviour
         #region 计时器更新
         lastOnGroundTime -= Time.deltaTime;
         LastPressedJumpTime -= Time.deltaTime;
+
+        // 冲刺计时器
+        if (dashTimer > 0)
+        {
+            dashTimer -= Time.deltaTime;
+            if (dashTimer <= 0)
+            {
+                EndDash();
+            }
+        }
+
+        // 冲刺冷却
+        if (dashCooldownTimer > 0)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0)
+            {
+                canDash = true;
+            }
+        }
         #endregion
         inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
 
-        // 处理Sprite的翻转
-        if (inputDirection.x != 0)
+        // 处理Sprite的翻转（冲刺时不能转向）
+        if (!isDash && inputDirection.x != 0)
         {
             isWalk = true;
             CheckDirectionToFace(inputDirection.x > 0);
@@ -86,7 +118,6 @@ public class KiritoController : MonoBehaviour
         {
             if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
             {
-                Debug.Log("地面");
                 // 如果之前不在地面上，现在着陆了
                 if (lastOnGroundTime < -0.1f)
                 {
@@ -103,17 +134,16 @@ public class KiritoController : MonoBehaviour
             }
         }
 
-
         if (isJump && rb.velocity.y < 0)
         {
             isJump = false;
-
             isJumpFall = true;
         }
 
+        // 跳跃检测（冲刺时不能跳跃）
         if (!isDash)
         {
-            if(CanJump()&&LastPressedJumpTime>0)
+            if (CanJump() && LastPressedJumpTime > 0)
             {
                 // 重置跳跃相关计时器
                 lastOnGroundTime = 0;
@@ -136,7 +166,6 @@ public class KiritoController : MonoBehaviour
             }
         }
 
-
         // 如果回到地面，重置跳跃状态
         if (lastOnGroundTime > 0 && !isJump)
         {
@@ -146,7 +175,6 @@ public class KiritoController : MonoBehaviour
         // 更新攻击速度状态
         UpdateAttackSpeed();
 
-        //TODO:调整重力缩放
         // 调整重力缩放
         UpdateGravity();
     }
@@ -192,12 +220,20 @@ public class KiritoController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move(1);
+        if (isDash)
+        {
+            // 冲刺时使用特殊的移动逻辑
+            ApplyDashMovement();
+        }
+        else
+        {
+            // 普通移动
+            Move(1);
+        }
     }
 
     public void Move(float lerpAmount)
     {
-
         // 使用平滑插值来加速
         float targetSpeed = inputDirection.x * movementData.runMaxSpeed;
         targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
@@ -245,30 +281,16 @@ public class KiritoController : MonoBehaviour
         }
     }
 
-
-
     private void ApplyDashMovement()
     {
-        // 在冲刺期间维持冲刺速度并应用衰减
-        Vector2 currentVelocity = rb.velocity;
-
-        // 限制冲刺速度不超过最大值
-        float currentHorizontalSpeed = currentVelocity.x;
-        if (Mathf.Abs(currentHorizontalSpeed) > combatData.dashAttackMaxSpeed)
-        {
-            currentHorizontalSpeed = Mathf.Sign(currentHorizontalSpeed) * combatData.dashAttackMaxSpeed;
-        }
-
-        // 应用冲刺速度衰减
-        currentHorizontalSpeed *= combatData.dashAttackDecay;
-
-        // 更新速度
-        rb.velocity = new Vector2(currentHorizontalSpeed, currentVelocity.y);
+        // 冲刺时设置恒定速度
+        float dashDirection = isFacingRight ? 1f : -1f;
+        rb.velocity = new Vector2(dashDirection * movementData.dashSpeed, 0f);
     }
 
     private void ApplyAttackSpeedLimit()
     {
-        if (isAttackSpeedActive) 
+        if (isAttackSpeedActive)
         {
             // 限制水平速度不超过攻击最大速度
             float currentSpeed = rb.velocity.x;
@@ -303,17 +325,69 @@ public class KiritoController : MonoBehaviour
 
     private void Attack(InputAction.CallbackContext obj)
     {
+        // 冲刺时不能攻击
+        if (isDash) return;
 
         animator.Attack();
         isAttack = true;
 
         // 施加攻击力和启动速度控制
-        ApplyAttackForce();
+        if(!isCrouch)
+            ApplyAttackForce();
     }
 
     private void Jump(InputAction.CallbackContext obj)
     {
         LastPressedJumpTime = movementData.jumpInputBufferTime;
+    }
+
+    // 新增冲刺方法
+    private void Dash(InputAction.CallbackContext obj)
+    {
+        if (canDash && !isDash)
+        {
+            StartDash();
+        }
+    }
+
+    private void Crouch(InputAction.CallbackContext obj)
+    {
+        if (CanCrouch())
+        {
+            isCrouch = true;
+            // TODO:切换为蹲下时的碰撞体
+        }
+
+    }
+    private void CrouchCancel(InputAction.CallbackContext obj)
+    {
+        isCrouch = false;
+    }
+
+    private bool CanCrouch()
+    {
+        return isGround&&!isDash;
+    }
+
+    private void StartDash()
+    {
+        isDash = true;
+        canDash = false;
+        dashTimer = movementData.dashDuration;
+
+        // 取消其他状态
+        isAttack = false;
+        isAttackSpeedActive = false;
+
+
+        //TODO:冲刺时无敌，可以取消与skill层、player层的碰撞？
+    }
+
+    private void EndDash()
+    {
+        isDash = false;
+        dashCooldownTimer = movementData.dashCooldown;
+
     }
 
     private bool CanJump()
@@ -323,7 +397,6 @@ public class KiritoController : MonoBehaviour
         // 2. 当前没有在跳跃状态
         return lastOnGroundTime > 0 && !isJump;
     }
-
 
     private void ApplyAttackForce()
     {
@@ -337,8 +410,6 @@ public class KiritoController : MonoBehaviour
         isAttackSpeedActive = true;
         attackSpeedTimer = combatData.attackSpeedDecayDuration;
     }
-
-  
 
     #region EDITOR METHODS
     private void OnDrawGizmosSelected()

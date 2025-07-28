@@ -36,11 +36,11 @@ public class KiritoAnimator : MonoBehaviour
     {
         anim.SetBool("isWalk", controller.isWalk);
         anim.SetBool("isAttack", controller.isAttack);
-
-
         anim.SetBool("isJump", controller.isJump);
         anim.SetBool("isJumpFall", controller.isJumpFall);
         anim.SetBool("isGround", controller.isGround);
+        anim.SetBool("isDash", controller.isDash);
+        anim.SetBool("isCrouch", controller.isCrouch);
 
         // 一次性触发的动画
         //if (startedJumping)

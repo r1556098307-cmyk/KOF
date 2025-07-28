@@ -112,4 +112,23 @@ public class PlayerMovementData : ScriptableObject
     [Tooltip("快速下落的速度上限")]
     [Range(20f, 50f)]
     public float maxFastFallSpeed = 35f;
+
+
+    [Space(20)]
+    [Header("========== 冲刺参数 ==========")]
+    [Space(5)]
+
+    [Header("【冲刺持续时间】")]
+    [Tooltip("单次冲刺的持续时间")]
+    [Range(0.1f, 0.5f)]
+    public float dashDuration = 0.2f;
+
+    [Header("【冲刺冷却时间】")]
+    [Tooltip("冲刺后的冷却时间")]
+    [Range(0.5f, 2f)]
+    public float dashCooldown = 0.5f;
+
+    [Header("【冲刺速度】")]
+    [Tooltip("冲刺时给一个固定的速度")]
+    public float dashSpeed = 30f;
 }
