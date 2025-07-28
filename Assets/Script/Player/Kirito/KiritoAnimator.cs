@@ -20,16 +20,16 @@ public class KiritoAnimator : MonoBehaviour
     {
         CheckAnimationState();
 
-        // 重置一次性动画标志
-        if (justLanded)
-        {
-            justLanded = false;
-        }
+        //// 重置一次性动画标志
+        //if (justLanded)
+        //{
+        //    justLanded = false;
+        //}
 
-        if (startedJumping)
-        {
-            startedJumping = false;
-        }
+        //if (startedJumping)
+        //{
+        //    startedJumping = false;
+        //}
     }
 
     private void CheckAnimationState()
@@ -41,6 +41,7 @@ public class KiritoAnimator : MonoBehaviour
         anim.SetBool("isGround", controller.isGround);
         anim.SetBool("isDash", controller.isDash);
         anim.SetBool("isCrouch", controller.isCrouch);
+        anim.SetBool("isBlock", controller.isBlock);
 
         // 一次性触发的动画
         //if (startedJumping)
@@ -59,15 +60,15 @@ public class KiritoAnimator : MonoBehaviour
         anim.SetTrigger("attack");
     }
 
-    public void StartJump()
-    {
-        startedJumping = true;
-    }
+    //public void StartJump()
+    //{
+    //    startedJumping = true;
+    //}
 
-    public void JustLanded()
-    {
-        justLanded = true;
-    }
+    //public void JustLanded()
+    //{
+    //    justLanded = true;
+    //}
 
 
 

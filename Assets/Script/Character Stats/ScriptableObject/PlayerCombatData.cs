@@ -15,4 +15,5 @@ public class PlayerCombatData : ScriptableObject
     public float dashAttackDuration = 0.3f;
     public float dashAttackDecay = 0.92f;
     public bool dashAttackIgnoreInput = true;
+
 }
