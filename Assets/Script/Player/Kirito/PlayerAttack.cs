@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -13,6 +14,13 @@ public class PlayerAttack : MonoBehaviour
     public GameObject specialMove1RangeTrigger;
     public GameObject specialMove2RangeTrigger;
     public GameObject specialMove3RangeTrigger;
+
+    private PlayerController controller;
+
+    private void Awake()
+    {
+        controller = GetComponent<PlayerController>();
+    }
 
     public void attack1()
     {
@@ -74,8 +82,9 @@ public class PlayerAttack : MonoBehaviour
         crouchAttack3RangeTrigger.SetActive(false);
     }
 
-    public void specialMoveAttack1()
+    public void specialMove1()
     {
+        controller.StartSpecialMove1Dash();
         specialMove1RangeTrigger.SetActive(true);
     }
 

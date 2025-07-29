@@ -27,11 +27,25 @@ public class PlayerController : MonoBehaviour
     public bool isJumpFall;
 
     // 碰撞体配置
-    [Header("Collider Settings")]
+    [Header("碰撞体设置")]
     [SerializeField] private Vector2 standingColliderOffset = new Vector2(0, -0.84f);
     [SerializeField] private Vector2 standingColliderSize = new Vector2(1.2f, 3.66f);
     [SerializeField] private Vector2 crouchingColliderOffset = new Vector2(0, -1.5f);
     [SerializeField] private Vector2 crouchingColliderSize = new Vector2(1.2f, 2.35f);
+
+    [Header("技能设置")]
+    [SerializeField] private float specialMove1DashSpeed = 20f;
+    [SerializeField] private float specialMove1DashDuration = 0.5f;
+    [SerializeField] private bool isInvulnerable = false;  // 无敌状态
+    private bool isSpecialMove1Dashing = false;
+    private float specialMove1DashTimer = 0f;
+
+    // 原始层级存储
+    private int originalLayer;
+    private string invulnerableLayerName = "Invulnerable";
+    private string playerPassThroughLayerName = "PlayerPassThrough";
+    private int invulnerableLayer;
+    private int playerPassThroughLayer;
 
     // 攻击速度控制
     private bool isAttackSpeedActive = false;
@@ -46,7 +60,7 @@ public class PlayerController : MonoBehaviour
     public float lastOnGroundTime; // 土狼时间优化
     public float LastPressedJumpTime; // 跳跃缓冲优化
 
-    public LayerMask wallLayer;                 // 墙面层（通常与groundLayer相同）
+    public LayerMask wallLayer;                 // 墙面层
 
     [SerializeField]
     private bool isWallSliding = false;         // 是否在墙面滑落
@@ -86,9 +100,25 @@ public class PlayerController : MonoBehaviour
 
         // 确保开始时使用站立碰撞体
         UpdateColliderSize(false);
+
+     
+
+        invulnerableLayer = LayerMask.NameToLayer(invulnerableLayerName);
+        if (invulnerableLayer == -1)
+        {
+            Debug.LogError($"Layer '{invulnerableLayerName}' 未找到! 请在Physics2D设置中创建该层级，并设置与Player层不碰撞..");
+        }
+
+        playerPassThroughLayer = LayerMask.NameToLayer(playerPassThroughLayerName);
+        if (playerPassThroughLayer == -1)
+        {
+            Debug.LogError($"Layer '{playerPassThroughLayerName}' 未找到! 请在Physics2D设置中创建该层级，并设置与Player层不碰撞.");
+        }
+
+        originalLayer = gameObject.layer;
     }
 
-    // 添加一个标记来记录玩家是否想要蹲下
+    // 记录玩家是否想要蹲下
     private bool wantsToCrouch = false;
 
     private void Update()
@@ -116,6 +146,17 @@ public class PlayerController : MonoBehaviour
                 canDash = true;
             }
         }
+
+        // 技能1冲刺计时器
+        if (specialMove1DashTimer > 0)
+        {
+            specialMove1DashTimer -= Time.deltaTime;
+            if (specialMove1DashTimer <= 0)
+            {
+                EndSpecialMove1Dash();
+            }
+        }
+
         #endregion
 
         // 自动站起检测
@@ -150,10 +191,10 @@ public class PlayerController : MonoBehaviour
         {
             if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
             {
-                // 如果之前不在地面上，现在着陆了
+                // 着陆
                 if (lastOnGroundTime < -0.1f)
                 {
-                    // 可以在这里添加着陆音效或特效
+                    // TODO：添加着陆音效或特效
                     //animator.JustLanded();
                 }
 
@@ -260,7 +301,7 @@ public class PlayerController : MonoBehaviour
                 SetGravityScale(movementData.gravityScale * movementData.fastFallGravityMult);
                 rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -movementData.maxFastFallSpeed));
             }
-            // 跳跃顶点时的悬停感（可选）
+            // 跳跃顶点时的悬停感
             else if ((isJump || isJumpFall) && Mathf.Abs(rb.velocity.y) < movementData.jumpHangTimeThreshold)
             {
                 SetGravityScale(movementData.gravityScale * movementData.jumpHangGravityMult);
@@ -291,15 +332,96 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDash)
+        if (isSpecialMove1Dashing)
         {
-            // 冲刺时使用特殊的移动逻辑
+            // 技能1冲刺移动
+            ApplySpecialMove1DashMovement();
+        }
+        else if (isDash)
+        {
+            // 普通冲刺
             ApplyDashMovement();
         }
         else
         {
             // 普通移动
             Move(1);
+        }
+    }
+
+    // 开始技能1冲刺
+    public void StartSpecialMove1Dash()
+    {
+        isSpecialMove1Dashing = true;
+        isInvulnerable = true;
+        specialMove1DashTimer = specialMove1DashDuration;
+
+        // 切换到穿透玩家层（避免与其他玩家碰撞，但仍会受到伤害）
+        SetPlayerPassThrough(true);
+
+        // 取消其他状态
+        isAttack = false;
+        isAttackSpeedActive = false;
+        isWallSliding = false;
+        isDash = false;
+        canDash = false; 
+
+        // TODO：添加特效
+        // PlaySpecialMove1Effect();
+    }
+
+    // 结束技能1冲刺
+    private void EndSpecialMove1Dash()
+    {
+        isSpecialMove1Dashing = false;
+        isInvulnerable = false;
+
+        // 恢复原始层级
+        SetPlayerPassThrough(false);
+
+        // 恢复普通冲刺能力
+        canDash = true;
+    }
+
+    // 技能1冲刺移动
+    private void ApplySpecialMove1DashMovement()
+    {
+        float dashDirection = isFacingRight ? 1f : -1f;
+        rb.velocity = new Vector2(dashDirection * specialMove1DashSpeed, 0f);
+
+        // 冲刺期间无重力
+        SetGravityScale(0);
+    }
+
+    // 设置无敌状态
+    public void SetInvulnerable(bool invulnerable)
+    {
+        if (invulnerable)
+        {
+            gameObject.layer = invulnerableLayer;
+            // Debug：改变角色颜色表示无敌状态
+             GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {
+            gameObject.layer = originalLayer;
+             GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
+
+    // 设置穿透玩家状态
+    public void SetPlayerPassThrough(bool passThrough)
+    {
+        if (passThrough)
+        {
+            gameObject.layer = playerPassThroughLayer;
+            // Debug：改变角色颜色表示穿透状态
+            GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 1f, 0.8f); // 淡蓝色表示穿透状态
+        }
+        else
+        {
+            gameObject.layer = originalLayer;
+            GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
 
@@ -527,18 +649,27 @@ public class PlayerController : MonoBehaviour
         canDash = false;
         dashTimer = movementData.dashDuration;
 
+        // 普通冲刺设置为无敌
+        isInvulnerable = true;
+        SetInvulnerable(true);
+
         // 取消其他状态
         isAttack = false;
         isAttackSpeedActive = false;
         isWallSliding = false; // 冲刺时停止墙面滑落
 
-        //TODO:冲刺时无敌，可以取消与skill层、player层的碰撞？
+        // TODO: 添加冲刺特效
+        // PlayDashEffect();
     }
 
     private void EndDash()
     {
         isDash = false;
         dashCooldownTimer = movementData.dashCooldown;
+
+        // 结束无敌状态
+        isInvulnerable = false;
+        SetInvulnerable(false);
     }
 
     private bool CanJump()

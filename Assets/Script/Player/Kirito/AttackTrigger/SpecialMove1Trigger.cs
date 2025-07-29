@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack1Trigger : MonoBehaviour
+public class SpecialMove1Trigger : MonoBehaviour
 {
-    [Header("攻击1设置")]
+    [Header("技能1设置")]
     [SerializeField] private float knockbackForce = 10f;
     [SerializeField] private float knockupForce = 0.3f;
     [SerializeField] private LayerMask targetLayers; // 可攻击的层级
@@ -17,7 +17,6 @@ public class Attack1Trigger : MonoBehaviour
         // 如果不在目标层级，或者碰撞对象是自身，则忽略
         if (!isInTargetLayer || collision.transform.parent == transform.parent)
             return;
-
 
         // 获取目标的组件
         PlayerAnimator targetAnimator = collision.GetComponent<PlayerAnimator>();
