@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KiritoAnimator : MonoBehaviour
+public class PlayerAnimator : MonoBehaviour
 {
-    private KiritoController controller;
+    private PlayerController controller;
     private Animator anim;
 
     public bool justLanded;
@@ -12,7 +12,7 @@ public class KiritoAnimator : MonoBehaviour
 
     private void Awake()
     {
-        controller = GetComponent<KiritoController>();
+        controller = GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
     }
 
@@ -69,6 +69,21 @@ public class KiritoAnimator : MonoBehaviour
     //{
     //    justLanded = true;
     //}
+
+    public void HurtLight()
+    {
+        anim.SetTrigger("hurtLight");
+    }
+
+    public void HurtHeavy()
+    {
+        anim.SetTrigger("hurtHeavy");
+    }
+
+    public void Knockdown()
+    {
+        anim.SetTrigger("knockdown");
+    }
 
     public void SpecailMove1()
     {

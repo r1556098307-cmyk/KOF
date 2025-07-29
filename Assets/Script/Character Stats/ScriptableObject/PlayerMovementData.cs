@@ -32,18 +32,12 @@ public class PlayerMovementData : ScriptableObject
     [Space(5)]
 
     [Header("【空中加速度倍数】")]
-    [Tooltip("空中加速度相对于地面的倍数。1=相同，<1=空中更难改变方向")]
     [Range(0.1f, 1f)]
     public float accelInAir = 1f;
 
     [Header("【空中减速度倍数】")]
-    [Tooltip("空中减速度相对于地面的倍数。较小值让角色在空中保持惯性")]
     [Range(0.1f, 1f)]
     public float deccelInAir = 1f;
-
-    [Header("【动量保持】")]
-    [Tooltip("是否保持动量。开启后玩家在空中松开方向键时会保持当前速度")]
-    public bool doConserveMomentum = false;
 
     [Space(20)]
     [Header("========== 跳跃机制参数 ==========")]
@@ -55,12 +49,12 @@ public class PlayerMovementData : ScriptableObject
     public float jumpForce = 26f;
 
     [Header("【土狼时间】")]
-    [Tooltip("角色离开平台后仍可跳跃的宽容时间（秒），提升操作手感")]
+    [Tooltip("角色离开平台后仍可跳跃的宽容时间，提升操作手感")]
     [Range(0f, 0.5f)]
     public float coyoteTime = 0.2f;
 
     [Header("【跳跃输入缓冲】")]
-    [Tooltip("按下跳跃键后的有效时间（秒），防止玩家过早按键")]
+    [Tooltip("按下跳跃键后的有效时间，提升操作手感")]
     [Range(0f, 0.5f)]
     public float jumpInputBufferTime = 0.2f;
 
@@ -83,7 +77,7 @@ public class PlayerMovementData : ScriptableObject
     public float jumpHangMaxSpeedMult = 1.3f;
 
     [Header("【顶点重力倍数】")]
-    [Tooltip("跳跃顶点的重力倍数，<1产生悬停感，格斗游戏通常接近1")]
+    [Tooltip("跳跃顶点的重力倍数，<1产生悬停感")]
     [Range(0.5f, 1.5f)]
     public float jumpHangGravityMult = 1f;
 
@@ -92,7 +86,7 @@ public class PlayerMovementData : ScriptableObject
     [Space(5)]
 
     [Header("【基础重力缩放】")]
-    [Tooltip("整体重力倍数，格斗游戏通常设置较大值(2-4)让动作更快")]
+    [Tooltip("整体重力倍数")]
     [Range(1f, 5f)]
     public float gravityScale = 3f;
 
@@ -137,4 +131,14 @@ public class PlayerMovementData : ScriptableObject
     [Header("【冲刺速度】")]
     [Tooltip("冲刺时给一个固定的速度")]
     public float dashSpeed = 30f;
+
+
+    [Space(20)]
+    [Header("========== 滑落参数 ==========")]
+    [Space(5)]
+
+    [Header("【墙面滑落速度】")]
+    public float wallSlideSpeed = 2f;           
+    [Header("【墙面滑落时的重力倍数】")]
+    public float wallSlideGravity = 0.3f;       
 }

@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Unity.Collections.AllocatorManager;
 
-public class KiritoController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public PlayerMovementData movementData;
     public PlayerCombatData combatData;
 
-    public PlayerInputControl inputControl;// TODO:统一改成使用ComboSystem的读取
     private Rigidbody2D rb;
-    public KiritoAnimator animator;
+    public PlayerAnimator animator;
     private ComboSystem comboSystem;
 
     public Vector2 inputDirection;
@@ -39,6 +38,10 @@ public class KiritoController : MonoBehaviour
     public float lastOnGroundTime; // 土狼时间优化
     public float LastPressedJumpTime; // 跳跃缓冲优化
 
+    public LayerMask wallLayer;                 // 墙面层（通常与groundLayer相同）
+
+    private bool isWallSliding = false;         // 是否在墙面滑落
+    private bool isTouchingWall = false;        // 是否接触墙面
 
     [SerializeField]
     private Transform groundCheckPoint;
@@ -47,39 +50,30 @@ public class KiritoController : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayer;
 
+    // 墙面检测点
+    [SerializeField]
+    private Transform wallCheckPoint;           // 墙面检测点
+    [SerializeField]
+    private Vector2 wallCheckSize = new Vector2(1f, 0.8f); // 墙面检测区域大小
+
     private void Awake()
     {
-        inputControl = new PlayerInputControl();
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<KiritoAnimator>();
+        animator = GetComponent<PlayerAnimator>();
         comboSystem = GetComponent<ComboSystem>();
 
-
-        //inputControl.GamePlay.Attack.started += Attack;
-        //inputControl.GamePlay.Jump.started += Jump;
-        //inputControl.GamePlay.Dash.started += Dash;
-        //inputControl.GamePlay.Crouch.started += Crouch;
-        //inputControl.GamePlay.Crouch.canceled += CrouchCancel;
-        //inputControl.GamePlay.Block.started += Block ;
-        //inputControl.GamePlay.Block.canceled += BlockCancel;
+        // 如果没有设置wallLayer，使用groundLayer
+        if (wallLayer == 0)
+        {
+            wallLayer = groundLayer;
+        }
     }
-    //TODO:玩家受击实现
-
 
     private void Start()
     {
         isFacingRight = true;
     }
 
-    private void OnEnable()
-    {
-        inputControl.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputControl.Disable();
-    }
 
     private void Update()
     {
@@ -106,9 +100,8 @@ public class KiritoController : MonoBehaviour
                 canDash = true;
             }
         }
-
         #endregion
-        //inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
+
         if (comboSystem != null)
         {
             inputDirection = comboSystem.GetMovementInput();
@@ -117,7 +110,7 @@ public class KiritoController : MonoBehaviour
         // 处理Sprite的翻转（冲刺时不能转向）
         if (!isDash && inputDirection.x != 0)
         {
-            if(!isBlock)
+            if (!isBlock)
                 isWalk = true;
             CheckDirectionToFace(inputDirection.x > 0);
         }
@@ -125,6 +118,9 @@ public class KiritoController : MonoBehaviour
         {
             isWalk = false;
         }
+
+        // 墙面检测（在地面检测之前）
+        CheckWallSliding();
 
         // 地面检测
         if (!isDash && !isJump)
@@ -165,6 +161,7 @@ public class KiritoController : MonoBehaviour
                 // 设置跳跃状态
                 isJump = true;
                 isGround = false;
+                isWallSliding = false; // 跳跃时停止墙面滑落
 
                 // 计算跳跃力度，如果正在下降则补偿向下的速度
                 float jumpForce = movementData.jumpForce;
@@ -173,9 +170,6 @@ public class KiritoController : MonoBehaviour
 
                 // 施加向上的跳跃力
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-                //// 通知动画系统开始跳跃
-                //animator.StartJump();
             }
         }
 
@@ -183,6 +177,7 @@ public class KiritoController : MonoBehaviour
         if (lastOnGroundTime > 0 && !isJump)
         {
             isJumpFall = false;
+            isWallSliding = false; // 着陆时停止墙面滑落
         }
 
         // 更新攻击速度状态
@@ -192,12 +187,52 @@ public class KiritoController : MonoBehaviour
         UpdateGravity();
     }
 
+    private void CheckWallSliding()
+    {
+        // 只有在空中且不在冲刺状态时才检测墙面滑落
+        if (isGround || isDash)
+        {
+            isWallSliding = false;
+            isTouchingWall = false;
+            return;
+        }
+
+        // 检测是否接触墙面
+        isTouchingWall = Physics2D.OverlapBox(wallCheckPoint.position, wallCheckSize, 0, wallLayer);
+        // Debug.Log(isTouchingWall);
+        if (isTouchingWall)
+        {
+
+            // 判断是否应该开始墙面滑落
+            // 条件：接触墙面 + 在空中 + 正在下落
+            if (rb.velocity.y <= 0)
+            {
+                isWallSliding = true;
+            }
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
     private void UpdateGravity()
     {
         if (!isDash)  // 非冲刺状态
         {
+            if (isWallSliding)
+            {
+                // 墙面滑落时使用特殊重力
+                SetGravityScale(movementData.gravityScale * movementData.wallSlideGravity);
+
+                // 限制墙面滑落速度
+                if (rb.velocity.y < -movementData.wallSlideSpeed)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, -movementData.wallSlideSpeed);
+                }
+            }
             // 快速下落（按住下键）
-            if (rb.velocity.y < 0 && inputDirection.y < 0)
+            else if (rb.velocity.y < 0 && inputDirection.y < 0)
             {
                 SetGravityScale(movementData.gravityScale * movementData.fastFallGravityMult);
                 rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -movementData.maxFastFallSpeed));
@@ -255,10 +290,11 @@ public class KiritoController : MonoBehaviour
             return;
         }
 
+
         // 使用平滑插值来加速
         float speedMultiplier = isCrouch ? movementData.crouchSpeedMultiplier : 1f;
 
-        float targetSpeed = inputDirection.x * movementData.runMaxSpeed*speedMultiplier;
+        float targetSpeed = inputDirection.x * movementData.runMaxSpeed * speedMultiplier;
         targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
 
         float accelRate;
@@ -274,13 +310,6 @@ public class KiritoController : MonoBehaviour
         {
             accelRate *= movementData.jumpHangAccelerationMult;
             targetSpeed *= movementData.jumpHangMaxSpeedMult;
-        }
-
-        // 动量保持
-        if (movementData.doConserveMomentum && Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) &&
-            Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && lastOnGroundTime < 0)
-        {
-            accelRate = 0;
         }
 
         // 对rb提供力，速度离目标远则加速快，近则加速慢
@@ -346,71 +375,10 @@ public class KiritoController : MonoBehaviour
         isFacingRight = !isFacingRight;
     }
 
-    //private void Attack(InputAction.CallbackContext obj)
-    //{
-    //    // 冲刺时不能攻击
-    //    if (isDash) return;
-
-    //    animator.Attack();
-    //    isAttack = true;
-
-    //    // 施加攻击力和启动速度控制
-    //    if(!isCrouch)
-    //        ApplyAttackForce();
-    //}
-
-    //private void Jump(InputAction.CallbackContext obj)
-    //{
-    //    LastPressedJumpTime = movementData.jumpInputBufferTime;
-    //}
-
-    //// 新增冲刺方法
-    //private void Dash(InputAction.CallbackContext obj)
-    //{
-    //    if (canDash && !isDash)
-    //    {
-    //        StartDash();
-    //    }
-    //}
-
-    //private void Crouch(InputAction.CallbackContext obj)
-    //{
-    //    if (CanCrouch())
-    //    {
-    //        isCrouch = true;
-    //        // TODO:切换为蹲下时的碰撞体
-    //    }
-
-    //}
-    //private void CrouchCancel(InputAction.CallbackContext obj)
-    //{
-    //    isCrouch = false;
-    //}
-
-    //private void Block(InputAction.CallbackContext obj)
-    //{
-    //    if (CanBlock())
-    //    {
-    //        isBlock = true;
-
-    //        rb.velocity = new Vector2(0, rb.velocity.y);
-
-    //        // 取消其他状态
-    //        isAttack = false;
-    //        isAttackSpeedActive = false;
-    //    }
-
-    //}
-    //private void BlockCancel(InputAction.CallbackContext obj)
-    //{
-    //    isBlock = false;
-    //}
-
-
     public void PerformAttack()
     {
-        // 冲刺时不能攻击
-        if (isDash) return;
+        // 冲刺时和墙面滑落时不能攻击
+        if (isDash || isWallSliding) return;
 
         animator.Attack();
         isAttack = true;
@@ -468,14 +436,13 @@ public class KiritoController : MonoBehaviour
 
     private bool CanCrouch()
     {
-        return isGround&&!isDash;
+        return isGround && !isDash && !isWallSliding;
     }
 
     private bool CanBlock()
     {
-        return isGround && !isDash;
+        return isGround && !isDash && !isWallSliding;
     }
-
 
     private void StartDash()
     {
@@ -486,7 +453,7 @@ public class KiritoController : MonoBehaviour
         // 取消其他状态
         isAttack = false;
         isAttackSpeedActive = false;
-
+        isWallSliding = false; // 冲刺时停止墙面滑落
 
         //TODO:冲刺时无敌，可以取消与skill层、player层的碰撞？
     }
@@ -495,7 +462,6 @@ public class KiritoController : MonoBehaviour
     {
         isDash = false;
         dashCooldownTimer = movementData.dashCooldown;
-
     }
 
     private bool CanJump()
@@ -522,8 +488,19 @@ public class KiritoController : MonoBehaviour
     #region EDITOR METHODS
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
+        // 地面检测可视化
+        if (groundCheckPoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
+        }
+
+        // 墙面检测可视化
+        if (wallCheckPoint != null)
+        {
+            Gizmos.color = isWallSliding ? Color.red : Color.blue;
+            Gizmos.DrawWireCube(wallCheckPoint.position, wallCheckSize);
+        }
     }
     #endregion
 }

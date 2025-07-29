@@ -21,7 +21,7 @@ public class ComboSystem : MonoBehaviour
         public List<GameInputKey> keySequence = new List<GameInputKey>();
         public UnityEngine.Events.UnityEvent onSkillTriggered;
     }
-    public KiritoController kiritoController;
+    public PlayerController kiritoController;
 
 
     [Header("Á¬ÕÐÅäÖÃ")]
@@ -46,7 +46,6 @@ public class ComboSystem : MonoBehaviour
     // ÊäÈë×´Ì¬×·×Ù
     private Vector2 lastMovementInput = Vector2.zero;
     private bool wasMovingUp = false;
-    private bool wasMovingDown = false;
     private bool wasMovingLeft = false;
     private bool wasMovingRight = false;
 
@@ -55,7 +54,7 @@ public class ComboSystem : MonoBehaviour
     private void Awake()
     {
         inputControl = new PlayerInputControl();
-        kiritoController = GetComponent<KiritoController>();
+        kiritoController = GetComponent<PlayerController>();
         BindInputEvents();
     }
 
@@ -147,7 +146,6 @@ public class ComboSystem : MonoBehaviour
     {
         lastMovementInput = Vector2.zero;
         wasMovingUp = false;
-        wasMovingDown = false;
         wasMovingLeft = false;
         wasMovingRight = false;
     }

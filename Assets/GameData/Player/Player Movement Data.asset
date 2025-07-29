@@ -18,8 +18,7 @@ MonoBehaviour:
   crouchSpeedMultiplier: 0.5
   accelInAir: 1
   deccelInAir: 1
-  doConserveMomentum: 0
-  jumpForce: 20
+  jumpForce: 25
   coyoteTime: 0.2
   jumpInputBufferTime: 0.2
   jumpHangTimeThreshold: 1
@@ -34,3 +33,5 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 0.5
   dashSpeed: 30
+  wallSlideSpeed: 6
+  wallSlideGravity: 0.3
