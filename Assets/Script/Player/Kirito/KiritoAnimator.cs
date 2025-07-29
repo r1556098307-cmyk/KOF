@@ -70,7 +70,23 @@ public class KiritoAnimator : MonoBehaviour
     //    justLanded = true;
     //}
 
+    public void SpecailMove1()
+    {
+        Debug.Log("技能1");
+        anim.SetTrigger("specialMove1");
+    }
 
+    public void SpecailMove2()
+    {
+        Debug.Log("技能2");
+        anim.SetTrigger("specialMove2");
+    }
+
+    public void SpecailMove3()
+    {
+        Debug.Log("技能3");
+        anim.SetTrigger("specialMove3");
+    }
 
 
 }

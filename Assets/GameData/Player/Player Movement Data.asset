@@ -15,6 +15,7 @@ MonoBehaviour:
   runMaxSpeed: 10
   runAccelAmount: 9.5
   runDeccelAmount: 9.5
+  crouchSpeedMultiplier: 0.5
   accelInAir: 1
   deccelInAir: 1
   doConserveMomentum: 0

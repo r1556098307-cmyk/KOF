@@ -9,9 +9,10 @@ public class KiritoController : MonoBehaviour
     public PlayerMovementData movementData;
     public PlayerCombatData combatData;
 
-    public PlayerInputControl inputControl;
+    public PlayerInputControl inputControl;// TODO:统一改成使用ComboSystem的读取
     private Rigidbody2D rb;
     public KiritoAnimator animator;
+    private ComboSystem comboSystem;
 
     public Vector2 inputDirection;
 
@@ -51,14 +52,16 @@ public class KiritoController : MonoBehaviour
         inputControl = new PlayerInputControl();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<KiritoAnimator>();
-        inputControl.GamePlay.Attack.started += Attack;
-        inputControl.GamePlay.Jump.started += Jump;
-        inputControl.GamePlay.Dash.started += Dash;
-        inputControl.GamePlay.Crouch.started += Crouch;
-        inputControl.GamePlay.Crouch.canceled += CrouchCancel;
-        //TODO:添加格挡
-        inputControl.GamePlay.Block.started += Block ;
-        inputControl.GamePlay.Block.canceled += BlockCancel;
+        comboSystem = GetComponent<ComboSystem>();
+
+
+        //inputControl.GamePlay.Attack.started += Attack;
+        //inputControl.GamePlay.Jump.started += Jump;
+        //inputControl.GamePlay.Dash.started += Dash;
+        //inputControl.GamePlay.Crouch.started += Crouch;
+        //inputControl.GamePlay.Crouch.canceled += CrouchCancel;
+        //inputControl.GamePlay.Block.started += Block ;
+        //inputControl.GamePlay.Block.canceled += BlockCancel;
     }
     //TODO:玩家受击实现
 
@@ -105,7 +108,11 @@ public class KiritoController : MonoBehaviour
         }
 
         #endregion
-        inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
+        //inputDirection = inputControl.GamePlay.Move.ReadValue<Vector2>();
+        if (comboSystem != null)
+        {
+            inputDirection = comboSystem.GetMovementInput();
+        }
 
         // 处理Sprite的翻转（冲刺时不能转向）
         if (!isDash && inputDirection.x != 0)
@@ -249,7 +256,9 @@ public class KiritoController : MonoBehaviour
         }
 
         // 使用平滑插值来加速
-        float targetSpeed = inputDirection.x * movementData.runMaxSpeed;
+        float speedMultiplier = isCrouch ? movementData.crouchSpeedMultiplier : 1f;
+
+        float targetSpeed = inputDirection.x * movementData.runMaxSpeed*speedMultiplier;
         targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
 
         float accelRate;
@@ -337,7 +346,68 @@ public class KiritoController : MonoBehaviour
         isFacingRight = !isFacingRight;
     }
 
-    private void Attack(InputAction.CallbackContext obj)
+    //private void Attack(InputAction.CallbackContext obj)
+    //{
+    //    // 冲刺时不能攻击
+    //    if (isDash) return;
+
+    //    animator.Attack();
+    //    isAttack = true;
+
+    //    // 施加攻击力和启动速度控制
+    //    if(!isCrouch)
+    //        ApplyAttackForce();
+    //}
+
+    //private void Jump(InputAction.CallbackContext obj)
+    //{
+    //    LastPressedJumpTime = movementData.jumpInputBufferTime;
+    //}
+
+    //// 新增冲刺方法
+    //private void Dash(InputAction.CallbackContext obj)
+    //{
+    //    if (canDash && !isDash)
+    //    {
+    //        StartDash();
+    //    }
+    //}
+
+    //private void Crouch(InputAction.CallbackContext obj)
+    //{
+    //    if (CanCrouch())
+    //    {
+    //        isCrouch = true;
+    //        // TODO:切换为蹲下时的碰撞体
+    //    }
+
+    //}
+    //private void CrouchCancel(InputAction.CallbackContext obj)
+    //{
+    //    isCrouch = false;
+    //}
+
+    //private void Block(InputAction.CallbackContext obj)
+    //{
+    //    if (CanBlock())
+    //    {
+    //        isBlock = true;
+
+    //        rb.velocity = new Vector2(0, rb.velocity.y);
+
+    //        // 取消其他状态
+    //        isAttack = false;
+    //        isAttackSpeedActive = false;
+    //    }
+
+    //}
+    //private void BlockCancel(InputAction.CallbackContext obj)
+    //{
+    //    isBlock = false;
+    //}
+
+
+    public void PerformAttack()
     {
         // 冲刺时不能攻击
         if (isDash) return;
@@ -346,17 +416,16 @@ public class KiritoController : MonoBehaviour
         isAttack = true;
 
         // 施加攻击力和启动速度控制
-        if(!isCrouch)
+        if (!isCrouch)
             ApplyAttackForce();
     }
 
-    private void Jump(InputAction.CallbackContext obj)
+    public void PerformJump()
     {
         LastPressedJumpTime = movementData.jumpInputBufferTime;
     }
 
-    // 新增冲刺方法
-    private void Dash(InputAction.CallbackContext obj)
+    public void PerformDash()
     {
         if (canDash && !isDash)
         {
@@ -364,37 +433,37 @@ public class KiritoController : MonoBehaviour
         }
     }
 
-    private void Crouch(InputAction.CallbackContext obj)
+    public void PerformCrouch(bool isPressed)
     {
-        if (CanCrouch())
+        if (isPressed)
         {
-            isCrouch = true;
-            // TODO:切换为蹲下时的碰撞体
+            if (CanCrouch())
+            {
+                isCrouch = true;
+            }
         }
-
-    }
-    private void CrouchCancel(InputAction.CallbackContext obj)
-    {
-        isCrouch = false;
-    }
-
-    private void Block(InputAction.CallbackContext obj)
-    {
-        if (CanBlock())
+        else
         {
-            isBlock = true;
-
-            rb.velocity = new Vector2(0, rb.velocity.y);
-
-            // 取消其他状态
-            isAttack = false;
-            isAttackSpeedActive = false;
+            isCrouch = false;
         }
-
     }
-    private void BlockCancel(InputAction.CallbackContext obj)
+
+    public void PerformBlock(bool isPressed)
     {
-        isBlock = false;
+        if (isPressed)
+        {
+            if (CanBlock())
+            {
+                isBlock = true;
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                isAttack = false;
+                isAttackSpeedActive = false;
+            }
+        }
+        else
+        {
+            isBlock = false;
+        }
     }
 
     private bool CanCrouch()

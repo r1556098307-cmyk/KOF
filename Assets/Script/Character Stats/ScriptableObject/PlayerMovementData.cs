@@ -21,6 +21,12 @@ public class PlayerMovementData : ScriptableObject
     [Range(5f, 20f)]
     public float runDeccelAmount = 9.5f;
 
+
+    [Header("【下蹲减速倍率】")]
+    [Tooltip("下蹲时的减速度大小，值越小角色移动速度越慢")]
+    [Range(0f, 1f)]
+    public float crouchSpeedMultiplier = 0.5f;
+
     [Space(20)]
     [Header("========== 空中控制参数 ==========")]
     [Space(5)]
