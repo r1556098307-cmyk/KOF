@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     public PlayerAnimator animator;
     private ComboSystem comboSystem;
+    private CapsuleCollider2D capsuleCollider; // 添加胶囊碰撞体引用
 
     public Vector2 inputDirection;
 
@@ -24,6 +25,13 @@ public class PlayerController : MonoBehaviour
     public bool isGround;
     public bool isAttack;
     public bool isJumpFall;
+
+    // 碰撞体配置
+    [Header("Collider Settings")]
+    [SerializeField] private Vector2 standingColliderOffset = new Vector2(0, -0.84f);
+    [SerializeField] private Vector2 standingColliderSize = new Vector2(1.2f, 3.66f);
+    [SerializeField] private Vector2 crouchingColliderOffset = new Vector2(0, -1.5f);
+    [SerializeField] private Vector2 crouchingColliderSize = new Vector2(1.2f, 2.35f);
 
     // 攻击速度控制
     private bool isAttackSpeedActive = false;
@@ -40,7 +48,9 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask wallLayer;                 // 墙面层（通常与groundLayer相同）
 
+    [SerializeField]
     private bool isWallSliding = false;         // 是否在墙面滑落
+    [SerializeField]
     private bool isTouchingWall = false;        // 是否接触墙面
 
     [SerializeField]
@@ -54,13 +64,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform wallCheckPoint;           // 墙面检测点
     [SerializeField]
-    private Vector2 wallCheckSize = new Vector2(1f, 0.8f); // 墙面检测区域大小
+    private Vector2 wallCheckSize = new Vector2(1.27f, 0.8f); // 墙面检测区域大小
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<PlayerAnimator>();
         comboSystem = GetComponent<ComboSystem>();
+        capsuleCollider = GetComponent<CapsuleCollider2D>(); // 获取胶囊碰撞体组件
 
         // 如果没有设置wallLayer，使用groundLayer
         if (wallLayer == 0)
@@ -72,8 +83,13 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         isFacingRight = true;
+
+        // 确保开始时使用站立碰撞体
+        UpdateColliderSize(false);
     }
 
+    // 添加一个标记来记录玩家是否想要蹲下
+    private bool wantsToCrouch = false;
 
     private void Update()
     {
@@ -101,6 +117,13 @@ public class PlayerController : MonoBehaviour
             }
         }
         #endregion
+
+        // 自动站起检测
+        if (isCrouch && !wantsToCrouch && CanStandUp())
+        {
+            isCrouch = false;
+            UpdateColliderSize(false);
+        }
 
         if (comboSystem != null)
         {
@@ -403,17 +426,71 @@ public class PlayerController : MonoBehaviour
 
     public void PerformCrouch(bool isPressed)
     {
+        wantsToCrouch = isPressed;
+
         if (isPressed)
         {
             if (CanCrouch())
             {
                 isCrouch = true;
+                UpdateColliderSize(true); // 切换到蹲下碰撞体
             }
         }
         else
         {
-            isCrouch = false;
+            // 尝试站起来
+            if (CanStandUp())
+            {
+                isCrouch = false;
+                UpdateColliderSize(false); // 切换到站立碰撞体
+            }
+            // 如果不能站起来，isCrouch保持true，等待自动站起
         }
+    }
+
+    private void UpdateColliderSize(bool isCrouching)
+    {
+        if (capsuleCollider != null)
+        {
+            if (isCrouching)
+            {
+                // 切换到蹲下碰撞体
+                capsuleCollider.offset = crouchingColliderOffset;
+                capsuleCollider.size = crouchingColliderSize;
+            }
+            else
+            {
+                // 切换到站立碰撞体
+                capsuleCollider.offset = standingColliderOffset;
+                capsuleCollider.size = standingColliderSize;
+            }
+        }
+    }
+
+    private bool CanStandUp()
+    {
+        // 检查站起来时是否会碰到天花板
+        float standingHeight = standingColliderSize.y;
+        float crouchingHeight = crouchingColliderSize.y;
+        float heightDiff = standingHeight - crouchingHeight;
+
+        // 从当前位置向上检测
+        Vector2 checkOrigin = (Vector2)transform.position + crouchingColliderOffset + Vector2.up * (crouchingHeight * 0.5f);
+        Vector2 checkSize = new Vector2(standingColliderSize.x * 0.9f, heightDiff);
+
+        // 检测是否有碰撞
+        Collider2D[] hits = Physics2D.OverlapBoxAll(checkOrigin + Vector2.up * (heightDiff * 0.5f), checkSize, 0f, groundLayer);
+
+        // 排除自身碰撞体
+        foreach (var hit in hits)
+        {
+            if (hit != capsuleCollider)
+            {
+                return false; // 有障碍物，不能站起来
+            }
+        }
+
+        return true;
     }
 
     public void PerformBlock(bool isPressed)
@@ -500,6 +577,17 @@ public class PlayerController : MonoBehaviour
         {
             Gizmos.color = isWallSliding ? Color.red : Color.blue;
             Gizmos.DrawWireCube(wallCheckPoint.position, wallCheckSize);
+        }
+
+        // 站起检测可视化（仅在蹲下时显示）
+        if (isCrouch && Application.isPlaying)
+        {
+            float heightDiff = standingColliderSize.y - crouchingColliderSize.y;
+            Vector2 checkOrigin = (Vector2)transform.position + crouchingColliderOffset + Vector2.up * (crouchingColliderSize.y * 0.5f);
+            Vector2 checkSize = new Vector2(standingColliderSize.x * 0.9f, heightDiff);
+
+            Gizmos.color = CanStandUp() ? Color.yellow : Color.red;
+            Gizmos.DrawWireCube(checkOrigin + Vector2.up * (heightDiff * 0.5f), checkSize);
         }
     }
     #endregion

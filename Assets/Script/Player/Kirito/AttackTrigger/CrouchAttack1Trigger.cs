@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CrouchAttack1Trigger : MonoBehaviour
+{
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag != "Player")
+            return;
+        PlayerAnimator playerAnimator = collision.GetComponent<PlayerAnimator>();
+        if (playerAnimator != null)
+            playerAnimator.HurtLight();
+
+    }
+}
