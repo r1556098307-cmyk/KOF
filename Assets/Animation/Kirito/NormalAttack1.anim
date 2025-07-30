@@ -80,15 +80,15 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: attack1
-    data: 
+    functionName: ActivateAttackByName
+    data: Attack1Range
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.2
-    functionName: attack1Finished
-    data: 
+    functionName: DeactivateAttackByName
+    data: Attack1Range
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

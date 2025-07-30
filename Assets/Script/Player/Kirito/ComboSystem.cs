@@ -21,8 +21,8 @@ public class ComboSystem : MonoBehaviour
         public List<GameInputKey> keySequence = new List<GameInputKey>();
         public UnityEngine.Events.UnityEvent onSkillTriggered;
     }
-    public PlayerController kiritoController;
-
+    private PlayerController playerController;
+    private HitstunSystem hitstunSystem;
 
     [Header("连招配置")]
     public List<ComboData> combos;
@@ -54,7 +54,8 @@ public class ComboSystem : MonoBehaviour
     private void Awake()
     {
         inputControl = new PlayerInputControl();
-        kiritoController = GetComponent<PlayerController>();
+        playerController = GetComponent<PlayerController>();
+        hitstunSystem = GetComponent<HitstunSystem>();
         BindInputEvents();
     }
 
@@ -84,50 +85,72 @@ public class ComboSystem : MonoBehaviour
 
     private void HandleAttackInput()
     {
+        if (hitstunSystem != null && !hitstunSystem.IsAttackAllowed())
+            return;
+
+
         // 记录输入
         HandleKeyInput(GameInputKey.Attack);
 
         // 如果没有触发连招，执行普通攻击
-        if (!comboTriggered && kiritoController != null)
+        if (!comboTriggered && playerController != null)
         {
-            kiritoController.PerformAttack();
+            playerController.PerformAttack();
         }
         comboTriggered = false;
     }
 
     private void HandleBlockInput(bool isPressed)
     {
+        if (isPressed && hitstunSystem != null && !hitstunSystem.IsBlockAllowed())
+            return;
+
+
         if (isPressed)
             HandleKeyInput(GameInputKey.Block);
 
-        if (kiritoController != null)
-            kiritoController.PerformBlock(isPressed);
+        if (playerController != null)
+            playerController.PerformBlock(isPressed);
         comboTriggered = false;
     }
 
     private void HandleCrouchInput(bool isPressed)
     {
+        if (isPressed && hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+            return;
+
+
         if (isPressed)
             HandleKeyInput(GameInputKey.MoveDown);
 
-        if (kiritoController != null)
-            kiritoController.PerformCrouch(isPressed);
+        if (playerController != null)
+            playerController.PerformCrouch(isPressed);
         comboTriggered = false;
     }
 
     private void HandleDashInput()
     {
+        // 检查僵直状态
+        if (hitstunSystem != null && !hitstunSystem.IsDashAllowed())
+            return;
+
+
         HandleKeyInput(GameInputKey.Dash);
-        if (kiritoController != null)
-            kiritoController.PerformDash();
+        if (playerController != null)
+            playerController.PerformDash();
         comboTriggered = false;
     }
 
     private void HandleJumpInput()
     {
+        // 检查僵直状态
+        if (hitstunSystem != null && !hitstunSystem.IsJumpAllowed())
+            return;
+
+
         HandleKeyInput(GameInputKey.Jump);
-        if (kiritoController != null)
-            kiritoController.PerformJump();
+        if (playerController != null)
+            playerController.PerformJump();
         comboTriggered = false;
     }
 
@@ -152,6 +175,12 @@ public class ComboSystem : MonoBehaviour
 
     private void CheckMovementDirection(Vector2 moveInput)
     {
+        // 检查僵直状态，如果被僵直则不处理移动输入
+        if (hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+        {
+            return;
+        }
+
         // Check Up
         if (moveInput.y > movementThreshold && !wasMovingUp)
         {
@@ -309,6 +338,12 @@ public class ComboSystem : MonoBehaviour
     // 获取移动输入
     public Vector2 GetMovementInput()
     {
+        // 如果被僵直，返回零向量
+        if (hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+        {
+            return Vector2.zero;
+        }
+
         return lastMovementInput;
     }
 
@@ -333,6 +368,11 @@ public class ComboSystem : MonoBehaviour
     // 检查是否移动，需要强度大于阈值
     public bool IsMoving()
     {
+        if (hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+        {
+            return false;
+        }
+
         return lastMovementInput.magnitude > movementThreshold;
     }
 

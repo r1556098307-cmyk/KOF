@@ -35,7 +35,6 @@ public class PlayerAnimator : MonoBehaviour
     private void CheckAnimationState()
     {
         anim.SetBool("isWalk", controller.isWalk);
-        anim.SetBool("isAttack", controller.isAttack);
         anim.SetBool("isJump", controller.isJump);
         anim.SetBool("isJumpFall", controller.isJumpFall);
         anim.SetBool("isGround", controller.isGround);
@@ -101,6 +100,23 @@ public class PlayerAnimator : MonoBehaviour
     {
         Debug.Log("¼¼ÄÜ3");
         anim.SetTrigger("specialMove3");
+    }
+
+    public void PlayAnimation(string animationName)
+    {
+        switch (animationName)
+        {
+            case "LightHit":
+                anim.SetTrigger("hurtLight");
+                break;
+            case "HeavyHit":
+                anim.SetTrigger("hurtHeavy");
+                break;
+            case "KnockdownHit":
+                anim.SetTrigger("knockdown");
+                break;
+        }
+
     }
 
 

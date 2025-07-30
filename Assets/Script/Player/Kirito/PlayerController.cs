@@ -6,6 +6,7 @@ using static Unity.Collections.AllocatorManager;
 
 public class PlayerController : MonoBehaviour
 {
+
     public PlayerMovementData movementData;
     public PlayerCombatData combatData;
 
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public PlayerAnimator animator;
     private ComboSystem comboSystem;
     private CapsuleCollider2D capsuleCollider; // 添加胶囊碰撞体引用
+    private HitstunSystem hitstunSystem;
 
     public Vector2 inputDirection;
 
@@ -86,6 +88,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<PlayerAnimator>();
         comboSystem = GetComponent<ComboSystem>();
         capsuleCollider = GetComponent<CapsuleCollider2D>(); // 获取胶囊碰撞体组件
+        hitstunSystem = GetComponent<HitstunSystem>();
 
         // 如果没有设置wallLayer，使用groundLayer
         if (wallLayer == 0)
@@ -174,9 +177,12 @@ public class PlayerController : MonoBehaviour
         // 处理Sprite的翻转（冲刺时不能转向）
         if (!isDash && inputDirection.x != 0)
         {
+            bool canMove = hitstunSystem == null || hitstunSystem.IsMoveAllowed();
+
             if (!isBlock)
                 isWalk = true;
-            CheckDirectionToFace(inputDirection.x > 0);
+            if (canMove)
+                CheckDirectionToFace(inputDirection.x > 0);
         }
         else
         {
@@ -216,7 +222,9 @@ public class PlayerController : MonoBehaviour
         // 跳跃检测（冲刺时不能跳跃）
         if (!isDash)
         {
-            if (CanJump() && LastPressedJumpTime > 0)
+            bool canJump = hitstunSystem == null || hitstunSystem.IsJumpAllowed();
+
+            if (canJump&&CanJump() && LastPressedJumpTime > 0)
             {
                 // 重置跳跃相关计时器
                 lastOnGroundTime = 0;
@@ -427,6 +435,13 @@ public class PlayerController : MonoBehaviour
 
     public void Move(float lerpAmount)
     {
+        // 检查是否被僵直或格挡
+        if (hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+        {
+            //rb.velocity = new Vector2(0, rb.velocity.y);
+            return;
+        }
+
         // 格挡期间不能移动
         if (isBlock)
         {
@@ -522,6 +537,10 @@ public class PlayerController : MonoBehaviour
 
     public void PerformAttack()
     {
+        if (hitstunSystem != null && !hitstunSystem.IsAttackAllowed())
+            return;
+
+
         // 冲刺时和墙面滑落时不能攻击
         if (isDash || isWallSliding) return;
 
@@ -535,11 +554,18 @@ public class PlayerController : MonoBehaviour
 
     public void PerformJump()
     {
+        if (hitstunSystem != null && !hitstunSystem.IsJumpAllowed())
+            return;
+
         LastPressedJumpTime = movementData.jumpInputBufferTime;
     }
 
     public void PerformDash()
     {
+        if (hitstunSystem != null && !hitstunSystem.IsDashAllowed())
+            return;
+
+
         if (canDash && !isDash)
         {
             StartDash();
@@ -548,6 +574,11 @@ public class PlayerController : MonoBehaviour
 
     public void PerformCrouch(bool isPressed)
     {
+        // 检查僵直状态（只在按下时检查）
+        if (isPressed && hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
+            return;
+
+
         wantsToCrouch = isPressed;
 
         if (isPressed)
@@ -617,6 +648,10 @@ public class PlayerController : MonoBehaviour
 
     public void PerformBlock(bool isPressed)
     {
+        if (isPressed && hitstunSystem != null && !hitstunSystem.IsBlockAllowed())
+            return;
+
+
         if (isPressed)
         {
             if (CanBlock())
@@ -691,6 +726,11 @@ public class PlayerController : MonoBehaviour
         // 启动攻击速度控制
         isAttackSpeedActive = true;
         attackSpeedTimer = combatData.attackSpeedDecayDuration;
+    }
+
+    public bool GetIsInvulnerable()
+    {
+        return isInvulnerable;
     }
 
     #region EDITOR METHODS
