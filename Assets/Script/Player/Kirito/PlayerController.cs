@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Unity.Collections.AllocatorManager;
 
+public enum PlayerID
+{
+    Player1,
+    Player2
+}
+
 public class PlayerController : MonoBehaviour
 {
 
@@ -15,8 +21,11 @@ public class PlayerController : MonoBehaviour
     private ComboSystem comboSystem;
     private CapsuleCollider2D capsuleCollider; // 添加胶囊碰撞体引用
     private HitstunSystem hitstunSystem;
+    private PlayerStats playerStats;
 
     public Vector2 inputDirection;
+
+    public PlayerID PlayerId;
 
     public bool isFacingRight;
     public bool isDash;
@@ -37,10 +46,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("技能设置")]
     [SerializeField] private float specialMove1DashSpeed = 20f;
-    [SerializeField] private float specialMove1DashDuration = 0.5f;
     [SerializeField] private bool isInvulnerable = false;  // 无敌状态
     private bool isSpecialMove1Dashing = false;
-    private float specialMove1DashTimer = 0f;
 
     // 原始层级存储
     private int originalLayer;
@@ -89,12 +96,15 @@ public class PlayerController : MonoBehaviour
         comboSystem = GetComponent<ComboSystem>();
         capsuleCollider = GetComponent<CapsuleCollider2D>(); // 获取胶囊碰撞体组件
         hitstunSystem = GetComponent<HitstunSystem>();
+        playerStats = GetComponent<PlayerStats>();
 
         // 如果没有设置wallLayer，使用groundLayer
         if (wallLayer == 0)
         {
             wallLayer = groundLayer;
         }
+
+        GameManager.Instance.RigisterPlayer(playerStats,PlayerId);
     }
 
     private void Start()
@@ -150,15 +160,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 技能1冲刺计时器
-        if (specialMove1DashTimer > 0)
-        {
-            specialMove1DashTimer -= Time.deltaTime;
-            if (specialMove1DashTimer <= 0)
-            {
-                EndSpecialMove1Dash();
-            }
-        }
 
         #endregion
 
@@ -362,7 +363,6 @@ public class PlayerController : MonoBehaviour
     {
         isSpecialMove1Dashing = true;
         isInvulnerable = true;
-        specialMove1DashTimer = specialMove1DashDuration;
 
         // 切换到穿透玩家层（避免与其他玩家碰撞，但仍会受到伤害）
         SetPlayerPassThrough(true);

@@ -6,7 +6,8 @@ public class AttackConfig
 {
     [Header("基础攻击设置")]
     public AttackType attackType = AttackType.Light;
-    public float damage = 10f;
+    public int damage = 10;
+    public int energyRecovery = 10;
     public string attackName = "Attack"; // 用于标识不同攻击
 
     [Header("击退设置")]

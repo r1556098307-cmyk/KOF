@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 // 硬直数据配置
-[CreateAssetMenu(fileName = "HitstunData", menuName = "Combat/Hitstun Data")]
+[CreateAssetMenu(fileName = "HitstunData", menuName = "Player Config/Hitstun Data")]
 public class HitstunData : ScriptableObject
 {
     [Header("硬直时间设置")]

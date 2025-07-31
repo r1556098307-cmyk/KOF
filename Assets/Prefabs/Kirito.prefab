@@ -157,17 +157,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 0
     damage: 10
+    energyRecovery: 10
     attackName: Attack1
     knockbackForce: 5
-    knockupForce: 0
+    knockupForce: 10
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &1101702461860000137
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,17 +303,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 2
     damage: 10
+    energyRecovery: 10
     attackName: CrouchAttack3
     knockbackForce: 5
-    knockupForce: 0
+    knockupForce: 20
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &3558896998903197036
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,17 +448,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 2
     damage: 10
+    energyRecovery: 10
     attackName: Attack3
     knockbackForce: 5
-    knockupForce: 0
+    knockupForce: 20
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &4094738171528663575
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +475,7 @@ GameObject:
   - component: {fileID: 1924650393316031840}
   - component: {fileID: 1457028013968145045}
   - component: {fileID: 7459452849793084597}
+  - component: {fileID: 4929217910741450394}
   - component: {fileID: 424556446635804781}
   - component: {fileID: 8212930349969534637}
   - component: {fileID: 984285861080286270}
@@ -606,7 +616,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -632,6 +642,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   justLanded: 0
   startedJumping: 0
+--- !u!114 &4929217910741450394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4094738171528663575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff7d4adce61d6248bed2172b9b737cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templateData: {fileID: 11400000, guid: 0efe3dc579cd68442bc0f4f1a536eb1f, type: 2}
+  playerData: {fileID: 0}
 --- !u!114 &424556446635804781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -648,6 +672,7 @@ MonoBehaviour:
   combatData: {fileID: 11400000, guid: fbbf8024ba6f09f4ab08a118c3233dbc, type: 2}
   animator: {fileID: 0}
   inputDirection: {x: 0, y: 0}
+  PlayerId: 0
   isFacingRight: 0
   isDash: 0
   isWalk: 0
@@ -662,7 +687,6 @@ MonoBehaviour:
   crouchingColliderOffset: {x: 0, y: -1.5}
   crouchingColliderSize: {x: 1.2, y: 2.35}
   specialMove1DashSpeed: 20
-  specialMove1DashDuration: 0.5
   isInvulnerable: 0
   lastOnGroundTime: 0
   LastPressedJumpTime: 0
@@ -711,7 +735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8058f12bad30ca488da0b0e373c4513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kiritoController: {fileID: 0}
   combos:
   - skillName: "\u6280\u80FD1"
     keySequence: 00000000010000000100000004000000
@@ -764,6 +787,23 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - skillName: "\u6280\u80FD2"
+    keySequence: 02000000000000000000000004000000
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: SpecailMove2
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   inputHistory: 
   inputClearDelay: 2
   movementThreshold: 0.5
@@ -784,6 +824,12 @@ MonoBehaviour:
   isInHitstun: 0
   hitstunTimer: 0
   isKnockedDown: 0
+  canMove: 1
+  canAttack: 1
+  canJump: 1
+  canDash: 1
+  canBlock: 1
+  canCrouch: 1
 --- !u!114 &8422797658175713845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,7 +842,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de393b9f6f301b84d9925ffbb2561191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack1RangeTrigger: {fileID: 0}
 --- !u!1 &5312639591553860081
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,6 +851,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3025974339971835295}
+  - component: {fileID: 6728896903552542511}
+  - component: {fileID: 4925193021712904075}
   m_Layer: 0
   m_Name: Range
   m_TagString: Untagged
@@ -828,6 +875,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3234677573064991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &6728896903552542511
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312639591553860081}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.13953876, y: -0.57211065}
+  serializedVersion: 2
+  m_Radius: 3.3884602
+--- !u!114 &4925193021712904075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312639591553860081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c82fc911ad82094391dafe871649eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackConfig:
+    attackType: 2
+    damage: 10
+    energyRecovery: 10
+    attackName: SpecialMove3
+    knockbackForce: 10
+    knockupForce: 10
+    isAddUpForce: 1
+    customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
+    hitSound: HitSound
+    hitEffect: HitEffect
+    stunDurationMultiplier: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &5398552076830294549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,17 +1196,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 0
     damage: 10
+    energyRecovery: 10
     attackName: CrouchAttack1
     knockbackForce: 5
-    knockupForce: 0
+    knockupForce: 10
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &7764368292334054875
 GameObject:
   m_ObjectHideFlags: 0
@@ -1105,6 +1219,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1800764094266662239}
+  - component: {fileID: 2369379682245286103}
+  - component: {fileID: 2310368402092803376}
   m_Layer: 0
   m_Name: Range
   m_TagString: Untagged
@@ -1127,6 +1243,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 36365946391227308}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2369379682245286103
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7764368292334054875}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 1.6884232, y: 1.2139901}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.92564, y: 2.534931}
+  m_EdgeRadius: 0
+--- !u!114 &2310368402092803376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7764368292334054875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c82fc911ad82094391dafe871649eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackConfig:
+    attackType: 1
+    damage: 10
+    energyRecovery: 10
+    attackName: SpecialMove2
+    knockbackForce: 5
+    knockupForce: 10
+    isAddUpForce: 1
+    customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
+    hitSound: HitSound
+    hitEffect: HitEffect
+    stunDurationMultiplier: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &8074852994821401398
 GameObject:
   m_ObjectHideFlags: 0
@@ -1228,17 +1418,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 1
     damage: 10
+    energyRecovery: 10
     attackName: Attack2
     knockbackForce: 5
     knockupForce: 0
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &8384935198367284628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1304,7 +1497,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.26689816, y: -0.9532064}
+  m_Offset: {x: -0.26689816, y: -0.9392525}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1315,7 +1508,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.109766, y: 2.9064128}
+  m_Size: {x: 3.109766, y: 2.9343207}
   m_EdgeRadius: 0
 --- !u!114 &5688953444937147203
 MonoBehaviour:
@@ -1332,17 +1525,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 1
     damage: 10
+    energyRecovery: 10
     attackName: SpecialMove1
-    knockbackForce: 5
-    knockupForce: 0
+    knockbackForce: 10
+    knockupForce: 10
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &8408638841201397966
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,17 +1641,20 @@ MonoBehaviour:
   attackConfig:
     attackType: 1
     damage: 10
+    energyRecovery: 10
     attackName: CrouchAttck2
     knockbackForce: 5
     knockupForce: 0
+    isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
     hitSound: HitSound
     hitEffect: HitEffect
-    causesKnockdown: 0
     stunDurationMultiplier: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  attackerTransform: {fileID: 0}
 --- !u!1 &8650266299891597525
 GameObject:
   m_ObjectHideFlags: 0

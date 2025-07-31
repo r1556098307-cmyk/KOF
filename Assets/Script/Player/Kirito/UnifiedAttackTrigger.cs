@@ -14,6 +14,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
     private Collider2D attackCollider;
     private HashSet<GameObject> hitTargets; // 防止重复命中
     private bool isActive = false;
+    [SerializeField]
     private Transform attackerTransform; // 攻击者的Transform
 
     private PlayerController playerController;
@@ -24,8 +25,8 @@ public class UnifiedAttackTrigger : MonoBehaviour
         hitTargets = new HashSet<GameObject>();
         playerController = GetComponentInParent<PlayerController>();
 
-        // 获取攻击者Transform（通常是父对象）可能是父父对象
-        attackerTransform = transform.parent != null ? transform.parent : transform;
+        // 获取攻击者Transform
+        attackerTransform = transform.parent.parent != null ? transform.parent.parent : transform;
 
         // 初始状态禁用碰撞体
         if (attackCollider != null)
@@ -104,6 +105,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
         // 获取目标组件
         HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();
         PlayerController targetPlayer = target.GetComponent<PlayerController>();
+        PlayerStats targetStats = target.GetComponent<PlayerStats>();
 
         // 计算攻击方向
         Vector2 attackDirection = CalculateAttackDirection(target);
@@ -113,6 +115,24 @@ public class UnifiedAttackTrigger : MonoBehaviour
         {
             ProcessBlockedHit(target, attackDirection);
             return;
+        }
+
+        // 处理伤害和能量恢复
+        if (targetStats != null)
+        {
+            PlayerStats attackerStats = playerController.GetComponent<PlayerStats>();
+            if (attackerStats != null)
+            {
+                // 调用伤害计算
+                bool targetDied = attackerStats.TakeDamage(targetStats, attackConfig.damage, attackConfig.energyRecovery);
+
+                if (targetDied)
+                {
+                    //Debug.Log($"{target.name} 被击败了！");
+                    // 处理死亡逻辑
+                    HandleTargetDeath(target);
+                }
+            }
         }
 
         // 使用新的硬直系统
@@ -137,6 +157,14 @@ public class UnifiedAttackTrigger : MonoBehaviour
         PlayHitEffects(target.transform.position);
 
         //Debug.Log($"命中目标: {target.name}, 攻击: {attackConfig.attackName}");
+    }
+
+    // 添加死亡处理方法
+    private void HandleTargetDeath(GameObject target)
+    {
+        //TODO:玩家胜利返回主菜单，玩家失败选择重新开始或者返回主菜单
+
+
     }
 
     private Vector2 CalculateAttackDirection(GameObject target)
