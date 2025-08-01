@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ComboSystem;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -99,14 +100,15 @@ public class PlayerStats : MonoBehaviour
 
     private void CheckEnergyNumberIncrease()
     {
-        if(CurrentEnergy>=MaxEnergy&& CurrentEnergyNum == MaxEnergyNum-1)
+        while (CurrentEnergy >= MaxEnergy && CurrentEnergyNum < MaxEnergyNum)
         {
             CurrentEnergyNum++;
+            playerData.currentEnergy = CurrentEnergy - MaxEnergy;
         }
-        else if (CurrentEnergy >= MaxEnergy && CurrentEnergyNum < MaxEnergyNum)
+        // 如果已经达到最大能量槽数，限制能量值为0
+        if (CurrentEnergyNum >= MaxEnergyNum)
         {
-            CurrentEnergyNum++;
-            playerData.currentEnergy = CurrentEnergy-MaxEnergy; 
+            playerData.currentEnergy = 0;
         }
     }
 
@@ -132,10 +134,10 @@ public class PlayerStats : MonoBehaviour
         // 修改能量恢复逻辑，考虑最大能量槽限制
         int newEnergy = CurrentEnergy + energyRecovery;
 
-        // 如果已经达到最大能量槽数，限制能量值不超过maxEnergy
+        // 如果已经达到最大能量槽数，限制能量值为0
         if (CurrentEnergyNum >= MaxEnergyNum)
         {
-            CurrentEnergy = Mathf.Min(newEnergy, MaxEnergy);
+            CurrentEnergy = 0;
         }
         else
         {
@@ -143,6 +145,17 @@ public class PlayerStats : MonoBehaviour
         }
 
         return targetStats.CurrentHealth == 0;
+    }
+
+    public bool HasSufficientEnergy(int energyCost)
+    {
+
+        return CurrentEnergyNum >= energyCost;
+    }
+
+    public void ConsumeEnergy(int energyCost)
+    {
+        CurrentEnergyNum -= energyCost;
     }
     #endregion
 

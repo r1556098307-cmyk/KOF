@@ -32,6 +32,120 @@ Transform:
   - {fileID: 3462706738224737289}
   m_Father: {fileID: 1363902767608326657}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &482729029112755389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9071217401267181010}
+  - component: {fileID: 5982781382410285113}
+  - component: {fileID: 9072203890869361396}
+  m_Layer: 7
+  m_Name: Range
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9071217401267181010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482729029112755389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2628655752776798717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &5982781382410285113
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482729029112755389}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 10.413486, y: 3.5085433}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 28.491598, y: 16.02746}
+  m_EdgeRadius: 0
+--- !u!114 &9072203890869361396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482729029112755389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c82fc911ad82094391dafe871649eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackConfig:
+    attackType: 1
+    damage: 10
+    energyRecovery: 10
+    attackName: Attack
+    knockbackForce: 5
+    knockupForce: 0
+    isAddUpForce: 1
+    customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
+    hitSound: HitSound
+    hitEffect: HitEffect
+    stunDurationMultiplier: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 1
+  damageInterval: 0.5
+  fullScreenDuration: 3
+  attackerTransform: {fileID: 0}
 --- !u!1 &500939125153731504
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +271,7 @@ MonoBehaviour:
   attackConfig:
     attackType: 0
     damage: 10
-    energyRecovery: 10
+    energyRecovery: 15
     attackName: Attack1
     knockbackForce: 5
     knockupForce: 10
@@ -170,6 +284,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &1101702461860000137
 GameObject:
@@ -302,8 +423,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 2
-    damage: 10
-    energyRecovery: 10
+    damage: 20
+    energyRecovery: 30
     attackName: CrouchAttack3
     knockbackForce: 5
     knockupForce: 20
@@ -316,6 +437,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &3558896998903197036
 GameObject:
@@ -447,8 +575,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 2
-    damage: 10
-    energyRecovery: 10
+    damage: 20
+    energyRecovery: 30
     attackName: Attack3
     knockbackForce: 5
     knockupForce: 20
@@ -461,6 +589,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &4094738171528663575
 GameObject:
@@ -512,6 +647,8 @@ Transform:
   - {fileID: 531873039336361210}
   - {fileID: 36365946391227308}
   - {fileID: 3234677573064991483}
+  - {fileID: 6831602829156532233}
+  - {fileID: 2628655752776798717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6949840158486437566
@@ -738,6 +875,7 @@ MonoBehaviour:
   combos:
   - skillName: "\u6280\u80FD1"
     keySequence: 00000000010000000100000004000000
+    energyCost: 0
     onSkillTriggered:
       m_PersistentCalls:
         m_Calls:
@@ -755,6 +893,7 @@ MonoBehaviour:
           m_CallState: 2
   - skillName: "\u6280\u80FD2"
     keySequence: 03000000000000000000000004000000
+    energyCost: 0
     onSkillTriggered:
       m_PersistentCalls:
         m_Calls:
@@ -770,8 +909,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - skillName: "\u6280\u80FD2"
+    keySequence: 02000000000000000000000004000000
+    energyCost: 0
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: SpecailMove2
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u6280\u80FD3"
     keySequence: 01000000010000000500000004000000
+    energyCost: 0
     onSkillTriggered:
       m_PersistentCalls:
         m_Calls:
@@ -787,14 +945,51 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - skillName: "\u6280\u80FD2"
-    keySequence: 02000000000000000000000004000000
+  - skillName: "\u8D85\u5FC5\u67401"
+    keySequence: 020000000300000000000000030000000100000004000000
+    energyCost: 1
     onSkillTriggered:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
           m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
-          m_MethodName: SpecailMove2
+          m_MethodName: SuperMove1
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u8D85\u5FC5\u67401"
+    keySequence: 020000000300000000000000030000000100000004000000
+    energyCost: 1
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: SuperMove1
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u8D85\u5FC5\u67402"
+    keySequence: 000000000100000000000000010000000400000005000000
+    energyCost: 3
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: SuperMove2
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -842,6 +1037,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de393b9f6f301b84d9925ffbb2561191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5249758282725955650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6831602829156532233}
+  m_Layer: 7
+  m_Name: SuperMove1Range
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6831602829156532233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249758282725955650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8135940668037878130}
+  m_Father: {fileID: 1363902767608326657}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5287860321077317677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2628655752776798717}
+  m_Layer: 7
+  m_Name: SuperMove2Range
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2628655752776798717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5287860321077317677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9071217401267181010}
+  m_Father: {fileID: 1363902767608326657}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5312639591553860081
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,11 +1183,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 2
-    damage: 10
-    energyRecovery: 10
+    damage: 30
+    energyRecovery: 20
     attackName: SpecialMove3
-    knockbackForce: 10
-    knockupForce: 10
+    knockbackForce: 20
+    knockupForce: 20
     isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
     blockKnockbackForce: 2
@@ -938,6 +1197,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &5398552076830294549
 GameObject:
@@ -1196,7 +1462,7 @@ MonoBehaviour:
   attackConfig:
     attackType: 0
     damage: 10
-    energyRecovery: 10
+    energyRecovery: 15
     attackName: CrouchAttack1
     knockbackForce: 5
     knockupForce: 10
@@ -1209,6 +1475,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &7764368292334054875
 GameObject:
@@ -1302,11 +1575,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 1
-    damage: 10
-    energyRecovery: 10
+    damage: 30
+    energyRecovery: 20
     attackName: SpecialMove2
     knockbackForce: 5
-    knockupForce: 10
+    knockupForce: 15
     isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
     blockKnockbackForce: 2
@@ -1316,6 +1589,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8074852994821401398
 GameObject:
@@ -1417,8 +1697,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 1
-    damage: 10
-    energyRecovery: 10
+    damage: 15
+    energyRecovery: 25
     attackName: Attack2
     knockbackForce: 5
     knockupForce: 0
@@ -1431,6 +1711,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8384935198367284628
 GameObject:
@@ -1524,8 +1811,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 1
-    damage: 10
-    energyRecovery: 10
+    damage: 30
+    energyRecovery: 20
     attackName: SpecialMove1
     knockbackForce: 10
     knockupForce: 10
@@ -1538,6 +1825,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8408638841201397966
 GameObject:
@@ -1640,8 +1934,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackConfig:
     attackType: 1
-    damage: 10
-    energyRecovery: 10
+    damage: 15
+    energyRecovery: 25
     attackName: CrouchAttck2
     knockbackForce: 5
     knockupForce: 0
@@ -1654,6 +1948,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useRaycast: 0
+  rayDistance: 10
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8650266299891597525
 GameObject:
@@ -1686,6 +1987,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1363902767608326657}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8769150350295406900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8135940668037878130}
+  - component: {fileID: 1435194436931649228}
+  m_Layer: 7
+  m_Name: Range
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8135940668037878130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769150350295406900}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6831602829156532233}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1435194436931649228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769150350295406900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c82fc911ad82094391dafe871649eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackConfig:
+    attackType: 2
+    damage: 100
+    energyRecovery: 0
+    attackName: SuperMove1
+    knockbackForce: 20
+    knockupForce: 20
+    isAddUpForce: 1
+    customKnockbackDirection: {x: 0, y: 0}
+    blockKnockbackForce: 2
+    hitSound: HitSound
+    hitEffect: HitEffect
+    stunDurationMultiplier: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 640
+  useRaycast: 1
+  rayDistance: 30
+  rayWidth: 1
+  rayOffset: {x: 0, y: 0}
+  useFullScreenStay: 0
+  damageInterval: 0.5
+  fullScreenDuration: 3
+  attackerTransform: {fileID: 0}
 --- !u!1 &9167528121984047912
 GameObject:
   m_ObjectHideFlags: 0

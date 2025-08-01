@@ -46,8 +46,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("技能设置")]
     [SerializeField] private float specialMove1DashSpeed = 20f;
+    [SerializeField] private float superMove2DashSpeed = 30f;
     [SerializeField] private bool isInvulnerable = false;  // 无敌状态
-    private bool isSpecialMove1Dashing = false;
+    private bool isSpecialDashing = false;
+    private string currentSpecialMove = "";
 
     // 原始层级存储
     private int originalLayer;
@@ -104,7 +106,7 @@ public class PlayerController : MonoBehaviour
             wallLayer = groundLayer;
         }
 
-        GameManager.Instance.RigisterPlayer(playerStats,PlayerId);
+        
     }
 
     private void Start()
@@ -129,6 +131,8 @@ public class PlayerController : MonoBehaviour
         }
 
         originalLayer = gameObject.layer;
+
+        GameManager.Instance.RigisterPlayer(playerStats, PlayerId);
     }
 
     // 记录玩家是否想要蹲下
@@ -341,10 +345,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isSpecialMove1Dashing)
+        if (isSpecialDashing)
         {
             // 技能1冲刺移动
-            ApplySpecialMove1DashMovement();
+            ApplySpecialDashMovement();
         }
         else if (isDash)
         {
@@ -359,13 +363,17 @@ public class PlayerController : MonoBehaviour
     }
 
     // 开始技能1冲刺
-    public void StartSpecialMove1Dash()
+    public void StartSpecialDash(string skillName)
     {
-        isSpecialMove1Dashing = true;
+        isSpecialDashing = true;
         isInvulnerable = true;
+        currentSpecialMove = skillName;  // 记录当前技能名称
 
-        // 切换到穿透玩家层（避免与其他玩家碰撞，但仍会受到伤害）
-        SetPlayerPassThrough(true);
+        if (skillName == "SpecialMove1")
+            SetPlayerPassThrough(true);  // 切换到穿透玩家层（避免与其他玩家碰撞，但仍会受到伤害）
+        else if (skillName == "SuperMove2")
+            SetInvulnerable(true);
+
 
         // 取消其他状态
         isAttack = false;
@@ -379,23 +387,38 @@ public class PlayerController : MonoBehaviour
     }
 
     // 结束技能1冲刺
-    private void EndSpecialMove1Dash()
+    private void EndSpecialDash()
     {
-        isSpecialMove1Dashing = false;
+        isSpecialDashing = false;
         isInvulnerable = false;
-
+        currentSpecialMove = "";  // 清空技能记录
         // 恢复原始层级
         SetPlayerPassThrough(false);
-
+        SetInvulnerable(false);  // 确保无敌状态也被重置
         // 恢复普通冲刺能力
         canDash = true;
     }
 
     // 技能1冲刺移动
-    private void ApplySpecialMove1DashMovement()
+    private void ApplySpecialDashMovement()
     {
         float dashDirection = isFacingRight ? 1f : -1f;
-        rb.velocity = new Vector2(dashDirection * specialMove1DashSpeed, 0f);
+        float dashSpeed = 0f;
+
+        // 根据不同的技能使用不同的速度
+        switch (currentSpecialMove)
+        {
+            case "SpecialMove1":
+                dashSpeed = specialMove1DashSpeed;
+                break;
+            case "SuperMove2":
+                dashSpeed = superMove2DashSpeed;
+                break;
+            default:
+                dashSpeed = specialMove1DashSpeed; // 默认速度
+                break;
+        }
+        rb.velocity = new Vector2(dashDirection * dashSpeed, 0f);
 
         // 冲刺期间无重力
         SetGravityScale(0);

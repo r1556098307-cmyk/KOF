@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSpecialMove1
+  m_Name: NormalSuperMove2
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,15 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 123e55e25e70c2d48a738ed15802f4b8, type: 3}
+      value: {fileID: 21300000, guid: 7f3a6513b4416f54386107d9bc3a8a3f, type: 3}
     - time: 0.1
-      value: {fileID: 21300000, guid: a4a2d18073ad84f45953ce05bd293670, type: 3}
+      value: {fileID: 21300000, guid: f594335d78323644ea8cd94e305c0dd7, type: 3}
     - time: 0.2
-      value: {fileID: 21300000, guid: a08c2d6dd4f498f469303010dc05beff, type: 3}
+      value: {fileID: 21300000, guid: 472f07e6d46c95a4fa36bc135a0ff4e6, type: 3}
     - time: 0.3
-      value: {fileID: 21300000, guid: 561030df3a5364743879cc5aa09f0263, type: 3}
+      value: {fileID: 21300000, guid: f0fc14e297206ab47a01d92bf557597f, type: 3}
+    - time: 0.4
+      value: {fileID: 21300000, guid: ef928d678c8631948b061ed174388742, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,21 +52,22 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 123e55e25e70c2d48a738ed15802f4b8, type: 3}
-    - {fileID: 21300000, guid: a4a2d18073ad84f45953ce05bd293670, type: 3}
-    - {fileID: 21300000, guid: a08c2d6dd4f498f469303010dc05beff, type: 3}
-    - {fileID: 21300000, guid: 561030df3a5364743879cc5aa09f0263, type: 3}
+    - {fileID: 21300000, guid: 7f3a6513b4416f54386107d9bc3a8a3f, type: 3}
+    - {fileID: 21300000, guid: f594335d78323644ea8cd94e305c0dd7, type: 3}
+    - {fileID: 21300000, guid: 472f07e6d46c95a4fa36bc135a0ff4e6, type: 3}
+    - {fileID: 21300000, guid: f0fc14e297206ab47a01d92bf557597f, type: 3}
+    - {fileID: 21300000, guid: ef928d678c8631948b061ed174388742, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.35000002
+    m_StopTime: 0.45000002
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
-    m_LoopTime: 0
+    m_LoopTime: 1
     m_LoopBlend: 0
     m_LoopBlendOrientation: 0
     m_LoopBlendPositionY: 0
@@ -81,19 +84,19 @@ AnimationClip:
   m_Events:
   - time: 0
     functionName: ActivateAttackByName
-    data: SpecialMove1Range
+    data: SuperMove2Range
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.3
+  - time: 0.4
     functionName: DeactivateAttackByName
-    data: SpecialMove1Range
+    data: SuperMove2Range
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.3
+  - time: 0.4
     functionName: EndSpecialDash
     data: 
     objectReferenceParameter: {fileID: 0}

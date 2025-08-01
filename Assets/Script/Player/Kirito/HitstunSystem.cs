@@ -9,6 +9,7 @@ public enum AttackType
     knockdown
 }
 
+
 public class HitstunSystem : MonoBehaviour
 {
     [Header("硬直配置")]
@@ -143,6 +144,13 @@ public class HitstunSystem : MonoBehaviour
 
         // 恢复原始颜色
         spriteRenderer.color = originalColor;
+
+        if(animator!=null)
+        {
+            animator.PlayAnimation("HitstunEnd");
+
+
+        }
 
 
         // 如果之前是击倒状态，触发恢复
@@ -324,14 +332,9 @@ public class HitstunSystem : MonoBehaviour
         // 播放起身动画
         if (animator != null)
         {
-            //animator.PlayAnimation("GetUp");
+            animator.PlayAnimation("GetUp");
         }
 
-        // 延迟恢复完全控制（起身动画期间）
-        Invoke(nameof(DelayedInputRecovery), 0.5f);
-
-        // 起身后延迟取消无敌状态
-        Invoke(nameof(EndInvincibilityAfterGetUp), 1.0f);
 
         // 触发起身事件
         OnGetUp?.Invoke();
@@ -345,6 +348,18 @@ public class HitstunSystem : MonoBehaviour
         if (!isInHitstun) // 确保不在其他硬直中
         {
             EnablePlayerInput();
+        }
+    }
+
+    // 由Animation Event调用的方法
+    public void OnGetUpAnimationComplete()
+    {
+        if (!isInHitstun && !isKnockedDown) // 确保状态正确
+        {
+            DelayedInputRecovery();
+            EndInvincibilityAfterGetUp();
+
+            Debug.Log("起身动画完成，恢复控制");
         }
     }
 

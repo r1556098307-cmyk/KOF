@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSpecialMove1
+  m_Name: NormalSuperMove1
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,19 +21,23 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 123e55e25e70c2d48a738ed15802f4b8, type: 3}
-    - time: 0.1
-      value: {fileID: 21300000, guid: a4a2d18073ad84f45953ce05bd293670, type: 3}
+      value: {fileID: 21300000, guid: 26fd3bd74891b7844bcbb26a16dba11f, type: 3}
+    - time: 0.06666667
+      value: {fileID: 21300000, guid: cf67209d680e09e4cb2a253b694ac242, type: 3}
+    - time: 0.13333334
+      value: {fileID: 21300000, guid: 14abb356d1d5c2c4fa55f5f221b961be, type: 3}
     - time: 0.2
-      value: {fileID: 21300000, guid: a08c2d6dd4f498f469303010dc05beff, type: 3}
-    - time: 0.3
-      value: {fileID: 21300000, guid: 561030df3a5364743879cc5aa09f0263, type: 3}
+      value: {fileID: 21300000, guid: aaecedebe5052454d81a2583b3f36e16, type: 3}
+    - time: 0.26666668
+      value: {fileID: 21300000, guid: 57b86e541986a2d4e86c2dd238b1424f, type: 3}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: e16c473dafca3d344a3c3ec32dd08957, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 20
+  m_SampleRate: 30
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -50,16 +54,18 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 123e55e25e70c2d48a738ed15802f4b8, type: 3}
-    - {fileID: 21300000, guid: a4a2d18073ad84f45953ce05bd293670, type: 3}
-    - {fileID: 21300000, guid: a08c2d6dd4f498f469303010dc05beff, type: 3}
-    - {fileID: 21300000, guid: 561030df3a5364743879cc5aa09f0263, type: 3}
+    - {fileID: 21300000, guid: 26fd3bd74891b7844bcbb26a16dba11f, type: 3}
+    - {fileID: 21300000, guid: cf67209d680e09e4cb2a253b694ac242, type: 3}
+    - {fileID: 21300000, guid: 14abb356d1d5c2c4fa55f5f221b961be, type: 3}
+    - {fileID: 21300000, guid: aaecedebe5052454d81a2583b3f36e16, type: 3}
+    - {fileID: 21300000, guid: 57b86e541986a2d4e86c2dd238b1424f, type: 3}
+    - {fileID: 21300000, guid: e16c473dafca3d344a3c3ec32dd08957, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.35000002
+    m_StopTime: 0.36666667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -79,23 +85,9 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0
+  - time: 0.2
     functionName: ActivateAttackByName
-    data: SpecialMove1Range
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.3
-    functionName: DeactivateAttackByName
-    data: SpecialMove1Range
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.3
-    functionName: EndSpecialDash
-    data: 
+    data: SuperMove1Range
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

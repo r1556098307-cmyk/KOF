@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightHitstun: 0.3
   heavyHitstun: 0.5
-  knockdownHitstun: 0.8
+  knockdownHitstun: 2
   hitstunColor: {r: 1, g: 0, b: 0, a: 1}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnifiedAttackTrigger : MonoBehaviour
 {
@@ -10,19 +11,23 @@ public class UnifiedAttackTrigger : MonoBehaviour
     [Header("检测设置")]
     [SerializeField] private LayerMask targetLayers; // 可攻击的层级
 
+    [Header("射线检测设置")]
+    [SerializeField] private bool useRaycast = false; // 是否使用射线检测
+    [SerializeField] private float rayDistance = 10f; // 射线距离
+    [SerializeField] private float rayWidth = 1f; // 射线宽度（用于BoxCast）
+    [SerializeField] private Vector2 rayOffset = Vector2.zero; // 射线起始偏移
+
 
     private Collider2D attackCollider;
-    private HashSet<GameObject> hitTargets; // 防止重复命中
     private bool isActive = false;
     [SerializeField]
     private Transform attackerTransform; // 攻击者的Transform
-
     private PlayerController playerController;
 
     private void Awake()
     {
         attackCollider = GetComponent<Collider2D>();
-        hitTargets = new HashSet<GameObject>();
+        //hitTargets = new HashSet<GameObject>();
         playerController = GetComponentInParent<PlayerController>();
 
         // 获取攻击者Transform
@@ -37,13 +42,19 @@ public class UnifiedAttackTrigger : MonoBehaviour
     public void ActivateAttack()
     {
         isActive = true;
-       hitTargets.Clear(); // 清空已命中列表，允许新的攻击
 
-        if (attackCollider != null)
-            attackCollider.enabled = true;
+        if (useRaycast && attackConfig.attackName == "SuperMove1")
+        {
+            PerformRaycastAttack();
+        }
+        else
+        {
+            if (attackCollider != null)
+                attackCollider.enabled = true;
+        }
 
-        if (attackConfig.attackName == "SpecialMove1")
-            playerController.StartSpecialMove1Dash();
+        if (attackConfig.attackName == "SpecialMove1"|| attackConfig.attackName == "SuperMove2")
+            playerController.StartSpecialDash(attackConfig.attackName);
 
         //Debug.Log($"攻击框激活: {attackConfig.attackName}");
     }
@@ -59,6 +70,60 @@ public class UnifiedAttackTrigger : MonoBehaviour
         //Debug.Log($"攻击框关闭: {attackConfig.attackName}");
     }
 
+
+   
+
+
+    private void PerformRaycastAttack()
+    {
+        // 获取攻击者朝向
+        bool facingRight = playerController.isFacingRight;
+        Vector2 rayDirection = facingRight ? Vector2.right : Vector2.left;
+
+        // 计算射线起始位置
+        Vector2 rayStart = (Vector2)attackerTransform.position + rayOffset;
+
+        // 使用BoxCast检测
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(
+            rayStart,                    // 起始位置
+            new Vector2(rayWidth, 0.5f), // 检测框大小
+            0f,                          // 旋转角度
+            rayDirection,                // 方向
+            rayDistance,                 // 距离
+            targetLayers                 // 目标层级
+        );
+
+        // 处理所有命中的目标
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (CanHitTarget(hit.collider.gameObject))
+            {
+                ProcessHit(hit.collider.gameObject);
+            }
+        }
+
+        // 绘制调试射线
+        DrawDebugRay(rayStart, rayDirection);
+    }
+
+    private void DrawDebugRay(Vector2 start, Vector2 direction)
+    {
+        // 在Scene视图中绘制调试射线
+        Debug.DrawRay(start, direction * rayDistance, Color.red, 0.5f);
+
+        // 绘制检测框的边界
+        Vector2 end = start + direction * rayDistance;
+        Vector2 topLeft = start + Vector2.up * (rayWidth / 2);
+        Vector2 bottomLeft = start + Vector2.down * (rayWidth / 2);
+        Vector2 topRight = end + Vector2.up * (rayWidth / 2);
+        Vector2 bottomRight = end + Vector2.down * (rayWidth / 2);
+
+        Debug.DrawLine(topLeft, topRight, Color.yellow, 0.5f);
+        Debug.DrawLine(bottomLeft, bottomRight, Color.yellow, 0.5f);
+        Debug.DrawLine(topLeft, bottomLeft, Color.yellow, 0.5f);
+        Debug.DrawLine(topRight, bottomRight, Color.yellow, 0.5f);
+    }
+
     // 设置攻击配置（运行时修改）
     public void SetAttackConfig(AttackConfig config)
     {
@@ -69,13 +134,62 @@ public class UnifiedAttackTrigger : MonoBehaviour
     {
         if (!isActive) return;
 
-        // 检查是否可以命中目标
+        // 普通攻击逻辑
         if (CanHitTarget(collision.gameObject))
         {
-            //Debug.Log("可命中");
             ProcessHit(collision.gameObject);
         }
     }
+
+
+
+    private void ProcessFullScreenHit(GameObject target)
+    {
+        if (target == null) return;
+
+        // 获取目标组件
+        HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();
+        PlayerController targetPlayer = target.GetComponent<PlayerController>();
+        PlayerStats targetStats = target.GetComponent<PlayerStats>();
+
+        // 计算攻击方向
+        Vector2 attackDirection = CalculateAttackDirection(target);
+
+        if (IsBlocking(targetPlayer, attackDirection))
+        {
+            ProcessBlockedHit(target, attackDirection);
+            return;
+        }
+
+        // 处理伤害
+        if (targetStats != null)
+        {
+            PlayerStats attackerStats = playerController.GetComponent<PlayerStats>();
+            if (attackerStats != null)
+            {
+                // 每次Tick的伤害
+                int tickDamage = Mathf.Max(1, attackConfig.damage / 5);
+                int tickEnergyRecovery = attackConfig.energyRecovery / 5;
+
+                bool targetDied = attackerStats.TakeDamage(targetStats, tickDamage, tickEnergyRecovery);
+
+                if (targetDied)
+                {
+                    HandleTargetDeath(target);
+                    return;
+                }
+            }
+        }
+
+        // 应用硬直和击退
+        if (targetHitstun != null)
+        {
+            targetHitstun.TakeHit(attackConfig, attackDirection);
+        }
+
+        Debug.Log($"全屏攻击Tick: {target.name}");
+    }
+
 
     private bool CanHitTarget(GameObject target)
     {
@@ -88,7 +202,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
             return false;
 
         // 防止重复命中
-        if (hitTargets.Contains(target)) return false;
+        //if (hitTargets.Contains(target)) return false;
 
         // 检查是否有有效的目标组件
         HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();
@@ -100,7 +214,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
     private void ProcessHit(GameObject target)
     {
         // 添加到已命中列表
-        hitTargets.Add(target);
+        //hitTargets.Add(target);
 
         // 获取目标组件
         HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();

@@ -19,10 +19,14 @@ public class ComboSystem : MonoBehaviour
     {
         public string skillName;
         public List<GameInputKey> keySequence = new List<GameInputKey>();
+
+        public int energyCost = 0;
+
         public UnityEngine.Events.UnityEvent onSkillTriggered;
     }
     private PlayerController playerController;
     private HitstunSystem hitstunSystem;
+    private PlayerStats playerStats;
 
     [Header("连招配置")]
     public List<ComboData> combos;
@@ -56,6 +60,7 @@ public class ComboSystem : MonoBehaviour
         inputControl = new PlayerInputControl();
         playerController = GetComponent<PlayerController>();
         hitstunSystem = GetComponent<HitstunSystem>();
+        playerStats = GetComponent<PlayerStats>();
         BindInputEvents();
     }
 
@@ -263,12 +268,34 @@ public class ComboSystem : MonoBehaviour
 
                 if (isValidSequence)
                 {
-                    //Debug.Log($"Combo triggered: {combos[i].skillName}");
-                    comboTriggered = true;
-                    combos[i].onSkillTriggered.Invoke();
-                    // 连招释放成功后清除列表
-                    inputHistory.Clear();
-                    return;
+                    ////Debug.Log($"Combo triggered: {combos[i].skillName}");
+                    //comboTriggered = true;
+                    //combos[i].onSkillTriggered.Invoke();
+                    //// 连招释放成功后清除列表
+                    //inputHistory.Clear();
+                    //return;
+
+                    // 检查能量是否足够
+                if (playerStats.HasSufficientEnergy(combos[i].energyCost))
+                    {
+                        //Debug.Log($"连招触发: {combos[i].skillName}");
+                        comboTriggered = true;
+
+                        // 消耗能量
+                        playerStats.ConsumeEnergy(combos[i].energyCost);
+
+                        // 触发技能
+                        combos[i].onSkillTriggered.Invoke();
+
+                        // 连招释放成功后清除列表
+                        inputHistory.Clear();
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Log($"能量不足，无法释放 {combos[i].skillName}");
+                        return;
+                    }
                 }
             }
         }

@@ -102,8 +102,25 @@ public class PlayerAnimator : MonoBehaviour
         anim.SetTrigger("specialMove3");
     }
 
+    public void SuperMove1()
+    {
+        Debug.Log("≥¨±ÿ…±1");
+        anim.SetTrigger("superMove1");
+    }
+
+    public void SuperMove2()
+    {
+        Debug.Log("≥¨±ÿ…±2");
+        anim.SetTrigger("superMove2");
+    }
+
     public void PlayAnimation(string animationName)
     {
+        anim.ResetTrigger("hurtLight");
+        anim.ResetTrigger("hurtHeavy");
+        anim.ResetTrigger("knockdown");
+        anim.ResetTrigger("hitStunEnd");
+
         switch (animationName)
         {
             case "LightHit":
@@ -114,6 +131,12 @@ public class PlayerAnimator : MonoBehaviour
                 break;
             case "KnockdownHit":
                 anim.SetTrigger("knockdown");
+                break;
+            case"GetUp":
+                anim.SetTrigger("getup");
+                break;
+            case "HitstunEnd":
+                anim.SetTrigger("hitStunEnd");
                 break;
         }
 
