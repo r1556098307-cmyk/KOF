@@ -143,52 +143,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
 
 
 
-    private void ProcessFullScreenHit(GameObject target)
-    {
-        if (target == null) return;
-
-        // 获取目标组件
-        HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();
-        PlayerController targetPlayer = target.GetComponent<PlayerController>();
-        PlayerStats targetStats = target.GetComponent<PlayerStats>();
-
-        // 计算攻击方向
-        Vector2 attackDirection = CalculateAttackDirection(target);
-
-        if (IsBlocking(targetPlayer, attackDirection))
-        {
-            ProcessBlockedHit(target, attackDirection);
-            return;
-        }
-
-        // 处理伤害
-        if (targetStats != null)
-        {
-            PlayerStats attackerStats = playerController.GetComponent<PlayerStats>();
-            if (attackerStats != null)
-            {
-                // 每次Tick的伤害
-                int tickDamage = Mathf.Max(1, attackConfig.damage / 5);
-                int tickEnergyRecovery = attackConfig.energyRecovery / 5;
-
-                bool targetDied = attackerStats.TakeDamage(targetStats, tickDamage, tickEnergyRecovery);
-
-                if (targetDied)
-                {
-                    HandleTargetDeath(target);
-                    return;
-                }
-            }
-        }
-
-        // 应用硬直和击退
-        if (targetHitstun != null)
-        {
-            targetHitstun.TakeHit(attackConfig, attackDirection);
-        }
-
-        Debug.Log($"全屏攻击Tick: {target.name}");
-    }
+   
 
 
     private bool CanHitTarget(GameObject target)
@@ -334,14 +289,24 @@ public class UnifiedAttackTrigger : MonoBehaviour
         Rigidbody2D targetRb = target.GetComponent<Rigidbody2D>();
         if (targetRb != null)
         {
+            //Debug.Log($"被击退方向{attackDirection}，被击退力{attackConfig.blockKnockbackForce}");
             Vector2 blockKnockback = attackDirection * attackConfig.blockKnockbackForce;
             targetRb.AddForce(blockKnockback, ForceMode2D.Impulse);
+
+            // 短暂延迟后停止滑行
+            StartCoroutine(StopKnockbackSliding(targetRb));
         }
 
         // 播放格挡效果
         //PlayBlockEffects(target.transform.position);
     }
+    private IEnumerator StopKnockbackSliding(Rigidbody2D rb)
+    {
+        yield return new WaitForSeconds(0.1f); // 允许短暂的击退效果
 
+        // 停止水平速度，保持垂直速度
+        rb.velocity = new Vector2(0, rb.velocity.y);
+    }
 
     private void PlayHitEffects(Vector3 position)
     {

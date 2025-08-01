@@ -85,6 +85,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayer;
 
+    // 物理材质设置
+    [Header("物理材质设置")]
+    [SerializeField] private PhysicsMaterial2D normalMaterial; 
+    [SerializeField] private PhysicsMaterial2D wallMaterial; 
+
     // 墙面检测点
     [SerializeField]
     private Transform wallCheckPoint;           // 墙面检测点
@@ -106,7 +111,12 @@ public class PlayerController : MonoBehaviour
             wallLayer = groundLayer;
         }
 
-        
+        if (capsuleCollider != null)
+        {
+            capsuleCollider.sharedMaterial = normalMaterial;
+        }
+
+
     }
 
     private void Start()
@@ -279,6 +289,7 @@ public class PlayerController : MonoBehaviour
         // Debug.Log(isTouchingWall);
         if (isTouchingWall)
         {
+            capsuleCollider.sharedMaterial = wallMaterial;
 
             // 判断是否应该开始墙面滑落
             // 条件：接触墙面 + 在空中 + 正在下落
@@ -289,6 +300,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            capsuleCollider.sharedMaterial = normalMaterial;
+
             isWallSliding = false;
         }
     }
@@ -468,8 +481,6 @@ public class PlayerController : MonoBehaviour
         // 格挡期间不能移动
         if (isBlock)
         {
-            // 停止水平移动
-            rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
 
@@ -567,7 +578,7 @@ public class PlayerController : MonoBehaviour
         // 冲刺时和墙面滑落时不能攻击
         if (isDash || isWallSliding) return;
 
-        animator.Attack();
+        animator.PlaySkill("Attack");
         isAttack = true;
 
         // 施加攻击力和启动速度控制

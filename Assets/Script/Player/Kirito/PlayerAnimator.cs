@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class SkillAnimationData
+{
+    public string skillName;
+    public string animationTrigger;
+}
+
 public class PlayerAnimator : MonoBehaviour
 {
     private PlayerController controller;
@@ -9,6 +16,8 @@ public class PlayerAnimator : MonoBehaviour
 
     public bool justLanded;
     public bool startedJumping;
+
+    [SerializeField] private List<SkillAnimationData> skillAnimations;
 
     private void Awake()
     {
@@ -54,9 +63,13 @@ public class PlayerAnimator : MonoBehaviour
         //}
     }
 
-    public void Attack()
+    public void PlaySkill(string skillName)
     {
-        anim.SetTrigger("attack");
+        var skillData = skillAnimations.Find(s => s.skillName == skillName);
+        if (skillData != null)
+        {
+            anim.SetTrigger(skillData.animationTrigger);
+        }
     }
 
     //public void StartJump()
@@ -69,50 +82,6 @@ public class PlayerAnimator : MonoBehaviour
     //    justLanded = true;
     //}
 
-    public void HurtLight()
-    {
-        anim.SetTrigger("hurtLight");
-    }
-
-    public void HurtHeavy()
-    {
-        anim.SetTrigger("hurtHeavy");
-    }
-
-    public void Knockdown()
-    {
-        anim.SetTrigger("knockdown");
-    }
-
-    public void SpecailMove1()
-    {
-        Debug.Log("技能1");
-        anim.SetTrigger("specialMove1");
-    }
-
-    public void SpecailMove2()
-    {
-        Debug.Log("技能2");
-        anim.SetTrigger("specialMove2");
-    }
-
-    public void SpecailMove3()
-    {
-        Debug.Log("技能3");
-        anim.SetTrigger("specialMove3");
-    }
-
-    public void SuperMove1()
-    {
-        Debug.Log("超必杀1");
-        anim.SetTrigger("superMove1");
-    }
-
-    public void SuperMove2()
-    {
-        Debug.Log("超必杀2");
-        anim.SetTrigger("superMove2");
-    }
 
     public void PlayAnimation(string animationName)
     {

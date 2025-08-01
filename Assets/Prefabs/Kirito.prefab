@@ -97,7 +97,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 10.413486, y: 3.5085433}
+  m_Offset: {x: 0.9612441, y: -0.97726583}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -108,7 +108,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 28.491598, y: 16.02746}
+  m_Size: {x: 9.587121, y: 4.0439444}
   m_EdgeRadius: 0
 --- !u!114 &9072203890869361396
 MonoBehaviour:
@@ -123,12 +123,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackConfig:
-    attackType: 1
-    damage: 10
-    energyRecovery: 10
-    attackName: Attack
-    knockbackForce: 5
-    knockupForce: 0
+    attackType: 2
+    damage: 300
+    energyRecovery: 0
+    attackName: SuperMove2
+    knockbackForce: 20
+    knockupForce: 20
     isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
     blockKnockbackForce: 2
@@ -142,9 +142,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 1
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &500939125153731504
 GameObject:
@@ -288,9 +285,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &1101702461860000137
 GameObject:
@@ -441,9 +435,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &3558896998903197036
 GameObject:
@@ -593,9 +584,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &4094738171528663575
 GameObject:
@@ -754,7 +742,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -824,6 +812,7 @@ MonoBehaviour:
   crouchingColliderOffset: {x: 0, y: -1.5}
   crouchingColliderSize: {x: 1.2, y: 2.35}
   specialMove1DashSpeed: 20
+  superMove2DashSpeed: 30
   isInvulnerable: 0
   lastOnGroundTime: 0
   LastPressedJumpTime: 0
@@ -837,6 +826,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  normalMaterial: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
+  wallMaterial: {fileID: 6200000, guid: 55985e3e84efdb74abf18909689ea8b6, type: 2}
   wallCheckPoint: {fileID: 1382072519194258503}
   wallCheckSize: {x: 1.27, y: 0.8}
 --- !u!95 &8212930349969534637
@@ -1201,9 +1192,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &5398552076830294549
 GameObject:
@@ -1479,9 +1467,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &7764368292334054875
 GameObject:
@@ -1593,9 +1578,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8074852994821401398
 GameObject:
@@ -1715,9 +1697,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8384935198367284628
 GameObject:
@@ -1829,9 +1808,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8408638841201397966
 GameObject:
@@ -1952,9 +1928,6 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &8650266299891597525
 GameObject:
@@ -2051,9 +2024,6 @@ MonoBehaviour:
   rayDistance: 30
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
-  useFullScreenStay: 0
-  damageInterval: 0.5
-  fullScreenDuration: 3
   attackerTransform: {fileID: 0}
 --- !u!1 &9167528121984047912
 GameObject:

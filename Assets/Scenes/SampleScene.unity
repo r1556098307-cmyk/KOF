@@ -454,7 +454,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 424556446635804781, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
       propertyPath: isBlock
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 424556446635804781, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
       propertyPath: PlayerId
@@ -4670,6 +4670,102 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[0].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[1].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[2].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[3].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[4].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[5].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[6].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[0].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[1].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[2].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[3].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[4].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[5].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[6].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[0].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerAnimator, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[1].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerAnimator, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[3].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerAnimator, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[0].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SpecialMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[1].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SpecialMove2
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[2].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SpecialMove2
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[3].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SpecialMove3
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[4].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SuperMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[5].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SuperMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 984285861080286270, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: combos.Array.data[6].onSkillTriggered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SuperMove2
+      objectReference: {fileID: 0}
     - target: {fileID: 1363902767608326657, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.84
@@ -4714,45 +4810,77 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kirito
       objectReference: {fileID: 0}
-    - target: {fileID: 5982781382410285113, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: m_Size.x
-      value: 9.587121
-      objectReference: {fileID: 0}
-    - target: {fileID: 5982781382410285113, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: m_Size.y
-      value: 4.0439444
-      objectReference: {fileID: 0}
-    - target: {fileID: 5982781382410285113, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: m_Offset.x
-      value: 0.9612441
-      objectReference: {fileID: 0}
-    - target: {fileID: 5982781382410285113, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.97726583
-      objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.damage
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.attackName
-      value: SuperMove2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.attackType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.knockupForce
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.energyRecovery
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: startedJumping
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9072203890869361396, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
-      propertyPath: attackConfig.knockbackForce
-      value: 20
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[0].skillName
+      value: Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[1].skillName
+      value: HurtLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[2].skillName
+      value: Knockdown
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[3].skillName
+      value: SpecialMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[4].skillName
+      value: SpecialMove2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[5].skillName
+      value: SpecialMove3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[6].skillName
+      value: SuperMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[7].skillName
+      value: SuperMove2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[0].animationTrigger
+      value: attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[1].animationTrigger
+      value: hurtLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[2].animationTrigger
+      value: knocdown
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[3].animationTrigger
+      value: specialMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[4].animationTrigger
+      value: specialMove2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[5].animationTrigger
+      value: specialMove3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[6].animationTrigger
+      value: superMove1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459452849793084597, guid: 40a6762b1da0c6a4fbc5acf0b75449eb, type: 3}
+      propertyPath: skillAnimations.Array.data[7].animationTrigger
+      value: superMove2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
