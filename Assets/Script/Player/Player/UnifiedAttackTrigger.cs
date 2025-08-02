@@ -11,6 +11,10 @@ public class UnifiedAttackTrigger : MonoBehaviour
     [Header("检测设置")]
     [SerializeField] private LayerMask targetLayers; // 可攻击的层级
 
+    [Header("冲刺攻击设置")]
+    [SerializeField] private bool useDash = false; // 是否使用冲刺攻击
+    [SerializeField] private bool isDashInvulnerable = false; // 冲刺攻击是是否无敌
+
     [Header("射线检测设置")]
     [SerializeField] private bool useRaycast = false; // 是否使用射线检测
     [SerializeField] private float rayDistance = 10f; // 射线距离
@@ -43,7 +47,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
     {
         isActive = true;
 
-        if (useRaycast && attackConfig.attackName == "SuperMove1")
+        if (useRaycast)
         {
             PerformRaycastAttack();
         }
@@ -53,8 +57,11 @@ public class UnifiedAttackTrigger : MonoBehaviour
                 attackCollider.enabled = true;
         }
 
-        if (attackConfig.attackName == "SpecialMove1"|| attackConfig.attackName == "SuperMove2")
-            playerController.StartSpecialDash(attackConfig.attackName);
+        if(useDash)
+        {
+            playerController.StartSpecialDash(isDashInvulnerable,attackConfig.attackName);
+        }
+           
 
         //Debug.Log($"攻击框激活: {attackConfig.attackName}");
     }
@@ -278,7 +285,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
         bool targetFacingRight = targetPlayer.isFacingRight;
 
         // 正确的格挡方向：面向攻击来源
-        return (attackFromRight && targetFacingRight) || (!attackFromRight && !targetFacingRight);
+        return (attackFromRight && !targetFacingRight) || (!attackFromRight && targetFacingRight);
     }
 
     private void ProcessBlockedHit(GameObject target, Vector2 attackDirection)

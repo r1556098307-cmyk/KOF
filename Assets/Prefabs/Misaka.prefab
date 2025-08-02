@@ -201,7 +201,133 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8058f12bad30ca488da0b0e373c4513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combos: []
+  combos:
+  - skillName: "\u6280\u80FD1"
+    keySequence: 010000000100000005000000
+    energyCost: 0
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SpecialMove1
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u6280\u80FD2"
+    keySequence: 000000000000000004000000
+    energyCost: 0
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SpecialMove2
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u6280\u80FD3"
+    keySequence: 03000000030000000000000004000000
+    energyCost: 0
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SpecialMove3
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u6280\u80FD3"
+    keySequence: 02000000020000000000000004000000
+    energyCost: 0
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SpecialMove3
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u8D85\u5FC5\u67401"
+    keySequence: 000000000100000000000000010000000400000005000000
+    energyCost: 1
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SuperMove1
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u8D85\u5FC5\u67402"
+    keySequence: 000000000400000001000000040000000300000004000000
+    energyCost: 3
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SuperMove2
+            m_BoolArgument: 0
+          m_CallState: 2
+  - skillName: "\u8D85\u5FC5\u67402"
+    keySequence: 000000000400000001000000040000000200000004000000
+    energyCost: 3
+    onSkillTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SuperMove2
+            m_BoolArgument: 0
+          m_CallState: 2
   inputHistory: 
   inputClearDelay: 2
   movementThreshold: 0.5
@@ -400,7 +526,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2678666325391186600}
-  - component: {fileID: 6883443038036537173}
+  - component: {fileID: 111597164586150530}
   - component: {fileID: 6406069822304670846}
   m_Layer: 0
   m_Name: Range
@@ -424,8 +550,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6638920232938319188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &6883443038036537173
-CircleCollider2D:
+--- !u!61 &111597164586150530
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -456,9 +582,19 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.13953876, y: -0.57211065}
+  m_Offset: {x: 1.7480505, y: -0.5440947}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 3.3884602
+  m_Size: {x: 3.060616, y: 3.9867332}
+  m_EdgeRadius: 0
 --- !u!114 &6406069822304670846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +623,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -598,6 +736,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -612,7 +752,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1480446182033143007}
-  - component: {fileID: 1114581094542625558}
+  - component: {fileID: 6751237035956524123}
   - component: {fileID: 7861079742483097296}
   m_Layer: 0
   m_Name: Range
@@ -636,8 +776,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9066026676616681029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1114581094542625558
-BoxCollider2D:
+--- !u!58 &6751237035956524123
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -668,19 +808,9 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.26689816, y: -0.9392525}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0.20031285, y: -0.35845423}
   serializedVersion: 2
-  m_Size: {x: 3.109766, y: 2.9343207}
-  m_EdgeRadius: 0
+  m_Radius: 2.808865
 --- !u!114 &7861079742483097296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,8 +828,8 @@ MonoBehaviour:
     damage: 30
     energyRecovery: 20
     attackName: SpecialMove1
-    knockbackForce: 10
-    knockupForce: 10
+    knockbackForce: 0
+    knockupForce: 15
     isAddUpForce: 1
     customKnockbackDirection: {x: 0, y: 0}
     blockKnockbackForce: 2
@@ -709,6 +839,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -907,7 +1039,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.6884232, y: 1.2139901}
+  m_Offset: {x: 0.07124579, y: 3.1931481}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -918,7 +1050,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.92564, y: 2.534931}
+  m_Size: {x: 4.9370356, y: 11.638114}
   m_EdgeRadius: 0
 --- !u!114 &6688823222797047680
 MonoBehaviour:
@@ -948,6 +1080,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -993,7 +1127,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4658505321414930530}
-  - component: {fileID: 2485210615101464456}
   - component: {fileID: 6006684049647180408}
   m_Layer: 7
   m_Name: Range
@@ -1017,51 +1150,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 661714844503989330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2485210615101464456
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5351256557946910667}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.9612441, y: -0.97726583}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 9.587121, y: 4.0439444}
-  m_EdgeRadius: 0
 --- !u!114 &6006684049647180408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1090,8 +1178,10 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
-  useRaycast: 0
-  rayDistance: 10
+  useDash: 0
+  isDashInvulnerable: 0
+  useRaycast: 1
+  rayDistance: 30
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
   attackerTransform: {fileID: 0}
@@ -1155,8 +1245,10 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 1
-  rayDistance: 30
+  rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
   attackerTransform: {fileID: 0}
@@ -1266,6 +1358,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -1409,6 +1503,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -1551,6 +1647,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -1662,6 +1760,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1
@@ -1901,6 +2001,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 640
+  useDash: 0
+  isDashInvulnerable: 0
   useRaycast: 0
   rayDistance: 10
   rayWidth: 1

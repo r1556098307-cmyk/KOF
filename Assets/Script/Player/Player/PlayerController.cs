@@ -350,7 +350,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isDash)  // 非冲刺状态
         {
-            if (isWallSliding)
+            if (isWallSliding&&!hitstunSystem.IsInHitstun())
             {
                 // 墙面滑落时使用特殊重力
                 SetGravityScale(movementData.gravityScale * movementData.wallSlideGravity);
@@ -416,17 +416,16 @@ public class PlayerController : MonoBehaviour
     }
 
     // 开始技能1冲刺
-    public void StartSpecialDash(string skillName)
+    public void StartSpecialDash(bool flag,string skillName)
     {
         isSpecialDashing = true;
         isInvulnerable = true;
         currentSpecialMove = skillName;  // 记录当前技能名称
 
-        if (skillName == "SpecialMove1")
-            SetPlayerPassThrough(true);  // 切换到穿透玩家层（避免与其他玩家碰撞，但仍会受到伤害）
-        else if (skillName == "SuperMove2")
+        if (flag)
             SetInvulnerable(true);
-
+        else
+            SetPlayerPassThrough(true);
 
         // 取消其他状态
         isAttack = false;
