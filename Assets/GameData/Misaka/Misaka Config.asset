@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4011b44863544c0498330fa1763a3882, type: 3}
+  m_Name: Misaka Config
+  m_EditorClassIdentifier: 
+  standingCollider:
+    offset: {x: 0, y: -0.84}
+    size: {x: 1.2, y: 3.66}
+  crouchingCollider:
+    offset: {x: 0, y: -1.5}
+    size: {x: 1.2, y: 2.35}
+  layers:
+    invulnerableLayerName: Invulnerable
+    playerPassThroughLayerName: PlayerPassThrough
+  detection:
+    groundCheckSize: {x: 0.49, y: 0.03}
+    wallCheckSize: {x: 1.5, y: 0.8}
+  skills:
+    specialMoveConfigs: []
+  normalMaterial: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
+  wallMaterial: {fileID: 6200000, guid: 55985e3e84efdb74abf18909689ea8b6, type: 2}

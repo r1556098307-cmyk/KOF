@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e12b1d8c5f46647904d53893151265, type: 3}
+  m_Name: Kirito Hitstun Data
+  m_EditorClassIdentifier: 
+  lightHitstun: 0.3
+  heavyHitstun: 0.5
+  knockdownHitstun: 2
+  hitstunColor: {r: 1, g: 0, b: 0, a: 1}

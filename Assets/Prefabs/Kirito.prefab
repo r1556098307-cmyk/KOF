@@ -767,6 +767,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   justLanded: 0
   startedJumping: 0
+  skillAnimations:
+  - skillName: Attack
+    animationTrigger: attack
+  - skillName: HurtLight
+    animationTrigger: hurtLight
+  - skillName: Knockdown
+    animationTrigger: knocdown
+  - skillName: SpecialMove1
+    animationTrigger: specialMove1
+  - skillName: SpecialMove2
+    animationTrigger: specialMove2
+  - skillName: SpecialMove3
+    animationTrigger: specialMove3
+  - skillName: SuperMove1
+    animationTrigger: superMove1
+  - skillName: SuperMove2
+    animationTrigger: superMove2
 --- !u!114 &4929217910741450394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6580042231efd44e852f6717d9c8328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 6f9aec8127cdca44f82e2d748b76eaf1, type: 2}
   movementData: {fileID: 11400000, guid: 271aa5bc12f54354993970692c99034c, type: 2}
   combatData: {fileID: 11400000, guid: fbbf8024ba6f09f4ab08a118c3233dbc, type: 2}
   animator: {fileID: 0}
@@ -807,12 +825,6 @@ MonoBehaviour:
   isGround: 0
   isAttack: 0
   isJumpFall: 0
-  standingColliderOffset: {x: 0, y: -0.84}
-  standingColliderSize: {x: 1.2, y: 3.66}
-  crouchingColliderOffset: {x: 0, y: -1.5}
-  crouchingColliderSize: {x: 1.2, y: 2.35}
-  specialMove1DashSpeed: 20
-  superMove2DashSpeed: 30
   isInvulnerable: 0
   lastOnGroundTime: 0
   LastPressedJumpTime: 0
@@ -822,14 +834,10 @@ MonoBehaviour:
   isWallSliding: 0
   isTouchingWall: 0
   groundCheckPoint: {fileID: 2495334764808568647}
-  groundCheckSize: {x: 0.49, y: 0.03}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  normalMaterial: {fileID: 6200000, guid: a062f315f9a72864aa3ca9864ad3793c, type: 2}
-  wallMaterial: {fileID: 6200000, guid: 55985e3e84efdb74abf18909689ea8b6, type: 2}
   wallCheckPoint: {fileID: 1382072519194258503}
-  wallCheckSize: {x: 1.27, y: 0.8}
 --- !u!95 &8212930349969534637
 Animator:
   serializedVersion: 5
@@ -871,15 +879,15 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
-          m_TargetAssemblyTypeName: KiritoAnimator, Assembly-CSharp
-          m_MethodName: SpecailMove1
-          m_Mode: 1
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SpecialMove1
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u6280\u80FD2"
@@ -889,15 +897,15 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
-          m_TargetAssemblyTypeName: KiritoAnimator, Assembly-CSharp
-          m_MethodName: SpecailMove2
-          m_Mode: 1
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SpecialMove2
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u6280\u80FD2"
@@ -908,14 +916,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
           m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
-          m_MethodName: SpecailMove2
-          m_Mode: 1
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SpecialMove2
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u6280\u80FD3"
@@ -925,15 +933,15 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
-          m_TargetAssemblyTypeName: KiritoAnimator, Assembly-CSharp
-          m_MethodName: SpecailMove3
-          m_Mode: 1
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SpecialMove3
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67401"
@@ -944,14 +952,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
           m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
-          m_MethodName: SuperMove1
-          m_Mode: 1
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SuperMove1
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67401"
@@ -962,14 +970,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
           m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
-          m_MethodName: SuperMove1
-          m_Mode: 1
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SuperMove1
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67402"
@@ -980,14 +988,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 7459452849793084597}
           m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
-          m_MethodName: SuperMove2
-          m_Mode: 1
+          m_MethodName: PlaySkill
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: SuperMove2
             m_BoolArgument: 0
           m_CallState: 2
   inputHistory: 
