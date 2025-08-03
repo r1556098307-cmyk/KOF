@@ -89,6 +89,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: OnComboAnimationStart
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.4
     functionName: DeactivateAttackByName
     data: SuperMove2Range
@@ -98,6 +105,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.4
     functionName: EndSpecialDash
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.4
+    functionName: OnComboAnimationEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

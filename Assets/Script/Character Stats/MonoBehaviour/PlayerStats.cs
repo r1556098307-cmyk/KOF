@@ -12,7 +12,7 @@ public class PlayerStats : MonoBehaviour
 
     public event Action<int, int> UpdateHealthBarOnAttack;
 
-    public event Action<int, int,int,int> UpdateEnergyBarOnAttack;
+    public event Action<int, int, int, int> UpdateEnergyBarOnAttack;
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class PlayerStats : MonoBehaviour
             // 初始化当前值为最大值
             InitializeStats();
         }
-            
+
     }
 
     private void InitializeStats()
@@ -72,7 +72,16 @@ public class PlayerStats : MonoBehaviour
         {
             if (playerData != null && playerData.currentEnergyNum != value)
             {
-                playerData.currentEnergyNum = value;
+                // 添加边界检查，防止能量变为负数
+                int clampedValue = Mathf.Max(0, value);
+                playerData.currentEnergyNum = clampedValue;
+
+                // 如果尝试设置负值，记录警告
+                if (value < 0)
+                {
+                    Debug.LogWarning($"Attempted to set CurrentEnergyNum to negative value {value}, clamped to 0");
+                }
+
                 UpdateEnergyBarOnAttack?.Invoke(CurrentEnergy, MaxEnergy, CurrentEnergyNum, MaxEnergyNum);
             }
         }
@@ -149,14 +158,92 @@ public class PlayerStats : MonoBehaviour
 
     public bool HasSufficientEnergy(int energyCost)
     {
-
         return CurrentEnergyNum >= energyCost;
     }
 
+    // 修复：添加边界检查的能量消耗方法
     public void ConsumeEnergy(int energyCost)
     {
-        CurrentEnergyNum -= energyCost;
+        if (energyCost < 0)
+        {
+            Debug.LogWarning($"Attempted to consume negative energy: {energyCost}");
+            return;
+        }
+
+        if (CurrentEnergyNum < energyCost)
+        {
+            Debug.LogWarning($"Insufficient energy to consume! Current: {CurrentEnergyNum}, Required: {energyCost}");
+            // 可以选择设置为0或者不执行消耗
+            CurrentEnergyNum = 0;
+        }
+        else
+        {
+            CurrentEnergyNum -= energyCost;
+        }
+
+        Debug.Log($"Energy consumed: {energyCost}, Remaining: {CurrentEnergyNum}");
+    }
+
+    // 新增：设置能量的方法（用于修正负数能量）
+    public void SetEnergy(int energyNum)
+    {
+        if (energyNum < 0)
+        {
+            Debug.LogWarning($"Attempted to set energy to negative value: {energyNum}, setting to 0 instead");
+            energyNum = 0;
+        }
+
+        if (energyNum > MaxEnergyNum)
+        {
+            Debug.LogWarning($"Attempted to set energy to value higher than max: {energyNum}, clamping to {MaxEnergyNum}");
+            energyNum = MaxEnergyNum;
+        }
+
+        CurrentEnergyNum = energyNum;
+        Debug.Log($"Energy set to: {CurrentEnergyNum}");
+    }
+
+    // 新增：安全的能量消耗方法（返回是否成功）
+    public bool TryConsumeEnergy(int energyCost)
+    {
+        if (HasSufficientEnergy(energyCost))
+        {
+            ConsumeEnergy(energyCost);
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"Cannot consume {energyCost} energy. Current energy: {CurrentEnergyNum}");
+            return false;
+        }
+    }
+
+    // 新增：添加能量的方法
+    public void AddEnergy(int energyAmount)
+    {
+        if (energyAmount < 0)
+        {
+            Debug.LogWarning($"Attempted to add negative energy: {energyAmount}");
+            return;
+        }
+
+        int newEnergy = Mathf.Min(CurrentEnergyNum + energyAmount, MaxEnergyNum);
+        CurrentEnergyNum = newEnergy;
+        Debug.Log($"Energy added: {energyAmount}, Current: {CurrentEnergyNum}");
+    }
+
+    // 新增：重置能量的方法
+    public void ResetEnergy()
+    {
+        CurrentEnergyNum = 0;
+        CurrentEnergy = 0;
+        Debug.Log("Energy reset to 0");
+    }
+
+    // 新增：调试方法
+    public void LogEnergyStatus()
+    {
+        Debug.Log($"Energy Status - Current: {CurrentEnergyNum}/{MaxEnergyNum}, Energy Bar: {CurrentEnergy}/{MaxEnergy}");
     }
     #endregion
-
 }

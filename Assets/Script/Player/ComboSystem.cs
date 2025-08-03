@@ -45,6 +45,10 @@ public class ComboSystem : MonoBehaviour
     [Tooltip("控制方向键是否计入连招，true为不记录")]
     public bool excludeMovementFromCombos = false;
 
+    [Header("输入提供者")]
+    [SerializeField] private bool isAIControlled = false;
+
+    private IInputProvider inputProvider;
     private PlayerInputControl inputControl;
 
     // 输入状态追踪
@@ -54,41 +58,44 @@ public class ComboSystem : MonoBehaviour
     private bool wasMovingRight = false;
 
     private bool comboTriggered = false;
+    private bool isExecutingCombo = false;
 
     private void Awake()
     {
-        inputControl = new PlayerInputControl();
+        //inputControl = new PlayerInputControl();
         playerController = GetComponent<PlayerController>();
         hitstunSystem = GetComponent<HitstunSystem>();
         playerStats = GetComponent<PlayerStats>();
-        BindInputEvents();
+        //BindInputEvents();
+
+        // 根据是否AI控制选择输入提供者
+        if (isAIControlled)
+        {
+            inputProvider = GetComponent<AIInputProvider>();
+            if (inputProvider == null)
+            {
+                inputProvider = gameObject.AddComponent<AIInputProvider>();
+            }
+        }
+        else
+        {
+            inputProvider = GetComponent<HumanInputProvider>();
+            if (inputProvider == null)
+            {
+                inputProvider = gameObject.AddComponent<HumanInputProvider>();
+            }
+
+        }
     }
 
-    private void BindInputEvents()
+
+    public void HandleMovementInput(Vector2 moveInput)
     {
-        // 绑定移动
-        inputControl.GamePlay.Move.performed += OnMovePerformed;
-        inputControl.GamePlay.Move.canceled += OnMoveCanceled;
-
-        // 绑定动作
-        //inputControl.GamePlay.Attack.started += ctx => HandleKeyInput(GameInputKey.Attack);
-        //inputControl.GamePlay.Block.started += ctx => HandleKeyInput(GameInputKey.Block);
-        //inputControl.GamePlay.Dash.started += ctx => HandleKeyInput(GameInputKey.Dash);
-        //inputControl.GamePlay.Jump.started += ctx => HandleKeyInput(GameInputKey.Jump);
-        // 修改攻击绑定
-        inputControl.GamePlay.Attack.started += ctx => HandleAttackInput();
-
-        // 其他动作
-        inputControl.GamePlay.Block.started += ctx => HandleBlockInput(true);
-        inputControl.GamePlay.Block.canceled += ctx => HandleBlockInput(false);
-        inputControl.GamePlay.Dash.started += ctx => HandleDashInput();
-        inputControl.GamePlay.Jump.started += ctx => HandleJumpInput();
-        inputControl.GamePlay.Crouch.started += ctx => HandleCrouchInput(true);
-        inputControl.GamePlay.Crouch.canceled += ctx => HandleCrouchInput(false);
-
+        CheckMovementDirection(moveInput);
+        lastMovementInput = moveInput;
     }
 
-    private void HandleAttackInput()
+    public void HandleAttackInput()
     {
         if (hitstunSystem != null && !hitstunSystem.IsAttackAllowed())
             return;
@@ -105,7 +112,7 @@ public class ComboSystem : MonoBehaviour
         comboTriggered = false;
     }
 
-    private void HandleBlockInput(bool isPressed)
+    public void HandleBlockInput(bool isPressed)
     {
         if (isPressed && hitstunSystem != null && !hitstunSystem.IsBlockAllowed())
             return;
@@ -119,7 +126,7 @@ public class ComboSystem : MonoBehaviour
         comboTriggered = false;
     }
 
-    private void HandleCrouchInput(bool isPressed)
+    public void HandleCrouchInput(bool isPressed)
     {
         if (isPressed && hitstunSystem != null && !hitstunSystem.IsMoveAllowed())
             return;
@@ -133,7 +140,7 @@ public class ComboSystem : MonoBehaviour
         comboTriggered = false;
     }
 
-    private void HandleDashInput()
+    public void HandleDashInput()
     {
         // 检查僵直状态
         if (hitstunSystem != null && !hitstunSystem.IsDashAllowed())
@@ -146,7 +153,7 @@ public class ComboSystem : MonoBehaviour
         comboTriggered = false;
     }
 
-    private void HandleJumpInput()
+    public void HandleJumpInput()
     {
         // 检查僵直状态
         if (hitstunSystem != null && !hitstunSystem.IsJumpAllowed())
@@ -161,6 +168,8 @@ public class ComboSystem : MonoBehaviour
 
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        if (isAIControlled) return;
+
         Vector2 moveInput = context.ReadValue<Vector2>();
 
         // 检查方向变化转化为离散输入
@@ -171,6 +180,8 @@ public class ComboSystem : MonoBehaviour
 
     private void OnMoveCanceled(InputAction.CallbackContext context)
     {
+        if (isAIControlled) return;
+
         lastMovementInput = Vector2.zero;
         wasMovingUp = false;
         wasMovingLeft = false;
@@ -244,8 +255,20 @@ public class ComboSystem : MonoBehaviour
         //Debug.Log($"Key pressed: {inputKey}, 当前队列: {string.Join(",", inputHistory)}");
     }
 
+    // 在动画事件中调用
+    public void OnComboAnimationStart()
+    {
+        isExecutingCombo = true;
+    }
+
+    public void OnComboAnimationEnd()
+    {
+        isExecutingCombo = false;
+    }
+
     public void CheckForCombo()
     {
+        if (isExecutingCombo) return;
         for (int i = 0; i < combos.Count; i++)
         {
             // 当输入队列的按键数量大于搓招的按键数
@@ -316,14 +339,26 @@ public class ComboSystem : MonoBehaviour
         }
     }
 
+    //private void OnEnable()
+    //{
+    //    inputControl?.Enable();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    inputControl?.Disable();
+    //}
+
     private void OnEnable()
     {
-        inputControl?.Enable();
+        if (!isAIControlled)
+            inputControl?.Enable();
     }
 
     private void OnDisable()
     {
-        inputControl?.Disable();
+        if (!isAIControlled)
+            inputControl?.Disable();
     }
 
     private void OnDestroy()
@@ -370,25 +405,45 @@ public class ComboSystem : MonoBehaviour
             return Vector2.zero;
         }
 
-        return lastMovementInput;
+        ////return lastMovementInput;
+        //// 使用输入提供者获取移动输入
+        //Vector2 movement = inputProvider.GetMovementInput();
+
+        //// 如果是AI，需要手动检查方向变化
+        //if (isAIControlled)
+        //{
+        //    CheckMovementDirection(movement);
+        //    lastMovementInput = movement;
+        //}
+
+        //return movement;
+        return inputProvider.GetMovementInput(); // 直接从provider获取
     }
 
     // 检查动作按键是否按下
     public bool IsActionKeyPressed(GameInputKey actionKey)
     {
-        switch (actionKey)
+        //switch (actionKey)
+        //{
+        //    case GameInputKey.Attack:
+        //        return inputControl.GamePlay.Attack.IsPressed();
+        //    case GameInputKey.Block:
+        //        return inputControl.GamePlay.Block.IsPressed();
+        //    case GameInputKey.Dash:
+        //        return inputControl.GamePlay.Dash.IsPressed();
+        //    case GameInputKey.Jump:
+        //        return inputControl.GamePlay.Jump.IsPressed();
+        //    default:
+        //        return false;
+        //}
+        return inputProvider != null && actionKey switch
         {
-            case GameInputKey.Attack:
-                return inputControl.GamePlay.Attack.IsPressed();
-            case GameInputKey.Block:
-                return inputControl.GamePlay.Block.IsPressed();
-            case GameInputKey.Dash:
-                return inputControl.GamePlay.Dash.IsPressed();
-            case GameInputKey.Jump:
-                return inputControl.GamePlay.Jump.IsPressed();
-            default:
-                return false;
-        }
+            GameInputKey.Attack => inputProvider.IsAttackPressed(),
+            GameInputKey.Block => inputProvider.IsBlockPressed(),
+            GameInputKey.Dash => inputProvider.IsDashPressed(),
+            GameInputKey.Jump => inputProvider.IsJumpPressed(),
+            _ => false
+        };
     }
 
     // 检查是否移动，需要强度大于阈值
@@ -407,5 +462,12 @@ public class ComboSystem : MonoBehaviour
     {
         return lastMovementInput.normalized;
     }
+    // 公共方法供AI调用
+    public void SetAIControlled(bool aiControlled)
+    {
+        isAIControlled = aiControlled;
+    }
+
+
     #endregion
 }

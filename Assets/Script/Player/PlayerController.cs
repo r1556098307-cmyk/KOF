@@ -689,7 +689,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private bool CanStandUp()
+    public bool CanStandUp()
     {
         if (config == null) return true;
 
@@ -739,15 +739,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private bool CanCrouch()
+    public bool CanCrouch()
     {
         return isGround && !isDash && !isWallSliding;
     }
 
-    private bool CanBlock()
+    public bool CanBlock()
     {
         return isGround && !isDash && !isWallSliding;
     }
+
+    public bool CanDash()=>canDash;
 
     private void StartDash()
     {
@@ -778,7 +780,7 @@ public class PlayerController : MonoBehaviour
         SetInvulnerable(false);
     }
 
-    private bool CanJump()
+    public bool CanJump()
     {
         // 可以跳跃的条件：
         // 1. 在地面上或在土狼时间内

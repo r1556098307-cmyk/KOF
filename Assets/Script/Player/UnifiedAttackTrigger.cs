@@ -180,6 +180,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
 
         // 获取目标组件
         HitstunSystem targetHitstun = target.GetComponent<HitstunSystem>();
+        ComboSystem targetCombo = target.GetComponent<ComboSystem>();
         PlayerController targetPlayer = target.GetComponent<PlayerController>();
         PlayerStats targetStats = target.GetComponent<PlayerStats>();
 
@@ -223,8 +224,8 @@ public class UnifiedAttackTrigger : MonoBehaviour
             {
                 targetHitstun.ModifyHitstunDuration(attackConfig.stunDurationMultiplier);
             }
-
-            bool isAddUpForce = attackConfig.isAddUpForce;
+            // 防止连招被打断无法处理输入
+            targetCombo.OnComboAnimationEnd();
             targetHitstun.TakeHit(attackConfig, attackDirection);
 
         }

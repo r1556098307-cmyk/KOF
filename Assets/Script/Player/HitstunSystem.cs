@@ -116,7 +116,7 @@ public class HitstunSystem : MonoBehaviour
 
         // 设置硬直时间
         hitstunTimer = GetHitstunDuration(attackType);
-        Debug.Log("僵直时间："+hitstunTimer);
+        //Debug.Log("僵直时间："+hitstunTimer);
 
 
         // 禁用玩家输入
@@ -229,7 +229,7 @@ public class HitstunSystem : MonoBehaviour
                 AttackType.knockdown => "KnockdownHit",
                 _ => "LightHit"
             };
-            Debug.Log(animationName);
+            //Debug.Log(animationName);
             animator.PlayAnimation(animationName);
             
         }
@@ -359,7 +359,7 @@ public class HitstunSystem : MonoBehaviour
             DelayedInputRecovery();
             EndInvincibilityAfterGetUp();
 
-            Debug.Log("起身动画完成，恢复控制");
+            //Debug.Log("起身动画完成，恢复控制");
         }
     }
 
