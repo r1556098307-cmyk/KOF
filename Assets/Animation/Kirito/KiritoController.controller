@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalAttack1
+  m_Name: Attack1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -169,7 +169,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSpeciaMove1
+  m_Name: SpeciaMove1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -249,7 +249,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalHitLight
+  m_Name: HitLight
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -325,7 +325,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalAttack3
+  m_Name: Attack3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -352,7 +352,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalCrouchAttack3
+  m_Name: CrouchAttack3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -482,7 +482,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalCrouchAttack1
+  m_Name: CrouchAttack1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -569,7 +569,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalGetUp
+  m_Name: GetUp
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -596,7 +596,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalDash
+  m_Name: Dash
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -625,7 +625,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalKnockdown
+  m_Name: Knockdown
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -652,7 +652,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalJump
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -753,7 +753,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalHitHeavy
+  m_Name: HitHeavy
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -782,7 +782,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalWalk
+  m_Name: Walk
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -931,7 +931,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSpecialMove3
+  m_Name: SpecialMove3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1014,7 +1014,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalCrouch
+  m_Name: Crouch
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1043,7 +1043,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalCrouchBlock
+  m_Name: CrouchBlock
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1485,7 +1485,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSpecialMove2
+  m_Name: SpecialMove2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1512,7 +1512,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalBlock
+  m_Name: Block
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1590,7 +1590,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSuperMove2
+  m_Name: SuperMove2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1692,7 +1692,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalCrouchAttack2
+  m_Name: CrouchAttack2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1900,7 +1900,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalSuperMove1
+  m_Name: SuperMove1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -2052,7 +2052,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalFall
+  m_Name: Fall
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -2199,7 +2199,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalAttack2
+  m_Name: Attack2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

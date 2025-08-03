@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b431d4da6abfb419d9146c0eed766d, type: 3}
+  m_Name: HardAIConfig
+  m_EditorClassIdentifier: 
+  attackRange: 2
+  pursuitRange: 8
+  dashRange: 10
+  attackTypeWeights:
+  - attackType: 0
+    weight: 0.3
+  - attackType: 1
+    weight: 0.3
+  - attackType: 2
+    weight: 0.4
+  attackReactionTime: 0.15
+  attackDuration: 4
+  defendDuration: 2
+  retreatDuration: 0.5
+  pursuitDuration: 3
+  idleDuration: 0.2
+  approachDuration: 0.8
+  jumpThreshold: 1.5
+  attackButtonInterval: 0.2
+  comboInputInterval: 0.15
+  blockHoldTime: 0.8
+  crouchDelay: 0.05
+  keyReleaseDelay: 0.05
+  crouchDefendChance: 0.5
+  healthThresholdForSaving: 0.4

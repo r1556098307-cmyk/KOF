@@ -111,5 +111,10 @@ public class PlayerAnimator : MonoBehaviour
 
     }
 
+    public Animator getAnim()
+    {
+        return anim;
+    }
+
 
 }

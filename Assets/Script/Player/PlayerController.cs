@@ -806,6 +806,7 @@ public class PlayerController : MonoBehaviour
         return isInvulnerable;
     }
 
+  
     #region EDITOR METHODS
     private void OnDrawGizmosSelected()
     {

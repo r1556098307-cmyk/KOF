@@ -36,20 +36,18 @@ public class AIStateMachine : MonoBehaviour
     private Dictionary<AIState, System.Action> stateEnterActions;
     private Dictionary<AIState, System.Action> stateExitActions;
 
-
     // 当前行为记录
     [SerializeField] private AIAttackType currentAttackType = AIAttackType.Normal;
-
 
     // 连招相关
     private List<ComboSystem.ComboData> availableCombos = new List<ComboSystem.ComboData>();
     private ComboSystem.ComboData selectedCombo = null;
     private bool isComboInProgress = false;
 
-
     // 缓存状态
     private bool isGrounded;
     private bool targetIsAttacking;
+    private bool targetIsDefending;
     private bool targetIsHigher;
 
     private bool isPerformingAttack = false;
@@ -67,7 +65,6 @@ public class AIStateMachine : MonoBehaviour
         ValidateComponents();
         LoadAvailableCombos();
     }
-
 
     // ========== 初始化方法 ==========
     private void InitializeComponents()
@@ -101,7 +98,6 @@ public class AIStateMachine : MonoBehaviour
                 availableCombos.Add(combo);
             }
         }
-
     }
 
     private void InitializeStateMachine()
@@ -155,8 +151,8 @@ public class AIStateMachine : MonoBehaviour
     {
         if (!target || !enabled) return;
 
-        // 面朝玩家方向
-        FaceTarget();
+        // 始终面朝玩家方向
+        //FaceTarget();
 
         UpdateCachedStates();
 
@@ -168,6 +164,7 @@ public class AIStateMachine : MonoBehaviour
     {
         isGrounded = playerController.isGround;
         targetIsAttacking = targetController.isAttack;
+        targetIsDefending = targetController.isBlock;
         targetIsHigher = target.position.y - transform.position.y > aiConfig.jumpThreshold;
     }
 
@@ -195,6 +192,7 @@ public class AIStateMachine : MonoBehaviour
         AIState previousState = currentState;
         currentState = newState;
         stateTimer = 0f;
+
         // 执行进入动作
         if (stateEnterActions.ContainsKey(newState))
         {
@@ -210,7 +208,7 @@ public class AIStateMachine : MonoBehaviour
         aiInput.SetMovementInput(Vector2.zero);
         float distance = GetDistanceToTarget();
 
-        if(stateTimer>aiConfig.idleDuration)
+        if (stateTimer > aiConfig.idleDuration)
         {
             if (targetIsAttacking && distance < aiConfig.attackRange * 1.5f)
             {
@@ -235,7 +233,6 @@ public class AIStateMachine : MonoBehaviour
                 ChangeState(AIState.Approach);
             }
         }
-       
     }
 
     private void UpdateApproach()
@@ -243,22 +240,33 @@ public class AIStateMachine : MonoBehaviour
         float distance = GetDistanceToTarget();
         Vector2 direction = GetDirectionToTarget();
 
+        aiInput.SetMovementInput(direction);
+
+        if (targetIsDefending) PerformDash();
+
+        if (targetIsHigher && playerController.CanJump()) PerformJump();
+
         if (targetIsAttacking && distance < aiConfig.attackRange * 1.5f)
         {
             ChangeState(AIState.Defend);
             return;
         }
 
-        aiInput.SetMovementInput(direction);
-
         if (distance <= aiConfig.attackRange)
         {
             ChangeState(AIState.Attack);
+        }
+
+        if (stateTimer > aiConfig.approachDuration)
+        {
+            ChangeState(AIState.Idle);
         }
     }
 
     private void UpdateAttack()
     {
+        if (targetIsDefending) PerformDash();
+
         // 如果没有在执行攻击
         if (!isPerformingAttack)
         {
@@ -267,7 +275,7 @@ public class AIStateMachine : MonoBehaviour
 
             // 如果是首次攻击或者间隔攻击反应时间后，且还有时间
             if ((lastAttackTime == 0f || timeSinceLastAttack > aiConfig.attackReactionTime) &&
-                stateTimer < aiConfig.attackDuration - 0.5f)
+                stateTimer < aiConfig.attackDuration)
             {
                 currentAttackType = GetWeightedRandomAttackType();
                 StartCoroutine(PerformAttackSequence());
@@ -329,12 +337,13 @@ public class AIStateMachine : MonoBehaviour
 
     private void UpdateDefend()
     {
-        bool isCrouch = Random.value<0.3;
+        // 使用配置中的概率
+        bool isCrouch = Random.value < aiConfig.crouchDefendChance;
 
         aiInput.SetBlockInput(true);
         if (isCrouch) aiInput.SetCrouchInput(true);
 
-        float duration =aiConfig.defendDuration;
+        float duration = aiConfig.defendDuration;
 
         if (stateTimer > duration || !targetIsAttacking)
         {
@@ -365,7 +374,6 @@ public class AIStateMachine : MonoBehaviour
         }
     }
 
-
     private void UpdatePursuit()
     {
         Vector2 direction = GetDirectionToTarget();
@@ -394,7 +402,6 @@ public class AIStateMachine : MonoBehaviour
                 yield return StartCoroutine(PerformCrouchAttack());
                 break;
             case AIAttackType.Combo:
-                // 选择一个满足发动条件的combo使用（要求当前能量大于消耗能量）
                 selectedCombo = SelectBestAvailableCombo();
                 if (selectedCombo != null)
                 {
@@ -402,7 +409,6 @@ public class AIStateMachine : MonoBehaviour
                 }
                 else
                 {
-                    // 如果没有可用连招，退回到普通攻击
                     Debug.LogWarning("AI: 没有可用连招，退回普通攻击");
                     currentAttackType = AIAttackType.Normal;
                     yield return StartCoroutine(PerformNormalAttack());
@@ -413,48 +419,9 @@ public class AIStateMachine : MonoBehaviour
                 break;
         }
 
-        // 攻击完成后重置标志
         isPerformingAttack = false;
-
     }
 
-    // 选择最佳可用连招
-    //private ComboSystem.ComboData SelectBestAvailableCombo()
-    //{
-    //    if (availableCombos == null || availableCombos.Count == 0)
-    //    {
-    //        Debug.LogWarning("AI: 没有可用连招");
-    //        return null;
-    //    }
-
-    //    float currentEnergy = playerStats.CurrentEnergyNum;
-
-    //    // 筛选出所有能量足够的连招
-    //    var affordableCombos = availableCombos
-    //        .Where(combo => combo.energyCost <= currentEnergy)
-    //        .OrderByDescending(combo => combo.energyCost) // 按能量消耗降序排列
-    //        .ToList();
-
-    //    if (affordableCombos.Count == 0)
-    //    {
-    //        // 如果没有能量足够的连招，选择无消耗的连招
-    //        var zeroCostCombos = availableCombos
-    //            .Where(combo => combo.energyCost == 0)
-    //            .ToList();
-
-
-    //        if (zeroCostCombos.Count > 0)
-    //        {
-    //            // 随机选择一个无消耗连招
-    //            return zeroCostCombos[Random.Range(0, zeroCostCombos.Count)];
-    //        }
-
-    //        return null;
-    //    }
-
-    //    // 返回能量消耗最高的可用连招
-    //    return affordableCombos[0];
-    //}
     private ComboSystem.ComboData SelectBestAvailableCombo()
     {
         if (availableCombos == null || availableCombos.Count == 0)
@@ -464,120 +431,86 @@ public class AIStateMachine : MonoBehaviour
         }
 
         float currentEnergy = playerStats.CurrentEnergyNum;
+        float maxEnergy = playerStats.MaxEnergyNum;
+        float healthPercentage = playerStats.CurrentHealth / playerStats.MaxHealth;
 
-        // 首先尝试选择有消耗的连招
+        // 使用配置中的血量阈值
+        if (healthPercentage > aiConfig.healthThresholdForSaving && currentEnergy < maxEnergy)
+        {
+            var zeroCostCombos = availableCombos
+                .Where(combo => combo.energyCost == 0)
+                .ToList();
+
+            if (zeroCostCombos.Count > 0)
+            {
+                return zeroCostCombos[Random.Range(0, zeroCostCombos.Count)];
+            }
+        }
+
+        // 血量低于阈值：有什么用什么，优先高消耗
         var affordableCombos = availableCombos
-            .Where(combo => combo.energyCost > 0 && combo.energyCost <= currentEnergy)
+            .Where(combo => combo.energyCost <= currentEnergy)
             .OrderByDescending(combo => combo.energyCost)
             .ToList();
 
         if (affordableCombos.Count > 0)
         {
-            // 有能量时优先使用消耗连招
             return affordableCombos[0];
         }
 
-        // 没有可用的消耗连招时，使用无消耗连招
-        var zeroCostCombos = availableCombos
-            .Where(combo => combo.energyCost == 0)
-            .ToList();
-
-        if (zeroCostCombos.Count > 0)
-        {
-            return zeroCostCombos[Random.Range(0, zeroCostCombos.Count)];
-        }
-
+        // 如果没有可用技能，返回null使用普通攻击
         return null;
     }
 
     private IEnumerator PerformNormalAttack()
     {
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
+        for (int i = 0; i < 3; i++)
+        {
+            aiInput.PerformAttack();
+            yield return new WaitForSeconds(aiConfig.attackButtonInterval);
+        }
     }
 
     private IEnumerator PerformCrouchAttack()
     {
+        // 使用配置中的蹲下延迟
         aiInput.SetCrouchInput(true);
-        yield return new WaitForSeconds(0.1f);
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
-        aiInput.PerformAttack();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(aiConfig.crouchDelay);
+
+        // 连续攻击
+        for (int i = 0; i < 3; i++)
+        {
+            aiInput.PerformAttack();
+            yield return new WaitForSeconds(aiConfig.attackButtonInterval);
+        }
+
+        // 松开蹲下
+        aiInput.SetCrouchInput(false);
     }
 
     private IEnumerator PerformCombo()
     {
-        if (selectedCombo == null || selectedCombo.keySequence == null || selectedCombo.keySequence.Count == 0)
+        if (selectedCombo == null || selectedCombo.keySequence == null)
         {
-            Debug.LogWarning("AI: 无效的连招选择");
-            yield break;
-        }
-
-        // 防止重复执行
-        if (isComboInProgress)
-        {
-            Debug.LogWarning($"AI: 正在连招");
             yield break;
         }
 
         isComboInProgress = true;
-        Debug.Log($"AI: 开始连招 '{selectedCombo.skillName}' (消耗: {selectedCombo.energyCost}, 当前能量: {playerStats.CurrentEnergyNum})");
 
-         // 消耗能量
-        if (selectedCombo.energyCost > 0)
-        {
-            if (playerStats.CurrentEnergyNum >= selectedCombo.energyCost)
-            {
-                playerStats.ConsumeEnergy(selectedCombo.energyCost);
-                Debug.Log($"AI: 能量消耗成功，当前能量: {playerStats.CurrentEnergyNum}");
-            }
-            else
-            {
-                Debug.LogError($"AI: 能量不足!");
-                isComboInProgress = false;
-                yield break;
-            }
-        }
-
-        // 执行连招序列
-        int inputIndex = 0;
+        // AI只负责按键序列，不管能量
         foreach (var inputKey in selectedCombo.keySequence)
         {
-            inputIndex++;
-
             ExecuteComboInput(inputKey);
-            yield return new WaitForSeconds(0.15f);
-
-            // 检查是否被打断
-            if (hitstunSystem != null && hitstunSystem.IsInHitstun())
-            {
-                Debug.Log("AI: 连招被打断!");
-                break;
-            }
-
-            // 检查游戏对象是否仍然激活
-            if (!gameObject.activeInHierarchy)
-            {
-                Debug.Log("AI: 游戏对象未激活!");
-                break;
-            }
+            yield return new WaitForSeconds(aiConfig.comboInputInterval);
         }
 
-
-        // 清理
         selectedCombo = null;
         isComboInProgress = false;
     }
 
     private void ExecuteComboInput(ComboSystem.GameInputKey inputKey)
     {
+        // 使用配置中的按键释放延迟
         switch (inputKey)
         {
             case ComboSystem.GameInputKey.Attack:
@@ -585,73 +518,48 @@ public class AIStateMachine : MonoBehaviour
                 break;
             case ComboSystem.GameInputKey.MoveDown:
                 aiInput.SetCrouchInput(true);
+                StartCoroutine(ReleaseKeyAfterDelay(() => aiInput.SetCrouchInput(false), aiConfig.keyReleaseDelay));
                 break;
             case ComboSystem.GameInputKey.MoveUp:
                 aiInput.SetMovementInput(Vector2.up);
+                StartCoroutine(ReleaseKeyAfterDelay(() => aiInput.SetMovementInput(Vector2.zero), aiConfig.keyReleaseDelay));
                 break;
             case ComboSystem.GameInputKey.Block:
                 aiInput.SetBlockInput(true);
+                StartCoroutine(ReleaseKeyAfterDelay(() => aiInput.SetBlockInput(false), aiConfig.blockHoldTime));
                 break;
             case ComboSystem.GameInputKey.MoveLeft:
                 aiInput.SetMovementInput(Vector2.left);
+                StartCoroutine(ReleaseKeyAfterDelay(() => aiInput.SetMovementInput(Vector2.zero), aiConfig.keyReleaseDelay));
                 break;
             case ComboSystem.GameInputKey.MoveRight:
                 aiInput.SetMovementInput(Vector2.right);
+                StartCoroutine(ReleaseKeyAfterDelay(() => aiInput.SetMovementInput(Vector2.zero), aiConfig.keyReleaseDelay));
                 break;
             case ComboSystem.GameInputKey.Jump:
-                if (playerController.CanJump()) aiInput.PerformJump();
+                aiInput.PerformJump();
                 break;
             case ComboSystem.GameInputKey.Dash:
-                if (playerController.CanDash()) aiInput.PerformDash();
-                break;
-            default:
-                Debug.LogWarning($"AI: 无效连招按键输入: {inputKey}");
+                aiInput.PerformDash();
                 break;
         }
     }
 
+
     // ========== 状态进入方法 ==========
-
-    private void EnterIdle()
-    {
-
-    }
-
-    private void EnterApproach()
-    {
-
-    }
-
+    private void EnterIdle() { }
+    private void EnterApproach() { }
     private void EnterAttack()
     {
         lastAttackTime = 0f;
     }
-
-    private void EnterDefend()
-    {
-
-    }
-
-    private void EnterRetreat()
-    {
-
-    }
-
-    private void EnterPursuit()
-    {
-
-    }
+    private void EnterDefend() { }
+    private void EnterRetreat() { }
+    private void EnterPursuit() { }
 
     // ========== 状态退出方法 ==========
-    private void ExitIdle ()
-    {
-
-    }
-
-    private void ExitApproach()
-    {
-
-    }
+    private void ExitIdle() { }
+    private void ExitApproach() { }
 
     private void ExitAttack()
     {
@@ -669,21 +577,10 @@ public class AIStateMachine : MonoBehaviour
     {
         aiInput.SetBlockInput(false);
         aiInput.SetCrouchInput(false);
-
     }
 
-    private void ExitRetreat()
-    {
-
-    }
-
-    private void ExitPursuit()
-    {
-
-    }
-
-    // ========== 攻击序列 ==========
-   
+    private void ExitRetreat() { }
+    private void ExitPursuit() { }
 
     // ========== 动作执行方法 ==========
     private void PerformJump()
@@ -705,9 +602,12 @@ public class AIStateMachine : MonoBehaviour
     // ========== 辅助方法 ==========
     private float GetDistanceToTarget() => Vector2.Distance(transform.position, target.position);
     private Vector2 GetDirectionToTarget() => (target.position - transform.position).normalized;
-
-    // ========== 公共接口 ==========
-
+    // 延迟释放按键
+    private IEnumerator ReleaseKeyAfterDelay(System.Action releaseAction, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        releaseAction?.Invoke();
+    }
 
 
     // ========== 调试 ==========
