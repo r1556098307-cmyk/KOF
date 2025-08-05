@@ -49,6 +49,7 @@ public class ComboSystem : MonoBehaviour
     [SerializeField] private bool isAIControlled = false;
 
     private IInputProvider inputProvider;
+
     private PlayerInputControl inputControl;
 
     // 输入状态追踪
@@ -68,7 +69,13 @@ public class ComboSystem : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         //BindInputEvents();
 
-        // 根据是否AI控制选择输入提供者
+   
+    }
+
+    private void Start()
+    {
+        inputClearTimer = inputClearDelay;
+
         if (isAIControlled)
         {
             inputProvider = GetComponent<AIInputProvider>();
@@ -323,10 +330,6 @@ public class ComboSystem : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        inputClearTimer = inputClearDelay;
-    }
 
     private void Update()
     {
@@ -404,19 +407,7 @@ public class ComboSystem : MonoBehaviour
         {
             return Vector2.zero;
         }
-
-        ////return lastMovementInput;
-        //// 使用输入提供者获取移动输入
-        //Vector2 movement = inputProvider.GetMovementInput();
-
-        //// 如果是AI，需要手动检查方向变化
-        //if (isAIControlled)
-        //{
-        //    CheckMovementDirection(movement);
-        //    lastMovementInput = movement;
-        //}
-
-        //return movement;
+        
         return inputProvider.GetMovementInput(); // 直接从provider获取
     }
 

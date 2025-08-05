@@ -199,7 +199,7 @@ public class AIStateMachine : MonoBehaviour
             stateEnterActions[newState]?.Invoke();
         }
 
-        Debug.Log($"AI ×´Ì¬ÇÐ»»: {previousState} -> {newState}");
+        //Debug.Log($"AI ×´Ì¬ÇÐ»»: {previousState} -> {newState}");
     }
 
     // ========== ×´Ì¬¸üÐÂ·½·¨ ==========

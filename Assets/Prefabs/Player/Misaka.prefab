@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 2300685907454916066}
   - component: {fileID: 1943101823274461205}
   - component: {fileID: 2001260359639686346}
+  - component: {fileID: 4054929292948944965}
   - component: {fileID: 4897674000222654300}
   - component: {fileID: 8027300783259157355}
   m_Layer: 7
@@ -94,9 +95,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1702478425
+  m_SortingLayer: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 965fe9e9ac9f4c84d902a3d529432e87, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -334,7 +335,7 @@ MonoBehaviour:
   inputClearDelay: 2
   movementThreshold: 0.5
   excludeMovementFromCombos: 0
-  isAIControlled: 1
+  isAIControlled: 0
 --- !u!114 &5905190397531042999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +457,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de393b9f6f301b84d9925ffbb2561191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4054929292948944965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32403181458875833}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ddd669ff0130c4f9be4b4649f42454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4897674000222654300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,7 +488,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 32403181458875833}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 949cfb0525ef95e439f2e6bd4f2641c5, type: 3}
   m_Name: 

@@ -28,11 +28,13 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     public PlayerAnimator animator;
+    [SerializeField]
     private ComboSystem comboSystem;
     private CapsuleCollider2D capsuleCollider; // 添加胶囊碰撞体引用
     private HitstunSystem hitstunSystem;
     private PlayerStats playerStats;
 
+    [SerializeField]
     public Vector2 inputDirection;
 
     public PlayerID PlayerId;
@@ -162,7 +164,6 @@ public class PlayerController : MonoBehaviour
         }
 
         originalLayer = gameObject.layer;
-
         GameManager.Instance.RigisterPlayer(playerStats, PlayerId);
 
         // 根据playerID决定角色面朝方向 
@@ -524,6 +525,7 @@ public class PlayerController : MonoBehaviour
         float speedMultiplier = isCrouch ? movementData.crouchSpeedMultiplier : 1f;
 
         float targetSpeed = inputDirection.x * movementData.runMaxSpeed * speedMultiplier;
+
         targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount);
 
         float accelRate;

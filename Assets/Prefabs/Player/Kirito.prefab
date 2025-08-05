@@ -1015,7 +1015,7 @@ MonoBehaviour:
   inputClearDelay: 2
   movementThreshold: 0.5
   excludeMovementFromCombos: 0
-  isAIControlled: 1
+  isAIControlled: 0
 --- !u!114 &217884438596436431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1081,12 +1081,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4094738171528663575}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 949cfb0525ef95e439f2e6bd4f2641c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiConfig: {fileID: 11400000, guid: 598f1d5c58f09564ea76d9e93b7cd56b, type: 2}
+  aiConfig: {fileID: 11400000, guid: 78a5d32fa78a30e4a9d21e82404a9da8, type: 2}
   currentState: 0
   stateTimer: 0
   showDebugInfo: 1

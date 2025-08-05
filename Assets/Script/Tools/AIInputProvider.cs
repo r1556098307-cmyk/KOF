@@ -3,6 +3,7 @@ using UnityEngine;
 public class AIInputProvider : MonoBehaviour, IInputProvider
 {
     private ComboSystem comboSystem;
+    [SerializeField]
     private Vector2 currentMovementInput;
     private bool isBlockPressed;
     private bool isCrouchPressed;
