@@ -42,7 +42,6 @@ public class AIStateMachine : MonoBehaviour
     // 连招相关
     private List<ComboSystem.ComboData> availableCombos = new List<ComboSystem.ComboData>();
     private ComboSystem.ComboData selectedCombo = null;
-    private bool isComboInProgress = false;
 
     // 缓存状态
     private bool isGrounded;
@@ -152,7 +151,7 @@ public class AIStateMachine : MonoBehaviour
         if (!target || !enabled) return;
 
         // 始终面朝玩家方向
-        //FaceTarget();
+        FaceTarget();
 
         UpdateCachedStates();
 
@@ -210,7 +209,7 @@ public class AIStateMachine : MonoBehaviour
 
         if (stateTimer > aiConfig.idleDuration)
         {
-            if (targetIsAttacking && distance < aiConfig.attackRange * 1.5f)
+            if ((targetIsAttacking || Random.value < aiConfig.idleDefendChance) && distance < aiConfig.attackRange * 1.5f)
             {
                 ChangeState(AIState.Defend);
             }
@@ -222,7 +221,7 @@ public class AIStateMachine : MonoBehaviour
             {
                 ChangeState(AIState.Attack);
             }
-            else if (distance <= aiConfig.dashRange && playerController.CanDash())
+            else if (distance <= aiConfig.dashRange && playerController.CanDash()&&isCenter())
             {
                 PerformDash();
                 ChangeState(AIState.Attack);
@@ -337,15 +336,15 @@ public class AIStateMachine : MonoBehaviour
 
     private void UpdateDefend()
     {
+        Debug.Log("防御");
         // 使用配置中的概率
         bool isCrouch = Random.value < aiConfig.crouchDefendChance;
 
         aiInput.SetBlockInput(true);
         if (isCrouch) aiInput.SetCrouchInput(true);
 
-        float duration = aiConfig.defendDuration;
 
-        if (stateTimer > duration || !targetIsAttacking)
+        if (stateTimer > aiConfig.defendDuration)
         {
             float distance = GetDistanceToTarget();
 
@@ -379,7 +378,7 @@ public class AIStateMachine : MonoBehaviour
         Vector2 direction = GetDirectionToTarget();
         float distance = GetDistanceToTarget();
 
-        if (playerController.CanDash() && distance > aiConfig.dashRange) PerformDash();
+        if (playerController.CanDash() && distance > aiConfig.dashRange&&isCenter()) PerformDash();
         if (targetIsHigher && playerController.CanJump()) PerformJump();
 
         aiInput.SetMovementInput(direction);
@@ -495,7 +494,6 @@ public class AIStateMachine : MonoBehaviour
             yield break;
         }
 
-        isComboInProgress = true;
 
         // AI只负责按键序列，不管能量
         foreach (var inputKey in selectedCombo.keySequence)
@@ -505,7 +503,6 @@ public class AIStateMachine : MonoBehaviour
         }
 
         selectedCombo = null;
-        isComboInProgress = false;
     }
 
     private void ExecuteComboInput(ComboSystem.GameInputKey inputKey)
@@ -566,7 +563,6 @@ public class AIStateMachine : MonoBehaviour
         isPerformingAttack = false;
         currentAttackType = AIAttackType.Normal;
         selectedCombo = null;
-        isComboInProgress = false;
 
         // 重置所有输入状态
         aiInput.SetMovementInput(Vector2.zero);
@@ -608,7 +604,10 @@ public class AIStateMachine : MonoBehaviour
         yield return new WaitForSeconds(delay);
         releaseAction?.Invoke();
     }
-
+    private bool isCenter()
+    {
+        return transform.position.x >= -13 && transform.position.x <= 6;
+    }
 
     // ========== 调试 ==========
     private void OnDrawGizmosSelected()

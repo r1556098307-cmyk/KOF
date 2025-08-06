@@ -191,6 +191,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
         #region 计时器更新
         lastOnGroundTime -= Time.deltaTime;
         LastPressedJumpTime -= Time.deltaTime;

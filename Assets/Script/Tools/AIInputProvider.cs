@@ -50,38 +50,38 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     // AI专用方法
     public void PerformAttack()
     {
-        Debug.Log("AI Input: Performing Attack");
+        //Debug.Log("AI Input: Performing Attack");
         OnAttackPerformed();
     }
 
     public void PerformDash()
     {
-        Debug.Log("AI Input: Performing Dash");
+        //Debug.Log("AI Input: Performing Dash");
         OnDashPerformed();
     }
 
     public void PerformJump()
     {
-        Debug.Log("AI Input: Performing Jump");
+        //Debug.Log("AI Input: Performing Jump");
         OnJumpPerformed();
     }
 
     public void PerformBlock(bool isPressed)
     {
-        Debug.Log($"AI Input: Block {(isPressed ? "Start" : "Stop")}");
+        //Debug.Log($"AI Input: Block {(isPressed ? "Start" : "Stop")}");
         SetBlockInput(isPressed);
     }
 
     public void PerformCrouch(bool isPressed)
     {
-        Debug.Log($"AI Input: Crouch {(isPressed ? "Start" : "Stop")}");
+        //Debug.Log($"AI Input: Crouch {(isPressed ? "Start" : "Stop")}");
         SetCrouchInput(isPressed);
     }
 
     public void PerformCombo(string comboName)
     {
-        // 可以添加特定连招的执行逻辑
-        Debug.Log($"AI Input: Performing Combo - {comboName}");
+        // 特定连招的执行逻辑
+        //Debug.Log($"AI Input: Performing Combo - {comboName}");
 
         // 示例：下蹲攻击连招
         if (comboName.Contains("Crouch"))

@@ -408,6 +408,8 @@ public class ComboSystem : MonoBehaviour
             return Vector2.zero;
         }
         
+        if(inputProvider==null)
+            return Vector2.zero;
         return inputProvider.GetMovementInput(); // 直接从provider获取
     }
 

@@ -32,6 +32,8 @@ public class CharacterSelectorController : MonoBehaviour
 
     private PlayerInputControl inputControl;
 
+    public Button backButton;
+
     void Awake()
     {
         // 初始化
@@ -111,6 +113,8 @@ public class CharacterSelectorController : MonoBehaviour
 
         computerLeftButton.onClick.AddListener(() => ChangeComputerCharacter(-1));
         computerRightButton.onClick.AddListener(() => ChangeComputerCharacter(1));
+
+        backButton.onClick.AddListener(() =>SceneController.Instance.TransitionToMenuScene());
 
         // 初始显示
         UpdatePlayerDisplay();

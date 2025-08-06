@@ -56,6 +56,9 @@ public class AIConfig : ScriptableObject
     [Tooltip("防御时蹲下的概率")]
     [Range(0f, 1f)]
     public float crouchDefendChance = 0.3f;
+    [Tooltip("闲置时防御的概率")]
+    [Range(0f, 1f)]
+    public float idleDefendChance = 0.3f;
     [Tooltip("血量阈值，高于此值时保存能量")]
     [Range(0f, 1f)]
     public float healthThresholdForSaving = 0.6f;

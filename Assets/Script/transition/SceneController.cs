@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 
 
-public class SceneController : Singleton<SceneController>
+public class SceneController : Singleton<SceneController>,IEndGameObserver
 {
     protected override void Awake()
     {
@@ -14,7 +14,8 @@ public class SceneController : Singleton<SceneController>
     }
     private void Start()
     {
-
+        if(GameManager.Instance!=null)
+        GameManager.Instance.AddObserver(this);
     }
 
 
@@ -25,11 +26,13 @@ public class SceneController : Singleton<SceneController>
 
     public void TransitionToMenuScene()
     {
+        Time.timeScale = 1f;
         StartCoroutine(LoadScene("MenuScene"));
     }
 
     public void TransitionToGameScene()
     {
+        Time.timeScale = 1f;
         StartCoroutine(LoadScene("GameScene"));
     }
 
@@ -45,4 +48,17 @@ public class SceneController : Singleton<SceneController>
 
     }
 
+    IEnumerator LoadMain()
+    {
+        yield return SceneManager.LoadSceneAsync("MenuScene");
+
+        yield break;
+    }
+
+
+    public void EndNotify(PlayerID id)
+    {
+        //if (id == PlayerID.Player1)
+        //    StartCoroutine(LoadMain());
+    }
 }

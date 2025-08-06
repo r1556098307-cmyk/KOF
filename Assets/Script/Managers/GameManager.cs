@@ -7,6 +7,8 @@ public class GameManager : Singleton<GameManager>
     public PlayerStats player1Stats;
     public PlayerStats player2Stats;
 
+    List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();
+
     protected override void Awake()
     {
         base.Awake();
@@ -27,4 +29,23 @@ public class GameManager : Singleton<GameManager>
         }
          
     }
+
+    public void AddObserver(IEndGameObserver observer)
+    {
+        endGameObservers.Add(observer);
+    }
+
+    public void RemoveObserver(IEndGameObserver observer)
+    {
+        endGameObservers.Remove(observer);
+    }
+
+    public void NotifyObservers(PlayerID id)
+    {
+        foreach (var observer in endGameObservers)
+        {
+            observer.EndNotify(id);
+        }
+    }
+
 }

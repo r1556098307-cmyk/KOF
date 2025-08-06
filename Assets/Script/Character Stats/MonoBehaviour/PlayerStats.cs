@@ -13,6 +13,7 @@ public class PlayerStats : MonoBehaviour
     public event Action<int, int> UpdateHealthBarOnAttack;
 
     public event Action<int, int, int, int> UpdateEnergyBarOnAttack;
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -46,6 +47,11 @@ public class PlayerStats : MonoBehaviour
             {
                 playerData.currentHealth = value;
                 UpdateHealthBarOnAttack?.Invoke(CurrentHealth, MaxHealth);
+                if (CurrentHealth <= 0 && !isDead)
+                {
+                    isDead = true;
+                    GameManager.Instance.NotifyObservers(GetComponent<PlayerController>().PlayerId);
+                }
             }
         }
     }
