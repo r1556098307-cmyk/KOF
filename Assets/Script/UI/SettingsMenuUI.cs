@@ -174,8 +174,10 @@ public class SettingsMenuUI : MonoBehaviour
         if (tempSettings != null) tempSettings.masterVolume = value;
         if (masterVolumeText != null) masterVolumeText.text = $"{(int)(value * 100)}%";
 
-        // 实时预览
-        if (SettingsManager.Instance != null)
+        // 实时预览 - 使用预览方法，不保存到实际设置
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMasterVolumePreview(value);
+        else if (SettingsManager.Instance != null)
             SettingsManager.Instance.SetMasterVolume(value);
     }
 
@@ -184,7 +186,10 @@ public class SettingsMenuUI : MonoBehaviour
         if (tempSettings != null) tempSettings.bgmVolume = value;
         if (bgmVolumeText != null) bgmVolumeText.text = $"{(int)(value * 100)}%";
 
-        if (SettingsManager.Instance != null)
+        // 实时预览 - 使用预览方法，不保存到实际设置
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetBGMVolumePreview(value);
+        else if (SettingsManager.Instance != null)
             SettingsManager.Instance.SetBGMVolume(value);
     }
 
@@ -193,10 +198,12 @@ public class SettingsMenuUI : MonoBehaviour
         if (tempSettings != null) tempSettings.sfxVolume = value;
         if (sfxVolumeText != null) sfxVolumeText.text = $"{(int)(value * 100)}%";
 
-        if (SettingsManager.Instance != null)
+        // 实时预览 - 使用预览方法，不保存到实际设置
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetSFXVolumePreview(value);
+        else if (SettingsManager.Instance != null)
             SettingsManager.Instance.SetSFXVolume(value);
     }
-
     private void OnDifficultyChanged(int index)
     {
         if (tempSettings != null) tempSettings.difficultyLevel = (DifficultyLevel)index;
@@ -222,18 +229,26 @@ public class SettingsMenuUI : MonoBehaviour
         // 保存到PlayerPrefs
         SaveSettingsToPlayerPrefs();
 
-        // 同时更新SettingsManager（如果存在）
+        // 更新SettingsManager
         if (SettingsManager.Instance != null && tempSettings != null)
         {
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(tempSettings), SettingsManager.Instance.CurrentSettings);
             SettingsManager.Instance.ApplySettings();
         }
 
+        // 应用到AudioManager（实际保存音量设置）
+        if (AudioManager.Instance != null && tempSettings != null)
+        {
+            AudioManager.Instance.SetMasterVolume(tempSettings.masterVolume);
+            AudioManager.Instance.SetBGMVolume(tempSettings.bgmVolume);
+            AudioManager.Instance.SetSFXVolume(tempSettings.sfxVolume);
+        }
+
         // 更新originalSettings为当前保存的值
         if (originalSettings != null && tempSettings != null)
         {
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(tempSettings), originalSettings);
-            Debug.Log("已更新原始设置为当前保存的值");
+            Debug.Log("设置已应用并保存");
         }
     }
 
@@ -245,15 +260,21 @@ public class SettingsMenuUI : MonoBehaviour
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(originalSettings), tempSettings);
             UpdateUIFromSettings();
 
-            // 恢复音频预览
-            if (SettingsManager.Instance != null)
+            // 恢复AudioManager到保存的状态
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.RestoreVolumeSettings();
+            }
+            // 恢复SettingsManager的音频预览
+            else if (SettingsManager.Instance != null)
             {
                 SettingsManager.Instance.SetMasterVolume(originalSettings.masterVolume);
                 SettingsManager.Instance.SetBGMVolume(originalSettings.bgmVolume);
                 SettingsManager.Instance.SetSFXVolume(originalSettings.sfxVolume);
             }
-        }
 
+            Debug.Log("设置已取消，恢复到原始状态");
+        }
     }
 
     private void ResetSettings()
@@ -283,6 +304,21 @@ public class SettingsMenuUI : MonoBehaviour
         // 通过MainMenu组件返回主菜单
         if (mainMenuController != null)
         {
+            if(originalSettings!=null&&AudioManager.Instance!=null)
+            {
+                // 恢复AudioManager到保存的状态
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.RestoreVolumeSettings();
+                }
+                // 恢复SettingsManager的音频预览
+                else if (SettingsManager.Instance != null)
+                {
+                    SettingsManager.Instance.SetMasterVolume(originalSettings.masterVolume);
+                    SettingsManager.Instance.SetBGMVolume(originalSettings.bgmVolume);
+                    SettingsManager.Instance.SetSFXVolume(originalSettings.sfxVolume);
+                }
+            }
             mainMenuController.ReturnToMainMenu();
         }
     }

@@ -36,4 +36,5 @@ MonoBehaviour:
   crouchDelay: 0.05
   keyReleaseDelay: 0.05
   crouchDefendChance: 0.5
+  idleDefendChance: 0.3
   healthThresholdForSaving: 0.4
