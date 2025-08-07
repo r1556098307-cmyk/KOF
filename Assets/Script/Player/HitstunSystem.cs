@@ -238,7 +238,7 @@ public class HitstunSystem : MonoBehaviour
     private void PlayHitEffects()
     {
         // TODO: 播放受击音效
-        // AudioManager.Instance.PlaySFX("HitSound");
+         AudioManager.Instance.PlaySFX("punch_3");
 
         // TODO: 播放受击特效
         // EffectManager.Instance.PlayEffect("HitEffect", transform.position);

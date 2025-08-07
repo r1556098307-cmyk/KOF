@@ -167,7 +167,7 @@ public class PlayerStats : MonoBehaviour
         return CurrentEnergyNum >= energyCost;
     }
 
-    // 修复：添加边界检查的能量消耗方法
+    // 添加边界检查的能量消耗方法
     public void ConsumeEnergy(int energyCost)
     {
         if (energyCost < 0)
@@ -190,7 +190,7 @@ public class PlayerStats : MonoBehaviour
         Debug.Log($"Energy consumed: {energyCost}, Remaining: {CurrentEnergyNum}");
     }
 
-    // 新增：设置能量的方法（用于修正负数能量）
+    // 设置能量的方法（用于修正负数能量）
     public void SetEnergy(int energyNum)
     {
         if (energyNum < 0)
@@ -206,10 +206,10 @@ public class PlayerStats : MonoBehaviour
         }
 
         CurrentEnergyNum = energyNum;
-        Debug.Log($"Energy set to: {CurrentEnergyNum}");
+        //Debug.Log($"Energy set to: {CurrentEnergyNum}");
     }
 
-    // 新增：安全的能量消耗方法（返回是否成功）
+    //安全的能量消耗方法（返回是否成功）
     public bool TryConsumeEnergy(int energyCost)
     {
         if (HasSufficientEnergy(energyCost))
@@ -224,7 +224,7 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    // 新增：添加能量的方法
+    // 添加能量的方法
     public void AddEnergy(int energyAmount)
     {
         if (energyAmount < 0)
@@ -235,18 +235,18 @@ public class PlayerStats : MonoBehaviour
 
         int newEnergy = Mathf.Min(CurrentEnergyNum + energyAmount, MaxEnergyNum);
         CurrentEnergyNum = newEnergy;
-        Debug.Log($"Energy added: {energyAmount}, Current: {CurrentEnergyNum}");
+        //Debug.Log($"Energy added: {energyAmount}, Current: {CurrentEnergyNum}");
     }
 
-    // 新增：重置能量的方法
+    // 重置能量的方法
     public void ResetEnergy()
     {
         CurrentEnergyNum = 0;
         CurrentEnergy = 0;
-        Debug.Log("Energy reset to 0");
+        //Debug.Log("Energy reset to 0");
     }
 
-    // 新增：调试方法
+    // 调试方法
     public void LogEnergyStatus()
     {
         Debug.Log($"Energy Status - Current: {CurrentEnergyNum}/{MaxEnergyNum}, Energy Bar: {CurrentEnergy}/{MaxEnergy}");

@@ -102,7 +102,7 @@ public class CharacterSelectorController : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        Debug.Log($"玩家选择: {GetPlayerCharacter()}, 电脑选择: {GetComputerCharacter()}");
+        //Debug.Log($"玩家选择: {GetPlayerCharacter()}, 电脑选择: {GetComputerCharacter()}");
     }
 
     void Start()

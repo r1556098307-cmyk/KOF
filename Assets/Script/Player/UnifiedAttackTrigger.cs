@@ -291,7 +291,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
 
     private void ProcessBlockedHit(GameObject target, Vector2 attackDirection)
     {
-        Debug.Log($"攻击被格挡: {target.name}");
+        //Debug.Log($"攻击被格挡: {target.name}");
 
         // 格挡者轻微后退
         Rigidbody2D targetRb = target.GetComponent<Rigidbody2D>();
@@ -306,7 +306,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
         }
 
         // 播放格挡效果
-        //PlayBlockEffects(target.transform.position);
+        PlayBlockEffects(target.transform.position);
     }
     private IEnumerator StopKnockbackSliding(Rigidbody2D rb)
     {
@@ -329,7 +329,7 @@ public class UnifiedAttackTrigger : MonoBehaviour
     private void PlayBlockEffects(Vector3 position)
     {
         // TODO: 播放格挡音效和特效
-        // AudioManager.Instance.PlaySFX("BlockSound");
+        AudioManager.Instance.PlaySFX("block");
         // EffectManager.Instance.PlayEffect("BlockEffect", position);
     }
 

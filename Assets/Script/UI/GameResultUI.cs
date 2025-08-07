@@ -186,8 +186,8 @@ public class GameResultUI : MonoBehaviour, IEndGameObserver
 
     private IEnumerator RestartGameCoroutine()
     {
-        // 可选：添加加载画面
-        Debug.Log("Restarting game...");
+        // TODO:可选：添加加载画面
+        //Debug.Log("Restarting game...");
 
         // 重新加载当前场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
@@ -197,7 +197,7 @@ public class GameResultUI : MonoBehaviour, IEndGameObserver
             yield return null;
         }
 
-        Debug.Log("Game restarted!");
+        //Debug.Log("Game restarted!");
     }
 
     public void EndNotify(PlayerID deadPlayerId)
@@ -234,7 +234,7 @@ public class GameResultUI : MonoBehaviour, IEndGameObserver
         // 暂停游戏
         Time.timeScale = 0f;
 
-        Debug.Log($"Game Over! Player {(isPlayer1Victory ? "1" : "2")} wins!");
+        //Debug.Log($"Game Over! Player {(isPlayer1Victory ? "1" : "2")} wins!");
     }
 
     private void OnDestroy()
@@ -276,7 +276,6 @@ public class GameResultUI : MonoBehaviour, IEndGameObserver
         // 场景加载完成后重新验证引用
         if (scene.name == SceneManager.GetActiveScene().name)
         {
-            Debug.Log("Scene reloaded, validating references...");
             ValidateReferences();
             if (!referencesValid)
             {

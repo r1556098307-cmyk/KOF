@@ -4,6 +4,7 @@ using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Unity.Collections.AllocatorManager;
+using Random = UnityEngine.Random;
 
 public enum PlayerID
 {
@@ -38,6 +39,8 @@ public class PlayerController : MonoBehaviour
     public Vector2 inputDirection;
 
     public PlayerID PlayerId;
+
+    public CharacterType characterType;
 
     public bool isFacingRight;
     public bool isDash;
@@ -257,8 +260,14 @@ public class PlayerController : MonoBehaviour
                 // 着陆
                 if (lastOnGroundTime < -0.1f)
                 {
-                    // TODO：添加着陆音效或特效
-                    //animator.JustLanded();
+                    // 停止下落音效（如果正在播放）
+                    if (AudioManager.Instance != null && AudioManager.Instance.IsLoopingSFXPlaying("fall"))
+                    {
+                        AudioManager.Instance.StopLoopingSFX("fall");
+                    }
+
+                    // 播放着陆音效
+                    AudioManager.Instance?.PlaySFX("land");
                 }
 
                 isGround = true;
@@ -274,6 +283,17 @@ public class PlayerController : MonoBehaviour
         {
             isJump = false;
             isJumpFall = true;
+            // 开始播放循环下落音效
+            AudioManager.Instance?.PlayLoopingSFX("fall");
+        }
+
+        // 如果不再下落，停止下落音效
+        if (isJumpFall && (isGround || rb.velocity.y >= 0))
+        {
+            if (AudioManager.Instance != null && AudioManager.Instance.IsLoopingSFXPlaying("fall"))
+            {
+                AudioManager.Instance.StopLoopingSFX("fall");
+            }
         }
 
         // 跳跃检测（冲刺时不能跳跃）
@@ -292,10 +312,17 @@ public class PlayerController : MonoBehaviour
                 isGround = false;
                 isWallSliding = false; // 跳跃时停止墙面滑落
 
+                if (AudioManager.Instance != null && AudioManager.Instance.IsLoopingSFXPlaying("fall"))
+                {
+                    AudioManager.Instance.StopLoopingSFX("fall");
+                }
+
                 // 计算跳跃力度，如果正在下降则补偿向下的速度
                 float jumpForce = movementData.jumpForce;
                 if (rb.velocity.y < 0)
                     jumpForce -= rb.velocity.y;
+
+                AudioManager.Instance?.PlaySFX("jump");
 
                 // 施加向上的跳跃力
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -305,6 +332,13 @@ public class PlayerController : MonoBehaviour
         // 如果回到地面，重置跳跃状态
         if (lastOnGroundTime > 0 && !isJump)
         {
+            // 停止下落音效
+            if (AudioManager.Instance != null && AudioManager.Instance.IsLoopingSFXPlaying("fall"))
+            {
+                AudioManager.Instance.StopLoopingSFX("fall");
+            }
+
+
             isJumpFall = false;
             isWallSliding = false; // 着陆时停止墙面滑落
         }
@@ -619,9 +653,48 @@ public class PlayerController : MonoBehaviour
         animator.PlaySkill("Attack");
         isAttack = true;
 
+        // 根据角色类型播放不同的攻击音效
+        PlayCharacterSpecificAttackAudio();
+
         // 施加攻击力和启动速度控制
         if (!isCrouch)
             ApplyAttackForce();
+
+
+    }
+
+    private void PlayCharacterSpecificAttackAudio()
+    {
+        if (AudioManager.Instance == null) return;
+
+        string soundName = GetRandomAttackSound();
+        if (!string.IsNullOrEmpty(soundName))
+        {
+            AudioManager.Instance.PlaySFX(soundName);
+        }
+    }
+
+    private string GetRandomAttackSound()
+    {
+        string[] attackSounds = GetCharacterAttackSounds();
+        if (attackSounds.Length == 0) return null;
+
+        int randomIndex = Random.Range(0, attackSounds.Length);
+        return attackSounds[randomIndex];
+    }
+
+    private string[] GetCharacterAttackSounds()
+    {
+        switch (characterType)
+        {
+            case CharacterType.Kirito:
+                return new string[] { "sword_1", "sword_2", "sword_3" };
+
+            case CharacterType.Misaka:
+                return new string[] { "attack" };
+            default:
+                return new string[] { "attack" };
+        }
     }
 
     public void PerformJump()
@@ -769,6 +842,9 @@ public class PlayerController : MonoBehaviour
         isAttackSpeedActive = false;
         isWallSliding = false; // 冲刺时停止墙面滑落
 
+        // TODO: 添加冲刺音效
+        AudioManager.Instance?.PlaySFX("dash");
+
         // TODO: 添加冲刺特效
         // PlayDashEffect();
     }
@@ -809,7 +885,17 @@ public class PlayerController : MonoBehaviour
         return isInvulnerable;
     }
 
-  
+    private void OnDestroy()
+    {
+        if (AudioManager.Instance != null)
+        {
+            // 停止该角色相关的循环音效
+            AudioManager.Instance.StopLoopingSFX("fall");
+            // 如果有其他角色专属的循环音效，也在这里停止
+        }
+    }
+
+
     #region EDITOR METHODS
     private void OnDrawGizmosSelected()
     {

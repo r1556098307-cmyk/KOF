@@ -84,9 +84,6 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
             }
         }
 
-        Debug.Log($"游戏初始化 - 玩家角色: {(CharacterType)playerCharacterIndex}, " +
-                  $"电脑角色: {(CharacterType)computerCharacterIndex}, " +
-                  $"难度: {(DifficultyLevel)difficultyIndex}");
 
         // 生成角色
         SpawnPlayer(playerCharacterIndex);
@@ -104,9 +101,9 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
             playerCharacter.tag = "Player";
 
             // 确保玩家角色的配置正确
-            SetupPlayerCharacter(playerCharacter);
+            SetupPlayerCharacter(playerCharacter, (CharacterType)characterIndex);
 
-            Debug.Log($"生成玩家角色: {(CharacterType)characterIndex}");
+            //Debug.Log($"生成玩家角色: {(CharacterType)characterIndex}");
         }
         else
         {
@@ -127,7 +124,7 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
             // 设置为AI控制
             SetupAICharacter(enemyCharacter, difficultyIndex);
 
-            Debug.Log($"生成敌人角色: {(CharacterType)characterIndex}, 难度: {(DifficultyLevel)difficultyIndex}");
+            //Debug.Log($"生成敌人角色: {(CharacterType)characterIndex}, 难度: {(DifficultyLevel)difficultyIndex}");
         }
         else
         {
@@ -149,14 +146,15 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
         }
     }
 
-    void SetupPlayerCharacter(GameObject character)
+    void SetupPlayerCharacter(GameObject character,CharacterType characterType)
     {
         // 设置PlayerID为Player1
         PlayerController playerController = character.GetComponent<PlayerController>();
         if (playerController != null)
         {
             playerController.PlayerId = PlayerID.Player1;
-            Debug.Log("设置玩家角色为 Player1");
+            playerController.characterType = characterType;
+            //Debug.Log("设置玩家角色为 Player1");
         }
         else
         {
@@ -201,7 +199,7 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
         if (playerController != null)
         {
             playerController.PlayerId = PlayerID.Player2;
-            Debug.Log("设置AI角色为 Player2");
+            //Debug.Log("设置AI角色为 Player2");
         }
         else
         {
@@ -221,15 +219,15 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
         {
             case DifficultyLevel.Easy:
                 aiStateMachine.aiConfig = easyAIConfig;
-                Debug.Log("AI难度设置为：简单");
+                //Debug.Log("AI难度设置为：简单");
                 break;
             case DifficultyLevel.Normal:
                 aiStateMachine.aiConfig = normalAIConfig;
-                Debug.Log("AI难度设置为：普通");
+                //Debug.Log("AI难度设置为：普通");
                 break;
             case DifficultyLevel.Hard:
                 aiStateMachine.aiConfig = hardAIConfig;
-                Debug.Log("AI难度设置为：困难");
+                //Debug.Log("AI难度设置为：困难");
                 break;
             default:
                 aiStateMachine.aiConfig = normalAIConfig;

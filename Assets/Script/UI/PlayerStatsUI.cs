@@ -86,7 +86,7 @@ public class PlayerStatsUI : MonoBehaviour
         {
             float sliderPercent = (float)currentEnergy / maxEnergy;
             player1EnergySlider.fillAmount = sliderPercent;
-            Debug.Log($"当前能量：{currentEnergy}最大能量：{maxEnergy}");
+            //Debug.Log($"当前能量：{currentEnergy}最大能量：{maxEnergy}");
         }
 
         if (player1EnergyNumText != null)

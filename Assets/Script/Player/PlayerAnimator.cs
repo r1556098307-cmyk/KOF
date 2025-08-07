@@ -29,21 +29,24 @@ public class PlayerAnimator : MonoBehaviour
     {
         CheckAnimationState();
 
-        //// 重置一次性动画标志
-        //if (justLanded)
-        //{
-        //    justLanded = false;
-        //}
 
-        //if (startedJumping)
-        //{
-        //    startedJumping = false;
-        //}
     }
 
     private void CheckAnimationState()
     {
         anim.SetBool("isWalk", controller.isWalk);
+        if(controller.isWalk 
+            &&controller.isGround 
+            &&!controller.isJump 
+            &&!controller.isJumpFall 
+            &&!controller.isDash 
+            &&!controller.isAttack)
+        {
+            AudioManager.Instance.PlayLoopingSFX("run");
+        }else
+        {
+            AudioManager.Instance.StopLoopingSFX("run");
+        }
         anim.SetBool("isJump", controller.isJump);
         anim.SetBool("isJumpFall", controller.isJumpFall);
         anim.SetBool("isGround", controller.isGround);
@@ -51,16 +54,7 @@ public class PlayerAnimator : MonoBehaviour
         anim.SetBool("isCrouch", controller.isCrouch);
         anim.SetBool("isBlock", controller.isBlock);
 
-        // 一次性触发的动画
-        //if (startedJumping)
-        //{
-        //    anim.SetTrigger("jumpStart");
-        //}
 
-        //if (justLanded)
-        //{
-        //    anim.SetTrigger("land");
-        //}
     }
 
     public void PlaySkill(string skillName)
@@ -71,16 +65,6 @@ public class PlayerAnimator : MonoBehaviour
             anim.SetTrigger(skillData.animationTrigger);
         }
     }
-
-    //public void StartJump()
-    //{
-    //    startedJumping = true;
-    //}
-
-    //public void JustLanded()
-    //{
-    //    justLanded = true;
-    //}
 
 
     public void PlayAnimation(string animationName)

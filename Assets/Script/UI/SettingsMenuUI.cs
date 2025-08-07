@@ -86,18 +86,18 @@ public class SettingsMenuUI : MonoBehaviour
         // 优先从PlayerPrefs加载设置
         if (LoadSettingsFromPlayerPrefs())
         {
-            Debug.Log("从PlayerPrefs加载设置成功");
+            //Debug.Log("从PlayerPrefs加载设置成功");
         }
         // 如果PlayerPrefs没有数据，从SettingsManager加载
         else if (SettingsManager.Instance != null && SettingsManager.Instance.CurrentSettings != null)
         {
-            Debug.Log("从SettingsManager加载设置");
+            //Debug.Log("从SettingsManager加载设置");
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(SettingsManager.Instance.CurrentSettings), tempSettings);
         }
         // 如果都没有，使用默认值
         else
         {
-            Debug.LogWarning("使用默认设置值");
+            //Debug.LogWarning("使用默认设置值");
             InitializeWithDefaultValues();
             return;
         }
@@ -135,7 +135,7 @@ public class SettingsMenuUI : MonoBehaviour
             string jsonData = JsonUtility.ToJson(tempSettings);
             PlayerPrefs.SetString(SETTINGS_KEY, jsonData);
             PlayerPrefs.Save();
-            Debug.Log("设置已保存到PlayerPrefs");
+            //Debug.Log("设置已保存到PlayerPrefs");
         }
     }
 
@@ -248,7 +248,7 @@ public class SettingsMenuUI : MonoBehaviour
         if (originalSettings != null && tempSettings != null)
         {
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(tempSettings), originalSettings);
-            Debug.Log("设置已应用并保存");
+            //Debug.Log("设置已应用并保存");
         }
     }
 
@@ -273,7 +273,7 @@ public class SettingsMenuUI : MonoBehaviour
                 SettingsManager.Instance.SetSFXVolume(originalSettings.sfxVolume);
             }
 
-            Debug.Log("设置已取消，恢复到原始状态");
+            //Debug.Log("设置已取消，恢复到原始状态");
         }
     }
 
@@ -360,7 +360,7 @@ public class SettingsMenuUI : MonoBehaviour
         {
             PlayerPrefs.DeleteKey(SETTINGS_KEY);
             PlayerPrefs.Save();
-            Debug.Log("已清除保存的设置");
+            //Debug.Log("已清除保存的设置");
         }
     }
 

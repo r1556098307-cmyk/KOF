@@ -31,7 +31,7 @@ public class SettingsManager : Singleton<SettingsManager>
             {
                 string jsonData = PlayerPrefs.GetString(SETTINGS_KEY);
                 JsonUtility.FromJsonOverwrite(jsonData, currentSettings);
-                Debug.Log("SettingsManager: 从 PlayerPrefs 加载设置成功");
+                //Debug.Log("SettingsManager: 从 PlayerPrefs 加载设置成功");
             }
             catch (System.Exception e)
             {
@@ -41,7 +41,7 @@ public class SettingsManager : Singleton<SettingsManager>
         }
         else
         {
-            Debug.Log("SettingsManager: 使用默认设置");
+            //Debug.Log("SettingsManager: 使用默认设置");
             currentSettings.ResetToDefaults();
         }
 
@@ -76,7 +76,7 @@ public class SettingsManager : Singleton<SettingsManager>
             audioMixer.SetFloat("BGMVolume", bgmDB);
             audioMixer.SetFloat("SFXVolume", sfxDB);
 
-            Debug.Log($"应用音量设置 - Master: {currentSettings.masterVolume}, BGM: {currentSettings.bgmVolume}, SFX: {currentSettings.sfxVolume}");
+            //Debug.Log($"应用音量设置 - Master: {currentSettings.masterVolume}, BGM: {currentSettings.bgmVolume}, SFX: {currentSettings.sfxVolume}");
         }
     }
 
@@ -85,7 +85,7 @@ public class SettingsManager : Singleton<SettingsManager>
     {
         // 可以在这里发送事件通知其他系统难度已改变
         // 例如：GameEvents.OnDifficultyChanged?.Invoke(currentSettings.difficultyLevel);
-        Debug.Log($"应用难度设置: {currentSettings.difficultyLevel}");
+        //Debug.Log($"应用难度设置: {currentSettings.difficultyLevel}");
     }
 
     // 实时音量调整方法（用于预览）

@@ -336,7 +336,7 @@ public class AIStateMachine : MonoBehaviour
 
     private void UpdateDefend()
     {
-        Debug.Log("防御");
+        //Debug.Log("防御");
         // 使用配置中的概率
         bool isCrouch = Random.value < aiConfig.crouchDefendChance;
 

@@ -837,7 +837,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 368071882}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &368071882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4270,7 +4282,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 860400148}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &860400148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4487,6 +4511,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5528d7b50a3d294d89c0c05a621d95a, type: 3}
+--- !u!114 &1010074839 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8328788272797071751, guid: e5528d7b50a3d294d89c0c05a621d95a, type: 3}
+  m_PrefabInstance: {fileID: 1010074838}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae66fa7867eb161478e94e6014c50230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1137832104
 GameObject:
   m_ObjectHideFlags: 0
@@ -5010,7 +5045,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1284868134}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1308667993
 GameObject:
   m_ObjectHideFlags: 0
@@ -6382,7 +6429,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1602291211}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1602291211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6869,7 +6928,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1758790140}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1758790140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7834,7 +7905,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2131754279}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1010074839}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2136784325
 GameObject:
   m_ObjectHideFlags: 0
@@ -8052,6 +8135,6 @@ SceneRoots:
   - {fileID: 181176188}
   - {fileID: 1143398451702596160}
   - {fileID: 1922506536}
-  - {fileID: 1557740094}
   - {fileID: 1010074838}
+  - {fileID: 1557740094}
   - {fileID: 542946035}

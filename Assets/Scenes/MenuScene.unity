@@ -552,7 +552,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 132183575}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &132183575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +689,18 @@ MonoBehaviour:
       - m_Target: {fileID: 419725019}
         m_TargetAssemblyTypeName: InputSystemSettingsMenuUI, Assembly-CSharp
         m_MethodName: ShowAudioTab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1283,7 +1307,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 305802910}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &305802910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1447,6 +1483,7 @@ GameObject:
   - component: {fileID: 419725014}
   - component: {fileID: 419725018}
   - component: {fileID: 419725019}
+  - component: {fileID: 419725020}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1584,6 +1621,18 @@ MonoBehaviour:
   resetButton: {fileID: 1669714379}
   closeButton: {fileID: 1749891510}
   mainMenuController: {fileID: 419725018}
+--- !u!114 &419725020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419725013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae66fa7867eb161478e94e6014c50230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &432206162
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,7 +3062,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 713789558}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &713789558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3321,7 +3382,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 821975839}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &821975839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4017,6 +4090,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &992919726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4130,6 +4215,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 999264653}
   m_CullTransparentMesh: 1
+--- !u!114 &1021288944 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8328788272797071751, guid: e5528d7b50a3d294d89c0c05a621d95a, type: 3}
+  m_PrefabInstance: {fileID: 4973043892798197824}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae66fa7867eb161478e94e6014c50230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1021376167
 GameObject:
   m_ObjectHideFlags: 0
@@ -4370,7 +4466,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1106895830}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1106895830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5767,7 +5875,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1669714380}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1669714380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6115,7 +6235,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1749891511}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021288944}
+        m_TargetAssemblyTypeName: UISFXPlay, Assembly-CSharp
+        m_MethodName: PlayUIConfirmSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1749891511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7366,6 +7498,70 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: d9ca4acf083f8444e99f88cc1db1035c, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 66f4b926a6cb3904f98b9cf73d4ba093, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 120bee428acf26b40ba9b401bf0d92d3, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: d054eb21bb4947b4a8f8c0d84289d091, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6ab79ac98de6a86459f7e0985603e197, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8b903a7ea8a6d3a4e84448f9d39de4f2, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: e03a11486909de942ac8a0729bda47cf, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[7]
+      value: 
+      objectReference: {fileID: 8300000, guid: c4afb84e1f4b26046b7ba791c0037a76, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[8]
+      value: 
+      objectReference: {fileID: 8300000, guid: 96ab5b93c685e464aa57f4bec1709a3b, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[9]
+      value: 
+      objectReference: {fileID: 8300000, guid: 051d005f75e224e4bb06b265896743ba, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[10]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4155e3d29e9330e499bdc55886b138da, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[11]
+      value: 
+      objectReference: {fileID: 8300000, guid: 101a2cd70528cb9478e8e064ec15fdbd, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[12]
+      value: 
+      objectReference: {fileID: 8300000, guid: c204108ada3992845a7662f2aa1b67e7, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[13]
+      value: 
+      objectReference: {fileID: 8300000, guid: 22564c788529569469679cd291b3e338, type: 3}
+    - target: {fileID: 4631884621067335044, guid: 80806f0c412f1ce48ba227bee01c5abe, type: 3}
+      propertyPath: sfxClips.Array.data[14]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6a206ecb40f5f494094da7a53a4fc5b2, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

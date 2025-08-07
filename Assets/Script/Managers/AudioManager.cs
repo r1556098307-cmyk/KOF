@@ -170,25 +170,18 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    // 从SettingsManager加载音量设置
+    // 加载音量设置
     private void LoadVolumeSettings()
     {
-        if (SettingsManager.Instance != null)
-        {
-            var settings = SettingsManager.Instance.CurrentSettings;
-            masterVolume = settings.masterVolume;
-            bgmVolume = settings.bgmVolume;
-            sfxVolume = settings.sfxVolume;
-            Debug.Log($"AudioManager: 从SettingsManager加载音量设置 - Master: {masterVolume}, BGM: {bgmVolume}, SFX: {sfxVolume}");
-        }
-        else
-        {
-            // 备用方案：从PlayerPrefs加载
-            masterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.8f);
-            bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 0.7f);
-            sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.8f);
-            Debug.Log("AudioManager: 从PlayerPrefs加载音量设置（备用方案）");
-        }
+
+        string settingsJson = PlayerPrefs.GetString("GameSettings");
+        var settingsData = JsonUtility.FromJson<GameSettingsData>(settingsJson);
+        masterVolume = settingsData.masterVolume;
+        bgmVolume = settingsData.bgmVolume;
+        sfxVolume = settingsData.sfxVolume;
+
+        Debug.Log($"主音量{masterVolume}，背景音量{bgmVolume}，特效音量{sfxVolume}");
+
     }
 
     // 应用当前保存的音量设置
@@ -364,6 +357,14 @@ public class AudioManager : Singleton<AudioManager>
     #endregion
 
     #region SFX控制
+    // 循环音效管理字典
+    private Dictionary<string, AudioSource> loopingSFX = new Dictionary<string, AudioSource>();
+
+    public void PlaySFXByName(string clipName)
+    {
+        PlaySFX(clipName, 1f);
+    }
+
     public void PlaySFX(string clipName, float volumeScale = 1f)
     {
         if (sfxDict.TryGetValue(clipName, out AudioClip clip))
@@ -381,6 +382,85 @@ public class AudioManager : Singleton<AudioManager>
         if (clip == null || sfxSource == null) return;
 
         sfxSource.PlayOneShot(clip, sfxVolume * volumeScale);
+    }
+
+    // 播放循环音效
+    public void PlayLoopingSFX(string clipName, float volumeScale = 1f)
+    {
+        if (sfxDict.TryGetValue(clipName, out AudioClip clip))
+        {
+            PlayLoopingSFX(clipName, clip, volumeScale);
+        }
+        else
+        {
+            Debug.LogWarning($"循环SFX '{clipName}' not found!");
+        }
+    }
+
+    public void PlayLoopingSFX(string sfxName, AudioClip clip, float volumeScale = 1f)
+    {
+        if (clip == null) return;
+
+        // 如果已经在播放这个循环音效，直接返回
+        if (loopingSFX.ContainsKey(sfxName) && loopingSFX[sfxName] != null && loopingSFX[sfxName].isPlaying)
+        {
+            return;
+        }
+
+        // 创建新的AudioSource用于循环播放
+        GameObject loopAudio = new GameObject($"Loop_{sfxName}");
+        loopAudio.transform.SetParent(transform); // 设置为AudioManager的子对象
+
+        AudioSource loopSource = loopAudio.AddComponent<AudioSource>();
+        loopSource.clip = clip;
+        loopSource.loop = true; // 设置为循环
+        loopSource.volume = sfxVolume * volumeScale;
+        loopSource.outputAudioMixerGroup = sfxMixerGroup;
+        loopSource.Play();
+
+        // 存储到字典中管理
+        if (loopingSFX.ContainsKey(sfxName))
+        {
+            // 如果之前有同名的循环音效，先停止并销毁
+            StopLoopingSFX(sfxName);
+        }
+        loopingSFX[sfxName] = loopSource;
+    }
+
+    // 停止循环音效
+    public void StopLoopingSFX(string sfxName)
+    {
+        if (loopingSFX.ContainsKey(sfxName) && loopingSFX[sfxName] != null)
+        {
+            AudioSource source = loopingSFX[sfxName];
+            source.Stop();
+            Destroy(source.gameObject);
+            loopingSFX.Remove(sfxName);
+        }
+    }
+
+    // 检查循环音效是否正在播放
+    public bool IsLoopingSFXPlaying(string sfxName)
+    {
+        if (loopingSFX.ContainsKey(sfxName) && loopingSFX[sfxName] != null)
+        {
+            return loopingSFX[sfxName].isPlaying;
+        }
+        return false;
+    }
+
+    // 停止所有循环音效
+    public void StopAllLoopingSFX()
+    {
+        foreach (var kvp in loopingSFX)
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.Stop();
+                Destroy(kvp.Value.gameObject);
+            }
+        }
+        loopingSFX.Clear();
     }
 
     public AudioSource PlaySFXAtPosition(string clipName, Vector3 position, float volumeScale = 1f)
@@ -495,7 +575,9 @@ public class AudioManager : Singleton<AudioManager>
         {
             StopCoroutine(bgmFadeCoroutine);
         }
+
+        // 清理所有循环音效
+        StopAllLoopingSFX();
     }
 }
 
-// 修复后的SettingsMenuUI.cs (只显示需要修改的部分)
