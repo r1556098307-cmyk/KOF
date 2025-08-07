@@ -80,6 +80,15 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleComboList"",
+                    ""type"": ""Button"",
+                    ""id"": ""7bd525d5-8c7d-4979-900a-2f5e24a9496e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -278,6 +287,28 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53f26b35-cab9-4017-b12a-db6515851902"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleComboList"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68abcdc9-b697-4a7b-bb96-0824325877f0"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleComboList"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -891,6 +922,7 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
         m_GamePlay_Dash = m_GamePlay.FindAction("Dash", throwIfNotFound: true);
         m_GamePlay_Crouch = m_GamePlay.FindAction("Crouch", throwIfNotFound: true);
         m_GamePlay_Jump = m_GamePlay.FindAction("Jump", throwIfNotFound: true);
+        m_GamePlay_ToggleComboList = m_GamePlay.FindAction("ToggleComboList", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -971,6 +1003,7 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlay_Dash;
     private readonly InputAction m_GamePlay_Crouch;
     private readonly InputAction m_GamePlay_Jump;
+    private readonly InputAction m_GamePlay_ToggleComboList;
     public struct GamePlayActions
     {
         private @PlayerInputControl m_Wrapper;
@@ -981,6 +1014,7 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_GamePlay_Dash;
         public InputAction @Crouch => m_Wrapper.m_GamePlay_Crouch;
         public InputAction @Jump => m_Wrapper.m_GamePlay_Jump;
+        public InputAction @ToggleComboList => m_Wrapper.m_GamePlay_ToggleComboList;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1008,6 +1042,9 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @ToggleComboList.started += instance.OnToggleComboList;
+            @ToggleComboList.performed += instance.OnToggleComboList;
+            @ToggleComboList.canceled += instance.OnToggleComboList;
         }
 
         private void UnregisterCallbacks(IGamePlayActions instance)
@@ -1030,6 +1067,9 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @ToggleComboList.started -= instance.OnToggleComboList;
+            @ToggleComboList.performed -= instance.OnToggleComboList;
+            @ToggleComboList.canceled -= instance.OnToggleComboList;
         }
 
         public void RemoveCallbacks(IGamePlayActions instance)
@@ -1226,6 +1266,7 @@ public partial class @PlayerInputControl: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnToggleComboList(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

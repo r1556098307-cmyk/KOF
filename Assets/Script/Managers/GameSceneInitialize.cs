@@ -101,6 +101,7 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
         {
             playerCharacter = Instantiate(prefabToSpawn, playerSpawnPoint.position, Quaternion.identity);
             playerCharacter.name = "Player";
+            playerCharacter.tag = "Player";
 
             // 确保玩家角色的配置正确
             SetupPlayerCharacter(playerCharacter);
@@ -121,6 +122,7 @@ public class GameSceneInitializer : Singleton<GameSceneInitializer>
         {
             enemyCharacter = Instantiate(prefabToSpawn, enemySpawnPoint.position, Quaternion.identity);
             enemyCharacter.name = "Enemy";
+            enemyCharacter.tag = "Enemy";
 
             // 设置为AI控制
             SetupAICharacter(enemyCharacter, difficultyIndex);

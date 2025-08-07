@@ -24,7 +24,7 @@ public class SettingsMenuUI : MonoBehaviour
     [SerializeField] private Text sfxVolumeText;
 
     [Header("游戏设置")]
-    [SerializeField] private TMP_Dropdown difficultyDropdown;
+    [SerializeField] private Dropdown difficultyDropdown;
 
     [Header("按钮")]
     [SerializeField] private Button applyButton;
@@ -34,6 +34,7 @@ public class SettingsMenuUI : MonoBehaviour
 
     [Header("主菜单引用")]
     [SerializeField] private MainMenu mainMenuController;
+
 
     private GameSettings tempSettings;
     private GameSettings originalSettings; // 保存打开设置时的原始值
