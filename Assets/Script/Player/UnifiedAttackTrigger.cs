@@ -22,6 +22,13 @@ public class UnifiedAttackTrigger : MonoBehaviour
     [SerializeField] private Vector2 rayOffset = Vector2.zero; // 射线起始偏移
 
 
+    [Header("Gizmos设置")]
+    [SerializeField] private bool showGizmos = true; // 是否显示Gizmos
+    [SerializeField] private bool showGizmosAlways = false; // 总是显示（不仅在选中时）
+    [SerializeField] private Color gizmosColor = new Color(1f, 0f, 0f, 0.5f); // Gizmos颜色
+    [SerializeField] private Color gizmosWireColor = Color.red; // 线框颜色
+    [SerializeField] private bool previewFacingDirection = true; // 预览朝向（默认右）
+
     private Collider2D attackCollider;
     private bool isActive = false;
     [SerializeField]
@@ -334,6 +341,131 @@ public class UnifiedAttackTrigger : MonoBehaviour
     }
 
 
+    // 在Scene视图中绘制Gizmos（选中时）
+    private void OnDrawGizmosSelected()
+    {
+        if (!showGizmos || showGizmosAlways) return;
+        DrawRaycastGizmos();
+    }
 
- 
+    // 在Scene视图中绘制Gizmos（总是）
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos || !showGizmosAlways) return;
+        DrawRaycastGizmos();
+    }
+
+    // 绘制射线预览
+    private void DrawRaycastGizmos()
+    {
+        if (!useRaycast) return;
+
+        // 获取攻击者Transform（编辑器模式下也能工作）
+        Transform origin = attackerTransform;
+        if (origin == null)
+        {
+            origin = transform.parent?.parent ?? transform;
+        }
+
+        // 确定朝向
+        bool facingRight = previewFacingDirection;
+        if (Application.isPlaying && playerController != null)
+        {
+            facingRight = playerController.isFacingRight;
+        }
+
+        Vector2 rayDirection = facingRight ? Vector2.right : Vector2.left;
+
+        // 计算射线起始位置
+        Vector3 rayStart = origin.position + (Vector3)rayOffset;
+
+        // 如果朝左，需要镜像偏移
+        if (!facingRight)
+        {
+            rayStart = origin.position + new Vector3(-rayOffset.x, rayOffset.y, 0);
+        }
+
+        // 计算终点
+        Vector3 rayEnd = rayStart + (Vector3)(rayDirection * rayDistance);
+
+        // 绘制射线检测范围
+        DrawRaycastBox(rayStart, rayEnd, rayWidth);
+
+        // 绘制起始点和方向箭头
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(rayStart, 0.1f);
+
+        // 绘制箭头
+        DrawArrow(rayStart, rayDirection * rayDistance * 0.8f);
+
+        // 显示信息文本
+#if UNITY_EDITOR
+        if (showGizmos)
+        {
+            UnityEditor.Handles.Label(
+                rayStart + Vector3.up * (rayWidth + 0.5f),
+                $"Ray: {rayDistance}m x {rayWidth}m\nOffset: {rayOffset}\nFacing: {(facingRight ? "Right" : "Left")}"
+            );
+        }
+#endif
+    }
+
+    // 绘制射线检测框
+    private void DrawRaycastBox(Vector3 start, Vector3 end, float width)
+    {
+        // 设置颜色
+        Gizmos.color = gizmosColor;
+
+        // 计算四个角的位置
+        Vector3 halfWidth = Vector3.up * (width / 2);
+        Vector3[] corners = new Vector3[4];
+        corners[0] = start + halfWidth;  // 左上
+        corners[1] = start - halfWidth;  // 左下
+        corners[2] = end - halfWidth;    // 右下
+        corners[3] = end + halfWidth;    // 右上
+
+        // 绘制实心区域（使用Mesh）
+#if UNITY_EDITOR
+        if (Application.isPlaying || UnityEditor.Selection.activeGameObject == gameObject)
+        {
+            // 创建网格来绘制半透明区域
+            Mesh mesh = new Mesh();
+            mesh.vertices = corners;
+            mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3 };
+            mesh.RecalculateNormals();
+
+            Gizmos.DrawMesh(mesh);
+        }
+#endif
+
+        // 绘制线框
+        Gizmos.color = gizmosWireColor;
+        Gizmos.DrawLine(corners[0], corners[1]);
+        Gizmos.DrawLine(corners[1], corners[2]);
+        Gizmos.DrawLine(corners[2], corners[3]);
+        Gizmos.DrawLine(corners[3], corners[0]);
+
+        // 绘制对角线（显示检测区域）
+        Gizmos.color = new Color(gizmosWireColor.r, gizmosWireColor.g, gizmosWireColor.b, 0.3f);
+        Gizmos.DrawLine(corners[0], corners[2]);
+        Gizmos.DrawLine(corners[1], corners[3]);
+    }
+
+    // 绘制箭头
+    private void DrawArrow(Vector3 start, Vector3 direction)
+    {
+        if (direction.magnitude < 0.1f) return;
+
+        Gizmos.color = Color.cyan;
+        Vector3 end = start + direction;
+        Gizmos.DrawLine(start, end);
+
+        // 箭头头部
+        Vector3 right = Quaternion.Euler(0, 0, -30) * -direction.normalized * 0.3f;
+        Vector3 left = Quaternion.Euler(0, 0, 30) * -direction.normalized * 0.3f;
+
+        Gizmos.DrawLine(end, end + right);
+        Gizmos.DrawLine(end, end + left);
+    }
+
 }

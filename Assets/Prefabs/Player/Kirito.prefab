@@ -97,7 +97,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.9612441, y: -0.97726583}
+  m_Offset: {x: 1.0974197, y: -1.2921721}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -108,7 +108,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 9.587121, y: 4.0439444}
+  m_Size: {x: 6.69339, y: 2.8013432}
   m_EdgeRadius: 0
 --- !u!114 &9072203890869361396
 MonoBehaviour:
@@ -144,6 +144,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &500939125153731504
 GameObject:
@@ -289,6 +294,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &1101702461860000137
 GameObject:
@@ -331,7 +341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5894904390653619629}
-  - component: {fileID: 3718274052210338386}
+  - component: {fileID: 7757807354180772199}
   - component: {fileID: 2049057479828481261}
   m_Layer: 0
   m_Name: Range
@@ -355,8 +365,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8614297810542580186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &3718274052210338386
-PolygonCollider2D:
+--- !u!61 &7757807354180772199
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -387,7 +397,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.4128218, y: -0.85109735}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -397,16 +407,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 2.5992498, y: 0.4976244}
-      - {x: 0.16290754, y: 0.5055988}
-      - {x: 0.17669916, y: -0.08821714}
-      - {x: 0.17278063, y: -0.5905931}
-      - {x: 0.13872337, y: -2.1743374}
-      - {x: 2.585019, y: -2.1902714}
-      - {x: 2.5892372, y: -0.8049465}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 2.3617554, y: 2.6000628}
+  m_EdgeRadius: 0
 --- !u!114 &2049057479828481261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +444,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &3558896998903197036
 GameObject:
@@ -483,7 +491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2927719807184640826}
-  - component: {fileID: 3992388482760133248}
+  - component: {fileID: 2885082647460015975}
   - component: {fileID: 6981954050001064828}
   m_Layer: 0
   m_Name: Range
@@ -507,8 +515,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 893896949986922239}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &3992388482760133248
-PolygonCollider2D:
+--- !u!61 &2885082647460015975
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -539,7 +547,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.2936683, y: -0.27235126}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -549,15 +557,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 2.583846, y: 1.4805331}
-      - {x: 0.068089485, y: 1.4896944}
-      - {x: 0.07696873, y: 1.3987626}
-      - {x: -0.0056467056, y: -1.9825344}
-      - {x: 2.5754476, y: -1.9885085}
-      - {x: 2.6329231, y: 1.4229807}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 2.4979315, y: 3.3830729}
+  m_EdgeRadius: 0
 --- !u!114 &6981954050001064828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,6 +594,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &4094738171528663575
 GameObject:
@@ -776,8 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 924c4286788929f4190811c1605a99ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  justLanded: 0
-  startedJumping: 0
   skillAnimations:
   - skillName: Attack
     animationTrigger: attack
@@ -924,6 +929,18 @@ MonoBehaviour:
             m_StringArgument: SpecialMove2
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Slash_1
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u6280\u80FD2"
     keySequence: 02000000000000000000000004000000
     energyCost: 0
@@ -940,6 +957,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: SpecialMove2
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Slash_1
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u6280\u80FD3"
@@ -960,6 +989,18 @@ MonoBehaviour:
             m_StringArgument: SpecialMove3
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Vortex
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67401"
     keySequence: 020000000300000000000000030000000100000004000000
     energyCost: 1
@@ -976,6 +1017,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: SuperMove1
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7459452849793084597}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Laser
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67401"
@@ -1261,6 +1314,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &5398552076830294549
 GameObject:
@@ -1430,7 +1488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8217724632566431194}
-  - component: {fileID: 3434710934821489493}
+  - component: {fileID: 5242024399920457336}
   - component: {fileID: 3992778106603455368}
   m_Layer: 0
   m_Name: Range
@@ -1454,8 +1512,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1779467710895470624}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &3434710934821489493
-PolygonCollider2D:
+--- !u!61 &5242024399920457336
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1486,7 +1544,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.9787626, y: -1.4043107}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1496,14 +1554,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.8518543, y: -0.44160008}
-      - {x: -0.16472918, y: -0.3899407}
-      - {x: -0.1946215, y: -2.2943015}
-      - {x: 2.116755, y: -2.3161442}
-      - {x: 2.1523905, y: -0.41178304}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 2.2766457, y: 1.8681197}
+  m_EdgeRadius: 0
 --- !u!114 &3992778106603455368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1538,6 +1591,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &7764368292334054875
 GameObject:
@@ -1604,7 +1662,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.6884232, y: 1.2139901}
+  m_Offset: {x: 1.6884232, y: 0.20118427}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1615,7 +1673,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.92564, y: 2.534931}
+  m_Size: {x: 2.92564, y: 4.560543}
   m_EdgeRadius: 0
 --- !u!114 &2310368402092803376
 MonoBehaviour:
@@ -1651,6 +1709,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &8074852994821401398
 GameObject:
@@ -1661,7 +1724,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8999820221785215171}
-  - component: {fileID: 918799743262207050}
+  - component: {fileID: 3756750371813160488}
   - component: {fileID: 5900075390362310877}
   m_Layer: 0
   m_Name: Range
@@ -1685,8 +1748,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9166594745732416957}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &918799743262207050
-PolygonCollider2D:
+--- !u!61 &3756750371813160488
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1717,7 +1780,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.5830412, y: -0.51916957}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1727,17 +1790,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 2.4887285, y: 1.4750148}
-      - {x: 0.07451534, y: 1.855693}
-      - {x: -1.6938992, y: 0.9560114}
-      - {x: -0.48661852, y: 0.9971076}
-      - {x: 0.6567122, y: 0.8984971}
-      - {x: 0.66054153, y: -1.9195199}
-      - {x: 2.5179596, y: -1.9413619}
-      - {x: 2.4961176, y: -1.9195199}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 1.8510971, y: 3.9788408}
+  m_EdgeRadius: 0
 --- !u!114 &5900075390362310877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1772,6 +1827,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &8384935198367284628
 GameObject:
@@ -1885,6 +1945,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &8408638841201397966
 GameObject:
@@ -1895,7 +1960,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 753501051709434654}
-  - component: {fileID: 2462297414467581976}
+  - component: {fileID: 5810061284301513764}
   - component: {fileID: 4664880411957798236}
   m_Layer: 0
   m_Name: Range
@@ -1919,8 +1984,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6723356695140099712}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &2462297414467581976
-PolygonCollider2D:
+--- !u!61 &5810061284301513764
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1948,10 +2013,10 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.902163, y: -1.4298438}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1961,18 +2026,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.971384, y: -0.6017045}
-      - {x: 1.4197559, y: 0.4976244}
-      - {x: -0.42910385, y: 0.5645045}
-      - {x: -1.6281681, y: 0.046907216}
-      - {x: -1.6362214, y: -0.41585338}
-      - {x: -1.6820021, y: -1.4007304}
-      - {x: -0.17750168, y: -0.4753492}
-      - {x: -0.242226, y: -2.4035146}
-      - {x: 2.0213356, y: -2.4431279}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 2.1234484, y: 1.9191854}
+  m_EdgeRadius: 0
 --- !u!114 &4664880411957798236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2007,6 +2063,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &8650266299891597525
 GameObject:
@@ -2105,6 +2166,11 @@ MonoBehaviour:
   rayDistance: 30
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &9167528121984047912
 GameObject:

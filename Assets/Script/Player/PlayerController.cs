@@ -656,7 +656,7 @@ public class PlayerController : MonoBehaviour
         // 根据角色类型播放不同的攻击音效
         PlayCharacterSpecificAttackAudio();
 
-        VFXManager.Instance.PlayVFXAt("Slash_1",transform,isFacingRight);
+
 
         // 施加攻击力和启动速度控制
         if (!isCrouch)

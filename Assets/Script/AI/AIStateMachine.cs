@@ -151,7 +151,7 @@ public class AIStateMachine : MonoBehaviour
         if (!target || !enabled) return;
 
         // 始终面朝玩家方向
-        FaceTarget();
+        //FaceTarget();
 
         UpdateCachedStates();
 

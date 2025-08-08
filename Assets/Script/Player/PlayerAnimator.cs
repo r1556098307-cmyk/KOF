@@ -14,10 +14,9 @@ public class PlayerAnimator : MonoBehaviour
     private PlayerController controller;
     private Animator anim;
 
-    public bool justLanded;
-    public bool startedJumping;
-
     [SerializeField] private List<SkillAnimationData> skillAnimations;
+
+
 
     private void Awake()
     {
@@ -29,24 +28,38 @@ public class PlayerAnimator : MonoBehaviour
     {
         CheckAnimationState();
 
+        PlaySFX();
+
 
     }
+
+
+
+
+
+    private void PlaySFX()
+    {
+        if (controller.isWalk
+            && controller.isGround
+            && !controller.isJump
+            && !controller.isJumpFall
+            && !controller.isDash
+            && !controller.isAttack)
+        {
+            AudioManager.Instance.PlayLoopingSFX("run");
+        }
+        else
+        {
+            AudioManager.Instance.StopLoopingSFX("run");
+        }
+    }
+
+
 
     private void CheckAnimationState()
     {
         anim.SetBool("isWalk", controller.isWalk);
-        if(controller.isWalk 
-            &&controller.isGround 
-            &&!controller.isJump 
-            &&!controller.isJumpFall 
-            &&!controller.isDash 
-            &&!controller.isAttack)
-        {
-            AudioManager.Instance.PlayLoopingSFX("run");
-        }else
-        {
-            AudioManager.Instance.StopLoopingSFX("run");
-        }
+        
         anim.SetBool("isJump", controller.isJump);
         anim.SetBool("isJumpFall", controller.isJumpFall);
         anim.SetBool("isGround", controller.isGround);
@@ -64,6 +77,11 @@ public class PlayerAnimator : MonoBehaviour
         {
             anim.SetTrigger(skillData.animationTrigger);
         }
+    }
+
+    public void PlayVFX(string vfxName)
+    {
+        VFXManager.Instance.PlayVFXAt(vfxName, transform, controller.isFacingRight);
     }
 
 

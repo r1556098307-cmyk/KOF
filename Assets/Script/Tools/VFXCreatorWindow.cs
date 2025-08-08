@@ -148,7 +148,6 @@ public class VFXCreatorWindow : EditorWindow
         // 设置参数
         vfx.sprites = spritesList.ToArray();
         vfx.fps = fps;
-        vfx.additive = additive;
         vfx.loop = loop;
 
         // 保存为预制体
@@ -244,7 +243,6 @@ public class QuickVFXContextMenu
         SimpleVFX vfx = go.AddComponent<SimpleVFX>();
         vfx.sprites = sprites.ToArray();
         vfx.fps = 30;
-        vfx.additive = true;
 
         // 保存
         string path = $"Assets/{baseName}_VFX.prefab";

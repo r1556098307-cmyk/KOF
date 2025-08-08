@@ -56,7 +56,7 @@ public class VFXManager : Singleton<VFXManager>
 
 
     // 播放特效
-    public GameObject PlayVFX(string vfxName, Vector3 position, Vector3 scale = default, bool facingRight = true)
+    public GameObject PlayVFX(string vfxName, Vector3 position, Vector3 scale = default, Transform target = null,bool facingRight = true)
     {
         if (scale == default) scale = Vector3.one;
 
@@ -68,9 +68,20 @@ public class VFXManager : Singleton<VFXManager>
         }
 
         // 设置变换
+        vfx.transform.SetParent(target);
+
         vfx.transform.position = position;
         vfx.transform.localScale = scale;
-        vfx.transform.SetParent(null);
+
+
+        // 处理朝向
+        if (!facingRight)
+        {
+            Vector3 currentScale = vfx.transform.localScale;
+            currentScale.x = -Mathf.Abs(currentScale.x);
+            vfx.transform.localScale = currentScale;
+        }
+
 
         // 配置特效组件
         SimpleVFX simpleVFX = vfx.GetComponent<SimpleVFX>();
@@ -101,6 +112,8 @@ public class VFXManager : Singleton<VFXManager>
         Vector3 offset = Vector3.zero;
         Vector3 scale = Vector3.one;
 
+      
+
         if (simpleVFX != null)
         {
             offset = simpleVFX.offset;
@@ -112,11 +125,14 @@ public class VFXManager : Singleton<VFXManager>
                 offset.x *= -1;
             }
         }
+        Debug.Log($"offset:{offset},scale:{scale}");
+
         Vector3 finalPosition = target.position + offset;
+        Debug.Log($"target.position :{target.position},finalPosition :{finalPosition}");
 
         // 回收到池中，然后用配置好的参数重新播放
         ReturnToPool(vfx);
-        return PlayVFX(vfxName, finalPosition, scale, facingRight);
+        return PlayVFX(vfxName, finalPosition, scale, target,facingRight);
     }
 
     GameObject GetFromPool(string vfxName)

@@ -223,6 +223,18 @@ MonoBehaviour:
             m_StringArgument: SpecialMove1
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: GlobeLightning
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u6280\u80FD2"
     keySequence: 000000000000000004000000
     energyCost: 0
@@ -239,6 +251,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: SpecialMove2
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Explosion
             m_BoolArgument: 0
           m_CallState: 2
   - skillName: "\u6280\u80FD3"
@@ -295,6 +319,18 @@ MonoBehaviour:
             m_StringArgument: SuperMove1
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Electric
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67402"
     keySequence: 000000000400000001000000040000000300000004000000
     energyCost: 3
@@ -313,6 +349,18 @@ MonoBehaviour:
             m_StringArgument: SuperMove2
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Railgun
+            m_BoolArgument: 0
+          m_CallState: 2
   - skillName: "\u8D85\u5FC5\u67402"
     keySequence: 000000000400000001000000040000000200000004000000
     energyCost: 3
@@ -329,6 +377,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: SuperMove2
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7825981207800161287}
+          m_TargetAssemblyTypeName: PlayerAnimator, Assembly-CSharp
+          m_MethodName: PlayVFX
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Railgun
             m_BoolArgument: 0
           m_CallState: 2
   inputHistory: 
@@ -370,8 +430,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 924c4286788929f4190811c1605a99ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  justLanded: 0
-  startedJumping: 0
   skillAnimations:
   - skillName: Attack
     animationTrigger: attack
@@ -407,8 +465,10 @@ MonoBehaviour:
   movementData: {fileID: 11400000, guid: 96357f7813c42c34fa2a812d385a1bf6, type: 2}
   combatData: {fileID: 11400000, guid: 05184486fdf95f44ab96adecf106fc32, type: 2}
   animator: {fileID: 0}
+  comboSystem: {fileID: 0}
   inputDirection: {x: 0, y: 0}
   PlayerId: 1
+  characterType: 0
   isFacingRight: 0
   isDash: 0
   isWalk: 0
@@ -445,6 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   templateData: {fileID: 11400000, guid: 54694d28a2f736740bf29a42ced78a7c, type: 2}
   playerData: {fileID: 0}
+  isDead: 0
 --- !u!114 &2001260359639686346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3788c89edb77aa34092ec669265dae63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMovementInput: {x: 0, y: 0}
 --- !u!114 &8027300783259157355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,6 +736,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &1984136117084168902
 GameObject:
@@ -787,6 +854,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &2705508575020089915
 GameObject:
@@ -890,6 +962,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &2952458364990978708
 GameObject:
@@ -1131,6 +1208,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &4666331104945367413
 GameObject:
@@ -1229,6 +1311,11 @@ MonoBehaviour:
   rayDistance: 30
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &6030826649552575618
 GameObject:
@@ -1296,6 +1383,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &6187225916084559685
 GameObject:
@@ -1409,6 +1501,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &6924024932167898547
 GameObject:
@@ -1554,6 +1651,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &7513492757173027302
 GameObject:
@@ -1698,6 +1800,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &7560659426233010097
 GameObject:
@@ -1811,6 +1918,11 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
 --- !u!1 &7680333444525773655
 GameObject:
@@ -2052,4 +2164,9 @@ MonoBehaviour:
   rayDistance: 10
   rayWidth: 1
   rayOffset: {x: 0, y: 0}
+  showGizmos: 1
+  showGizmosAlways: 0
+  gizmosColor: {r: 1, g: 0, b: 0, a: 0.5}
+  gizmosWireColor: {r: 1, g: 0, b: 0, a: 1}
+  previewFacingDirection: 1
   attackerTransform: {fileID: 0}
