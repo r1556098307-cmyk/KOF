@@ -360,10 +360,7 @@ public class AudioManager : Singleton<AudioManager>
     // 循环音效管理字典
     private Dictionary<string, AudioSource> loopingSFX = new Dictionary<string, AudioSource>();
 
-    public void PlaySFXByName(string clipName)
-    {
-        PlaySFX(clipName, 1f);
-    }
+
 
     public void PlaySFX(string clipName, float volumeScale = 1f)
     {
@@ -463,38 +460,7 @@ public class AudioManager : Singleton<AudioManager>
         loopingSFX.Clear();
     }
 
-    public AudioSource PlaySFXAtPosition(string clipName, Vector3 position, float volumeScale = 1f)
-    {
-        if (sfxDict.TryGetValue(clipName, out AudioClip clip))
-        {
-            return PlaySFXAtPosition(clip, position, volumeScale);
-        }
-        else
-        {
-            Debug.LogWarning($"SFX '{clipName}' not found!");
-            return null;
-        }
-    }
-
-    public AudioSource PlaySFXAtPosition(AudioClip clip, Vector3 position, float volumeScale = 1f)
-    {
-        if (clip == null) return null;
-
-        GameObject tempAudio = new GameObject("TempAudio");
-        tempAudio.transform.position = position;
-
-        AudioSource tempSource = tempAudio.AddComponent<AudioSource>();
-        tempSource.clip = clip;
-        tempSource.volume = sfxVolume * volumeScale;
-        tempSource.spatialBlend = 1f; // 3D音效
-        tempSource.outputAudioMixerGroup = sfxMixerGroup;
-        tempSource.Play();
-
-        // 播放完成后销毁
-        Destroy(tempAudio, clip.length + 0.1f);
-
-        return tempSource;
-    }
+ 
     #endregion
 
     #region 场景音效管理

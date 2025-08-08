@@ -811,6 +811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   templateData: {fileID: 11400000, guid: 0efe3dc579cd68442bc0f4f1a536eb1f, type: 2}
   playerData: {fileID: 0}
+  isDead: 0
 --- !u!114 &424556446635804781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -827,8 +828,10 @@ MonoBehaviour:
   movementData: {fileID: 11400000, guid: 271aa5bc12f54354993970692c99034c, type: 2}
   combatData: {fileID: 11400000, guid: fbbf8024ba6f09f4ab08a118c3233dbc, type: 2}
   animator: {fileID: 0}
+  comboSystem: {fileID: 0}
   inputDirection: {x: 0, y: 0}
   PlayerId: 0
+  characterType: 0
   isFacingRight: 0
   isDash: 0
   isWalk: 0
@@ -1074,6 +1077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3788c89edb77aa34092ec669265dae63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMovementInput: {x: 0, y: 0}
 --- !u!114 &8691974140357928686
 MonoBehaviour:
   m_ObjectHideFlags: 0
